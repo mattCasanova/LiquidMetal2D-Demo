@@ -7,14 +7,27 @@
 //
 
 import UIKit
+import LiquidMetal2D
 
-class ViewController: UIViewController {
-
+class ViewController: LiquidViewController {
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view.
+    
+    let sceneFactory = SceneFactory()
+    sceneFactory.addScene(type: SceneTypes.visualDemo, builder: GenericSceneBuilder<VisualDemo>())
+    
+    let renderer = DefaultRenderer(
+      parentView: self.view,
+      maxObjects: GameConstants.MAX_OBJECTS,
+      uniformSize: TransformUniformData.typeSize())
+    
+    gameEngine = DefaultEngine(
+      renderer: renderer,
+      intitialSceneType: SceneTypes.visualDemo,
+      sceneFactory: sceneFactory)
+    
+    gameEngine.run()
   }
-
-
 }
 

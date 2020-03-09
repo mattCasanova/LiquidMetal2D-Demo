@@ -174,7 +174,6 @@ class VisualDemo: Scene {
   
   
   private func getFOV() -> Float {
-    //return 45
     return renderer.screenWidth <= renderer.screenHeight ? 90 : 45;
   }
   

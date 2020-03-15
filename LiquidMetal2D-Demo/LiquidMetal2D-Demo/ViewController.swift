@@ -16,6 +16,7 @@ class ViewController: LiquidViewController {
     
     let sceneFactory = SceneFactory()
     sceneFactory.addScene(type: SceneTypes.visualDemo, builder: GenericSceneBuilder<VisualDemo>())
+    sceneFactory.addScene(type: SceneTypes.inputDemo,  builder: GenericSceneBuilder<InputDemo>())
     
     let renderer = DefaultRenderer(
       parentView: self.view,
@@ -24,7 +25,7 @@ class ViewController: LiquidViewController {
     
     gameEngine = DefaultEngine(
       renderer: renderer,
-      intitialSceneType: SceneTypes.visualDemo,
+      intitialSceneType: SceneTypes.inputDemo,
       sceneFactory: sceneFactory)
     
     gameEngine.run()

@@ -32,7 +32,10 @@ class VisualDemo: Scene {
   var startColor = Vector3D()
   var endColor = Vector3D()
   
+  var uiView: UIView!
   var nextButton: UIButton!
+  var prevButton: UIButton!
+  var pushButton: UIButton!
   
   private var textures = [Int]()
   
@@ -62,27 +65,29 @@ class VisualDemo: Scene {
     renderer.setCamera(x: 0, y: 0, distance: distance)
     
     createObjects()
-    
-    
-    nextButton = UIButton(frame: CGRect(x: renderer.view.safeAreaInsets.left, y: renderer.view.safeAreaInsets.top, width: 100, height: 44))
-    nextButton.backgroundColor = UIColor.black
-    nextButton.setTitle("Next", for: .normal)
-    nextButton.layer.cornerRadius = 4
-    
-    nextButton.addTarget(self, action: #selector(onClick), for: .touchUpInside)
-    
-    renderer.view.addSubview(nextButton)
-    
+    createUI()
   }
-  
-  @objc func onClick() {
-    createObjects()
-  }
+
   
   func resize() {
+    uiView.frame = renderer.view.safeAreaLayoutGuide.layoutFrame
+    
     nextButton.frame = CGRect(
-      x: renderer.view.safeAreaInsets.left,
-      y: renderer.view.safeAreaInsets.top,
+      x: 0,
+      y: uiView.frame.height - 44,
+      width: 100,
+      height: 44)
+    
+    let x = uiView.frame.width - 100
+    prevButton.frame = CGRect(
+      x: x,
+      y: uiView.frame.height - 44,
+      width: 100,
+      height: 44)
+    
+    pushButton.frame = CGRect(
+      x: uiView.frame.width / 2 - 50,
+      y: uiView.frame.height - 44,
       width: 100,
       height: 44)
     
@@ -169,7 +174,7 @@ class VisualDemo: Scene {
   }
   
   func shutdown() {
-    nextButton.removeFromSuperview()
+    uiView.removeFromSuperview()
   }
   
   
@@ -226,6 +231,44 @@ class VisualDemo: Scene {
      obj.velocity.setRotation(obj.rotation)
      obj.velocity *= (Float.random(in: 1...10))
      */
+  }
+  
+  private func createUI() {
+    uiView = UIView(frame: renderer.view.safeAreaLayoutGuide.layoutFrame)
+    renderer.view.addSubview(uiView)
+    
+    nextButton = UIButton(frame: CGRect(x: 0, y: uiView.frame.height - 44, width: 100, height: 44))
+    nextButton.backgroundColor = UIColor.blue
+    nextButton.setTitle("Next", for: .normal)
+    nextButton.layer.cornerRadius = 4
+    nextButton.addTarget(self, action: #selector(onNext), for: .touchUpInside)
+    uiView.addSubview(nextButton)
+    
+    prevButton = UIButton(frame: CGRect(x: uiView.frame.width + 100, y: uiView.frame.height - 44, width: 100, height: 44))
+    prevButton.backgroundColor = UIColor.blue
+    prevButton.setTitle("Prev", for: .normal)
+    prevButton.layer.cornerRadius = 4
+    prevButton.addTarget(self, action: #selector(onPrev), for: .touchUpInside)
+    uiView.addSubview(prevButton)
+    
+    pushButton = UIButton(frame: CGRect(x: (uiView.frame.width / 2) - 50 , y: uiView.frame.height - 44, width: 100, height: 44))
+    pushButton.backgroundColor = UIColor.red
+    pushButton.setTitle("Push", for: .normal)
+    pushButton.layer.cornerRadius = 4
+    pushButton.addTarget(self, action: #selector(onPush), for: .touchUpInside)
+    uiView.addSubview(pushButton)
+  }
+  
+  @objc func onNext() {
+    sceneMgr.setScene(type: SceneTypes.inputDemo)
+  }
+  
+  @objc func onPrev() {
+    sceneMgr.setScene(type: SceneTypes.inputDemo)
+  }
+  
+  @objc func onPush() {
+    sceneMgr.pushScene(type: SceneTypes.inputDemo)
   }
   
   static func build() -> Scene {

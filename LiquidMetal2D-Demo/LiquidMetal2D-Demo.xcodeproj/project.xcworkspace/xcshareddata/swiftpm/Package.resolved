@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "LiquidMetal2D",
+        "repositoryURL": "git@github.com:mattCasanova/LiquidMetal2D.git",
+        "state": {
+          "branch": null,
+          "revision": "22fd1d7c7a73bb737849eceb8d6dc8d27717736a",
+          "version": "0.0.22"
+        }
+      },
+      {
+        "package": "MetalMath",
+        "repositoryURL": "https://github.com/mattCasanova/MetalMath.git",
+        "state": {
+          "branch": null,
+          "revision": "e4873952a8084427cf069dcbd24baeedd3fe81e6",
+          "version": "0.0.3"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

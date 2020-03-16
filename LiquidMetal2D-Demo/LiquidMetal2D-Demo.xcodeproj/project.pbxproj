@@ -1,0 +1,422 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F536B68F241690A800B3566F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B68E241690A800B3566F /* AppDelegate.swift */; };
+		F536B691241690A800B3566F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B690241690A800B3566F /* SceneDelegate.swift */; };
+		F536B693241690A800B3566F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B692241690A800B3566F /* ViewController.swift */; };
+		F536B696241690A800B3566F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F536B694241690A800B3566F /* Main.storyboard */; };
+		F536B698241690A900B3566F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F536B697241690A900B3566F /* Assets.xcassets */; };
+		F536B69B241690A900B3566F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F536B699241690A900B3566F /* LaunchScreen.storyboard */; };
+		F536B6A5241691DB00B3566F /* LiquidMetal2D in Frameworks */ = {isa = PBXBuildFile; productRef = F536B6A4241691DB00B3566F /* LiquidMetal2D */; };
+		F536B6AB2416922F00B3566F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B6AA2416922E00B3566F /* Constants.swift */; };
+		F536B6AE2416925800B3566F /* VisualDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B6AC2416925800B3566F /* VisualDemo.swift */; };
+		F536B6AF2416925800B3566F /* SceneTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B6AD2416925800B3566F /* SceneTypes.swift */; };
+		F536B6B32416926800B3566F /* playerShip1_orange.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B02416926800B3566F /* playerShip1_orange.png */; };
+		F536B6B42416926800B3566F /* playerShip1_green.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B12416926800B3566F /* playerShip1_green.png */; };
+		F536B6B52416926800B3566F /* playerShip1_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B22416926800B3566F /* playerShip1_blue.png */; };
+		F5EDA0B42416952400C42A29 /* InputDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EDA0B32416952400C42A29 /* InputDemo.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F536B68B241690A800B3566F /* LiquidMetal2D-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LiquidMetal2D-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F536B68E241690A800B3566F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F536B690241690A800B3566F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		F536B692241690A800B3566F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F536B695241690A800B3566F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F536B697241690A900B3566F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F536B69A241690A900B3566F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F536B69C241690A900B3566F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F536B6AA2416922E00B3566F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		F536B6AC2416925800B3566F /* VisualDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualDemo.swift; sourceTree = "<group>"; };
+		F536B6AD2416925800B3566F /* SceneTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneTypes.swift; sourceTree = "<group>"; };
+		F536B6B02416926800B3566F /* playerShip1_orange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_orange.png; sourceTree = "<group>"; };
+		F536B6B12416926800B3566F /* playerShip1_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_green.png; sourceTree = "<group>"; };
+		F536B6B22416926800B3566F /* playerShip1_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_blue.png; sourceTree = "<group>"; };
+		F5EDA0B32416952400C42A29 /* InputDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputDemo.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F536B688241690A800B3566F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F536B6A5241691DB00B3566F /* LiquidMetal2D in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F536B682241690A800B3566F = {
+			isa = PBXGroup;
+			children = (
+				F536B68D241690A800B3566F /* LiquidMetal2D-Demo */,
+				F536B68C241690A800B3566F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F536B68C241690A800B3566F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F536B68B241690A800B3566F /* LiquidMetal2D-Demo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F536B68D241690A800B3566F /* LiquidMetal2D-Demo */ = {
+			isa = PBXGroup;
+			children = (
+				F536B6B72416939700B3566F /* textures */,
+				F536B6B62416928500B3566F /* scenes */,
+				F536B6AA2416922E00B3566F /* Constants.swift */,
+				F536B6A2241690FB00B3566F /* appleDefaults */,
+				F536B692241690A800B3566F /* ViewController.swift */,
+				F536B697241690A900B3566F /* Assets.xcassets */,
+			);
+			path = "LiquidMetal2D-Demo";
+			sourceTree = "<group>";
+		};
+		F536B6A2241690FB00B3566F /* appleDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				F536B68E241690A800B3566F /* AppDelegate.swift */,
+				F536B690241690A800B3566F /* SceneDelegate.swift */,
+				F536B694241690A800B3566F /* Main.storyboard */,
+				F536B699241690A900B3566F /* LaunchScreen.storyboard */,
+				F536B69C241690A900B3566F /* Info.plist */,
+			);
+			name = appleDefaults;
+			sourceTree = "<group>";
+		};
+		F536B6B62416928500B3566F /* scenes */ = {
+			isa = PBXGroup;
+			children = (
+				F536B6AD2416925800B3566F /* SceneTypes.swift */,
+				F536B6AC2416925800B3566F /* VisualDemo.swift */,
+				F5EDA0B32416952400C42A29 /* InputDemo.swift */,
+			);
+			name = scenes;
+			sourceTree = "<group>";
+		};
+		F536B6B72416939700B3566F /* textures */ = {
+			isa = PBXGroup;
+			children = (
+				F536B6B22416926800B3566F /* playerShip1_blue.png */,
+				F536B6B12416926800B3566F /* playerShip1_green.png */,
+				F536B6B02416926800B3566F /* playerShip1_orange.png */,
+			);
+			name = textures;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F536B68A241690A800B3566F /* LiquidMetal2D-Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F536B69F241690A900B3566F /* Build configuration list for PBXNativeTarget "LiquidMetal2D-Demo" */;
+			buildPhases = (
+				F536B687241690A800B3566F /* Sources */,
+				F536B688241690A800B3566F /* Frameworks */,
+				F536B689241690A800B3566F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "LiquidMetal2D-Demo";
+			packageProductDependencies = (
+				F536B6A4241691DB00B3566F /* LiquidMetal2D */,
+			);
+			productName = "LiquidMetal2D-Demo";
+			productReference = F536B68B241690A800B3566F /* LiquidMetal2D-Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F536B683241690A800B3566F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "Matt Casanova";
+				TargetAttributes = {
+					F536B68A241690A800B3566F = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+				};
+			};
+			buildConfigurationList = F536B686241690A800B3566F /* Build configuration list for PBXProject "LiquidMetal2D-Demo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F536B682241690A800B3566F;
+			packageReferences = (
+				F536B6A3241691DB00B3566F /* XCRemoteSwiftPackageReference "LiquidMetal2D" */,
+			);
+			productRefGroup = F536B68C241690A800B3566F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F536B68A241690A800B3566F /* LiquidMetal2D-Demo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F536B689241690A800B3566F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F536B6B32416926800B3566F /* playerShip1_orange.png in Resources */,
+				F536B69B241690A900B3566F /* LaunchScreen.storyboard in Resources */,
+				F536B6B42416926800B3566F /* playerShip1_green.png in Resources */,
+				F536B698241690A900B3566F /* Assets.xcassets in Resources */,
+				F536B6B52416926800B3566F /* playerShip1_blue.png in Resources */,
+				F536B696241690A800B3566F /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F536B687241690A800B3566F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F536B6AE2416925800B3566F /* VisualDemo.swift in Sources */,
+				F536B693241690A800B3566F /* ViewController.swift in Sources */,
+				F536B6AF2416925800B3566F /* SceneTypes.swift in Sources */,
+				F536B68F241690A800B3566F /* AppDelegate.swift in Sources */,
+				F536B691241690A800B3566F /* SceneDelegate.swift in Sources */,
+				F5EDA0B42416952400C42A29 /* InputDemo.swift in Sources */,
+				F536B6AB2416922F00B3566F /* Constants.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F536B694241690A800B3566F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F536B695241690A800B3566F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F536B699241690A900B3566F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F536B69A241690A900B3566F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F536B69D241690A900B3566F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F536B69E241690A900B3566F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F536B6A0241690A900B3566F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9GQFJY4Z92;
+				INFOPLIST_FILE = "LiquidMetal2D-Demo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mattcasanova.LiquidMetal2D-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F536B6A1241690A900B3566F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9GQFJY4Z92;
+				INFOPLIST_FILE = "LiquidMetal2D-Demo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mattcasanova.LiquidMetal2D-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F536B686241690A800B3566F /* Build configuration list for PBXProject "LiquidMetal2D-Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F536B69D241690A900B3566F /* Debug */,
+				F536B69E241690A900B3566F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F536B69F241690A900B3566F /* Build configuration list for PBXNativeTarget "LiquidMetal2D-Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F536B6A0241690A900B3566F /* Debug */,
+				F536B6A1241690A900B3566F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F536B6A3241691DB00B3566F /* XCRemoteSwiftPackageReference "LiquidMetal2D" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:mattCasanova/LiquidMetal2D.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.0.12;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F536B6A4241691DB00B3566F /* LiquidMetal2D */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F536B6A3241691DB00B3566F /* XCRemoteSwiftPackageReference "LiquidMetal2D" */;
+			productName = LiquidMetal2D;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = F536B683241690A800B3566F /* Project object */;
+}

@@ -1,6 +1,6 @@
 
-# Created by https://www.gitignore.io/api/c,osx,vim,c++,xcode,macos,swift,swiftpm,objective-c,visualstudiocode,swiftpackagemanager
-# Edit at https://www.gitignore.io/?templates=c,osx,vim,c++,xcode,macos,swift,swiftpm,objective-c,visualstudiocode,swiftpackagemanager
+# Created by https://www.gitignore.io/api/c,osx,vim,c++,xcode,macos,swift,objective-c,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=c,osx,vim,c++,xcode,macos,swift,objective-c,visualstudiocode
 
 ### C ###
 # Prerequisites
@@ -228,15 +228,6 @@ Dependencies/
 # https://github.com/johnno1962/injectionforxcode
 
 
-### SwiftPackageManager ###
-Packages
-xcuserdata
-*.xcodeproj
-
-
-### SwiftPM ###
-
-
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
@@ -293,4 +284,4 @@ tags
 ### Xcode Patch ###
 **/xcshareddata/WorkspaceSettings.xcsettings
 
-# End of https://www.gitignore.io/api/c,osx,vim,c++,xcode,macos,swift,swiftpm,objective-c,visualstudiocode,swiftpackagemanager
+# End of https://www.gitignore.io/api/c,osx,vim,c++,xcode,macos,swift,objective-c,visualstudiocode

@@ -15,8 +15,8 @@ class ViewController: LiquidViewController {
     super.viewDidLoad()
     
     let sceneFactory = SceneFactory()
-    sceneFactory.addScene(type: SceneTypes.visualDemo, builder: GenericSceneBuilder<VisualDemo>())
-    sceneFactory.addScene(type: SceneTypes.inputDemo,  builder: GenericSceneBuilder<InputDemo>())
+    sceneFactory.addScene(type: SceneTypes.visualDemo, builder: TSceneBuilder<VisualDemo>())
+    sceneFactory.addScene(type: SceneTypes.inputDemo,  builder: TSceneBuilder<InputDemo>())
     
     let renderer = DefaultRenderer(
       parentView: self.view,

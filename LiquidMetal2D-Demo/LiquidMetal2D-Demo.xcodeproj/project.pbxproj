@@ -20,6 +20,11 @@
 		F536B6B32416926800B3566F /* playerShip1_orange.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B02416926800B3566F /* playerShip1_orange.png */; };
 		F536B6B42416926800B3566F /* playerShip1_green.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B12416926800B3566F /* playerShip1_green.png */; };
 		F536B6B52416926800B3566F /* playerShip1_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B22416926800B3566F /* playerShip1_blue.png */; };
+		F57FE96D2426D439005D5A59 /* BehavoirObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE96C2426D439005D5A59 /* BehavoirObj.swift */; };
+		F57FE9702426D808005D5A59 /* RandomAngleBehavoir.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE96F2426D808005D5A59 /* RandomAngleBehavoir.swift */; };
+		F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */; };
+		F57FE9762427C72F005D5A59 /* MoveRightBehavoir.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9752427C72F005D5A59 /* MoveRightBehavoir.swift */; };
+		F57FE9782427CEF3005D5A59 /* MoveRightState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9772427CEF3005D5A59 /* MoveRightState.swift */; };
 		F5EDA0B42416952400C42A29 /* InputDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EDA0B32416952400C42A29 /* InputDemo.swift */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +43,11 @@
 		F536B6B02416926800B3566F /* playerShip1_orange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_orange.png; sourceTree = "<group>"; };
 		F536B6B12416926800B3566F /* playerShip1_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_green.png; sourceTree = "<group>"; };
 		F536B6B22416926800B3566F /* playerShip1_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_blue.png; sourceTree = "<group>"; };
+		F57FE96C2426D439005D5A59 /* BehavoirObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BehavoirObj.swift; sourceTree = "<group>"; };
+		F57FE96F2426D808005D5A59 /* RandomAngleBehavoir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAngleBehavoir.swift; sourceTree = "<group>"; };
+		F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAngleState.swift; sourceTree = "<group>"; };
+		F57FE9752427C72F005D5A59 /* MoveRightBehavoir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightBehavoir.swift; sourceTree = "<group>"; };
+		F57FE9772427CEF3005D5A59 /* MoveRightState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightState.swift; sourceTree = "<group>"; };
 		F5EDA0B32416952400C42A29 /* InputDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputDemo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +82,8 @@
 		F536B68D241690A800B3566F /* LiquidMetal2D-Demo */ = {
 			isa = PBXGroup;
 			children = (
+				F57FE96E2426D486005D5A59 /* behavoirs */,
+				F57FE96B2426D3B9005D5A59 /* gameObjs */,
 				F536B6B72416939700B3566F /* textures */,
 				F536B6B62416928500B3566F /* scenes */,
 				F536B6AA2416922E00B3566F /* Constants.swift */,
@@ -112,6 +124,41 @@
 				F536B6B02416926800B3566F /* playerShip1_orange.png */,
 			);
 			name = textures;
+			sourceTree = "<group>";
+		};
+		F57FE96B2426D3B9005D5A59 /* gameObjs */ = {
+			isa = PBXGroup;
+			children = (
+				F57FE96C2426D439005D5A59 /* BehavoirObj.swift */,
+			);
+			name = gameObjs;
+			sourceTree = "<group>";
+		};
+		F57FE96E2426D486005D5A59 /* behavoirs */ = {
+			isa = PBXGroup;
+			children = (
+				F57FE9742427C6B8005D5A59 /* MoveRight */,
+				F57FE9712426D8C5005D5A59 /* RandomAngle */,
+			);
+			name = behavoirs;
+			sourceTree = "<group>";
+		};
+		F57FE9712426D8C5005D5A59 /* RandomAngle */ = {
+			isa = PBXGroup;
+			children = (
+				F57FE96F2426D808005D5A59 /* RandomAngleBehavoir.swift */,
+				F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */,
+			);
+			name = RandomAngle;
+			sourceTree = "<group>";
+		};
+		F57FE9742427C6B8005D5A59 /* MoveRight */ = {
+			isa = PBXGroup;
+			children = (
+				F57FE9752427C72F005D5A59 /* MoveRightBehavoir.swift */,
+				F57FE9772427CEF3005D5A59 /* MoveRightState.swift */,
+			);
+			name = MoveRight;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,13 +241,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */,
 				F536B6AE2416925800B3566F /* VisualDemo.swift in Sources */,
+				F57FE96D2426D439005D5A59 /* BehavoirObj.swift in Sources */,
 				F536B693241690A800B3566F /* ViewController.swift in Sources */,
 				F536B6AF2416925800B3566F /* SceneTypes.swift in Sources */,
 				F536B68F241690A800B3566F /* AppDelegate.swift in Sources */,
 				F536B691241690A800B3566F /* SceneDelegate.swift in Sources */,
 				F5EDA0B42416952400C42A29 /* InputDemo.swift in Sources */,
+				F57FE9762427C72F005D5A59 /* MoveRightBehavoir.swift in Sources */,
+				F57FE9782427CEF3005D5A59 /* MoveRightState.swift in Sources */,
 				F536B6AB2416922F00B3566F /* Constants.swift in Sources */,
+				F57FE9702426D808005D5A59 /* RandomAngleBehavoir.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,7 +457,7 @@
 			repositoryURL = "git@github.com:mattCasanova/LiquidMetal2D.git";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.0.12;
+				minimumVersion = 0.0.25;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

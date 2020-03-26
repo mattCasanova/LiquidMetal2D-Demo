@@ -22,6 +22,7 @@ class InputDemo: Scene {
   var objects = [GameObj]()
   
   let spawnPos = Vector2D()
+  var bounds = Bounds(maxX: 0, minX: 0, maxY: 0, minY: 0)
   
   var uiView: UIView!
   var nextButton: UIButton!
@@ -39,16 +40,13 @@ class InputDemo: Scene {
     textures.append(renderer.loadTexture(name: "playerShip1_green", ext: "png", isMipmaped: true, shouldFlip: true))
     textures.append(renderer.loadTexture(name: "playerShip1_orange", ext: "png", isMipmaped: true, shouldFlip: true))
     
-    
-    
+    renderer.setCamera(x: 0, y: 0, distance: distance)
     renderer.setPerspective(
       fov: GameMath.toRadian(fromDegree: getFOV()),
       aspect: renderer.screenAspect,
       nearZ: PerspectiveData.defaultNearZ,
       farZ: PerspectiveData.defaultFarZ)
-    
-    renderer.setCamera(x: 0, y: 0, distance: distance)
-    
+  
     
     let clearColor = Vector3D()
     clearColor.r = 0
@@ -60,6 +58,10 @@ class InputDemo: Scene {
     createUI()
   }
   
+  func resume() {
+  
+  }
+  
   func update(dt: Float) {
     
     let touch = input.getWorldTouch()
@@ -68,13 +70,10 @@ class InputDemo: Scene {
       spawnPos.setX(touch.x, andY: touch.y)
     }
     
+    
     for i in 0..<objectCount {
-      let obj = objects[i]
-      obj.position += obj.velocity * dt
-      
-      if obj.position.lengthSquared >= 3600 {
-        randomize(obj: obj)
-      }
+      let obj = objects[i] as! BehavoirObj
+      obj.behavoir.update(dt: dt)
     }
     
     //We can sort by scale to give the illusion of 3D
@@ -84,13 +83,13 @@ class InputDemo: Scene {
   func draw() {
     let worldUniforms = TransformUniformData()
     
-    renderer.beginRenderPass()
-    renderer.renderPerspective()
+    renderer.beginPass()
+    renderer.usePerspective()
     
     for i in 0..<objectCount {
       let obj = objects[i]
       
-      renderer.setTexture(textureId: obj.textureID)
+      renderer.useTexture(textureId: obj.textureID)
       worldUniforms.transform.setToScaleX(
         obj.scale.x,
         scaleY:  obj.scale.y,
@@ -101,11 +100,15 @@ class InputDemo: Scene {
       renderer.draw(uniforms: worldUniforms)
     }
     
-    renderer.endRenderPass()
+    renderer.endPass()
   }
   
   func shutdown() {
+    objects.removeAll()
     uiView.removeFromSuperview()
+    
+    textures.forEach({ renderer.unloadTexture(textureId: $0) })
+    textures.removeAll()
   }
   
   func resize() {
@@ -135,6 +138,8 @@ class InputDemo: Scene {
       aspect: renderer.screenAspect,
       nearZ: PerspectiveData.defaultNearZ,
       farZ: PerspectiveData.defaultFarZ)
+    
+    bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
   }
   
   private func getFOV() -> Float {
@@ -144,42 +149,30 @@ class InputDemo: Scene {
   private func createObjects() {
     objects.removeAll()
     
+    bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+    
+    let getSpawnLocation = { [unowned self] in
+      return self.spawnPos
+    }
+    
+    let getBounds = { [unowned self] in
+      return self.bounds
+    }
+    
     for _ in 0..<objectCount {
-      let obj = GameObj()
-      randomize(obj: obj)
+      let obj = BehavoirObj()
+      obj.behavoir = RandomAngleBehavoir(
+        obj: obj,
+        getSpawnLocation: getSpawnLocation,
+        getBounds: getBounds,
+        textures: textures)
+      
+      
       objects.append(obj)
     }
   }
   
-  private func randomize(obj: GameObj) {
-    /*
-     obj.zOrder = 0
-     obj.position.x = 0
-     obj.position.y = 0
-     
-     
-     obj.scale.setX(20, andY: 20)
-     obj.textureID = 0
-     obj.rotation = 0
-     obj.velocity.setX(0, andY: 0)
-     obj.textureID = Int.random(in: 0...2)
-     */
-    
-    
-    obj.zOrder = 0
-    obj.position.x = spawnPos.x
-    obj.position.y = spawnPos.y
-    
-    let scale = Float.random(in: 0.25...1.5)
-    obj.scale.setX(scale, andY: scale)
-    
-    obj.rotation = Float.random(in: 0...GameMath.twoPi())
-    obj.velocity.setRotation(obj.rotation)
-    obj.velocity *= 5 * scale
-    obj.textureID = Int.random(in: 0...2)
-    
-  }
-  
+
   private func createUI() {
     uiView = UIView(frame: renderer.view.safeAreaLayoutGuide.layoutFrame)
     renderer.view.addSubview(uiView)

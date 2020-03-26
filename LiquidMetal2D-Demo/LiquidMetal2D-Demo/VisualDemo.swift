@@ -16,8 +16,8 @@ class VisualDemo: Scene {
   private var renderer: Renderer!
   private var input: InputReader!
   
-
-
+  
+  
   var backgroundTime: Float = 0
   let maxBackgroundChangeTime: Float = 2
   
@@ -27,7 +27,7 @@ class VisualDemo: Scene {
   var distance: Float = 40
   
   let objectCount = GameConstants.MAX_OBJECTS
-  var objects = [GameObj]()
+  var objects = [BehavoirObj]()
   
   var startColor = Vector3D()
   var endColor = Vector3D()
@@ -37,6 +37,8 @@ class VisualDemo: Scene {
   var prevButton: UIButton!
   var pushButton: UIButton!
   
+  private let scheduler = Scheduler()
+  
   private var textures = [Int]()
   
   func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
@@ -44,84 +46,93 @@ class VisualDemo: Scene {
     self.renderer = renderer
     self.input = input
     
-    startColor.r = 0.5
+    startColor.r = 0.7
     startColor.g = 0
-    startColor.b = 0.5
+    startColor.b = 0.7
     
-    endColor.r = 0
-    endColor.g = 0
-    endColor.b = 0
+    endColor.r = 0.0
+    endColor.g = 1.0
+    endColor.b = 1.0
     
-    textures.append(renderer.loadTexture(name: "playerShip1_blue", ext: "png", isMipmaped: true, shouldFlip: true))
-    textures.append(renderer.loadTexture(name: "playerShip1_green", ext: "png", isMipmaped: true, shouldFlip: true))
-    textures.append(renderer.loadTexture(name: "playerShip1_orange", ext: "png", isMipmaped: true, shouldFlip: true))
+    let textureNames = [
+      "playerShip1_blue",
+      "playerShip1_green",
+      "playerShip1_orange"
+    ]
+    textureNames.forEach({
+      textures.append(renderer.loadTexture(
+        name: $0,
+        ext: "png",
+        isMipmaped: true,
+        shouldFlip: true))
+    })
     
+    renderer.setCamera(x: 0, y: 0, distance: distance)
+    renderer.setPerspective(
+      fov: GameMath.toRadian(fromDegree: getFOV()),
+      aspect: renderer.screenAspect,
+      nearZ: PerspectiveData.defaultNearZ,
+      farZ: PerspectiveData.defaultFarZ)
+
+    
+    scheduler.add(task: Task(time: maxBackgroundChangeTime, action: { [unowned self] in
+      self.backgroundTime = 0
+      let temp = self.startColor
+      self.startColor = self.endColor
+      self.endColor = temp
+    }))
+    
+    createObjects()
+    createUI()
+  }
+  
+  func resume() {
+    uiView.isHidden = false
+  }
+  
+  func resize() {
+    uiView.frame = renderer.view.safeAreaLayoutGuide.layoutFrame
+    
+    let frameWidth = uiView.frame.width
+    let frameHeight = uiView.frame.height
+    let buttonWidth: CGFloat = 100
+    let buttonHeight: CGFloat = 44
+    
+    nextButton.frame = CGRect(
+      x: 0,
+      y: frameHeight - buttonHeight,
+      width: buttonWidth,
+      height: buttonHeight)
+    
+    prevButton.frame = CGRect(
+      x: frameWidth - buttonWidth,
+      y: frameHeight - buttonHeight,
+      width: buttonWidth,
+      height: buttonHeight)
+    
+    pushButton.frame = CGRect(
+      x: (frameWidth / 2) - (buttonWidth / 2),
+      y: frameHeight - buttonHeight,
+      width: buttonWidth,
+      height: buttonHeight)
     
     renderer.setPerspective(
       fov: GameMath.toRadian(fromDegree: getFOV()),
       aspect: renderer.screenAspect,
       nearZ: PerspectiveData.defaultNearZ,
       farZ: PerspectiveData.defaultFarZ)
-    renderer.setCamera(x: 0, y: 0, distance: distance)
-    
-    createObjects()
-    createUI()
-  }
-
-  
-  func resize() {
-    uiView.frame = renderer.view.safeAreaLayoutGuide.layoutFrame
-    
-    nextButton.frame = CGRect(
-      x: 0,
-      y: uiView.frame.height - 44,
-      width: 100,
-      height: 44)
-    
-    let x = uiView.frame.width - 100
-    prevButton.frame = CGRect(
-      x: x,
-      y: uiView.frame.height - 44,
-      width: 100,
-      height: 44)
-    
-    pushButton.frame = CGRect(
-      x: uiView.frame.width / 2 - 50,
-      y: uiView.frame.height - 44,
-      width: 100,
-      height: 44)
-    
-    renderer.setPerspective(
-    fov: GameMath.toRadian(fromDegree: getFOV()),
-    aspect: renderer.screenAspect,
-    nearZ: PerspectiveData.defaultNearZ,
-    farZ: PerspectiveData.defaultFarZ)
   }
   
   func update(dt: Float) {
-
     
-    cameraTime += dt * 0.1 //To slow down the camera
+    scheduler.update(dt: dt)
+    
+    
+    cameraTime += dt * 0.5 //To slow down the camera
     let newDist = -sinf(cameraTime) * camDistance + distance
     renderer.setCamera(x: 0, y: 0, distance: newDist)
     
-    /*
-    let touch = input.getWorldTouch()
-    
-    if let touch = touch {
-      renderer.setCamera(x: 0, y: 0, distance: newDist)
-    } else {
-      renderer.setCamera(x: 0, y: 0, distance: newDist)
-    }*/
-    
-    
-    //renderer.setCamera(x: 0, y: 0, distance: distance)
-    //let vec = renderer.unProject(screenCoordinate: Vector2D(x: 0, y: 0))
-    
-    /*if let vec = input.getWorldTouch() {
-      objects[0].rotation = vec.angle
-    }*/
-    
+
     
     backgroundTime += dt
     let clearColor = startColor.linearInterpolate(
@@ -130,20 +141,10 @@ class VisualDemo: Scene {
     
     renderer.setClearColor(clearColor: clearColor)
     
-    if backgroundTime >= maxBackgroundChangeTime {
-      backgroundTime = 0
-      let temp = startColor
-      startColor = endColor
-      endColor = temp
-    }
     
     for i in 0..<objectCount {
       let obj = objects[i]
-      obj.position += obj.velocity * dt
-      
-      if obj.position.lengthSquared >= 3600 {
-        randomize(obj: obj)
-      }
+      obj.behavoir.update(dt: dt)
     }
     
     //We must sort by z before drawing to have alpha blending work correctly
@@ -153,13 +154,13 @@ class VisualDemo: Scene {
   func draw() {
     let worldUniforms = TransformUniformData()
     
-    renderer.beginRenderPass()
-    renderer.renderPerspective()
+    renderer.beginPass()
+    renderer.usePerspective()
     
     for i in 0..<objectCount {
       let obj = objects[i]
       
-      renderer.setTexture(textureId: obj.textureID)
+      renderer.useTexture(textureId: obj.textureID)
       worldUniforms.transform.setToScaleX(
         obj.scale.x,
         scaleY:  obj.scale.y,
@@ -170,11 +171,15 @@ class VisualDemo: Scene {
       renderer.draw(uniforms: worldUniforms)
     }
     
-    renderer.endRenderPass()
+    renderer.endPass()
   }
   
   func shutdown() {
+    objects.removeAll()
     uiView.removeFromSuperview()
+    
+    textures.forEach({ renderer.unloadTexture(textureId: $0) })
+    textures.removeAll()
   }
   
   
@@ -185,52 +190,17 @@ class VisualDemo: Scene {
   private func createObjects() {
     objects.removeAll()
     
+    let getBounds = { [unowned self] (zOrder: Float) -> Bounds in
+      return self.renderer.getWorldBounds(cameraDistance: self.distance + self.camDistance, zOrder: zOrder)
+    }
+    
     for _ in 0..<objectCount {
-      let obj = GameObj()
-      randomize(obj: obj)
+      let obj = BehavoirObj()
+      
+      obj.behavoir = MoveRightBehavoir(obj: obj, getBounds: getBounds, textures: textures)
+      
       objects.append(obj)
     }
-  }
-  
-  private func randomize(obj: GameObj) {
-    /*
-    obj.zOrder = 0
-    obj.position.x = 0
-    obj.position.y = 0
-    
-    
-    obj.scale.setX(20, andY: 20)
-    obj.textureID = 0
-    obj.rotation = 0
-    obj.velocity.setX(0, andY: 0)
-    obj.textureID = Int.random(in: 0...2)
- */
-    
-    obj.zOrder = Float.random(in: 0...60)
-     obj.position.x = -30
-     obj.position.y = Float.random(in: -10...10)
-     
-     
-     obj.scale.setX(1, andY: 1)
-     obj.textureID = 0
-     obj.rotation = 0
-     obj.velocity.setX(Float.random(in: 2...10), andY: 0)
-     obj.textureID = Int.random(in: 0...2)
-     
-    
-    /*
-     obj.position.x = 0//Float.random(in: -5...5)
-     obj.position.y = 0//Float.random(in: -10...10)
-     
-     let scale = Float.random(in: 0.25...5)
-     obj.scale.setX(scale, andY: scale)
-     
-     
-     
-     obj.rotation = Float.random(in: 0...GameMath.twoPi())
-     obj.velocity.setRotation(obj.rotation)
-     obj.velocity *= (Float.random(in: 1...10))
-     */
   }
   
   private func createUI() {
@@ -268,6 +238,7 @@ class VisualDemo: Scene {
   }
   
   @objc func onPush() {
+    uiView.isHidden = true
     sceneMgr.pushScene(type: SceneTypes.inputDemo)
   }
   

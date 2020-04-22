@@ -9,5 +9,5 @@
 import LiquidMetal2D
 
 class BehavoirObj: GameObj {
-  var behavoir: Behavoir = Behavoir()
+  var behavoir: Behavoir = NilBehavoir()
 }

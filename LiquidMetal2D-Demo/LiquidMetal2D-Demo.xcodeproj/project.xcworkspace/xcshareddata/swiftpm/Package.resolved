@@ -6,8 +6,8 @@
         "repositoryURL": "git@github.com:mattCasanova/LiquidMetal2D.git",
         "state": {
           "branch": null,
-          "revision": "8fa3ff5cf6187cfe22f64fc945a2815214b3bb71",
-          "version": "0.0.28"
+          "revision": "f03123ee6e343b8ca0da0afafff25641600c62dd",
+          "version": "0.1.1"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/mattCasanova/MetalMath.git",
         "state": {
           "branch": null,
-          "revision": "e4873952a8084427cf069dcbd24baeedd3fe81e6",
-          "version": "0.0.3"
+          "revision": "ed063fbf0c02567f104cb0ace859c42d172ea4c8",
+          "version": "0.1.0"
         }
       }
     ]

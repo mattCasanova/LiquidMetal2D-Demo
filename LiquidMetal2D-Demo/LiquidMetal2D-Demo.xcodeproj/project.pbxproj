@@ -457,7 +457,7 @@
 			repositoryURL = "git@github.com:mattCasanova/LiquidMetal2D.git";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.0.25;
+				minimumVersion = 0.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

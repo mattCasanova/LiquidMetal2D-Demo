@@ -9,12 +9,13 @@
 import LiquidMetal2D
 
 class MoveRightBehavoir: Behavoir {
-  
-  private let moveRightState: MoveRightState
-  
-  init(obj: BehavoirObj, getBounds: @escaping (_ zOrder: Float) -> Bounds, textures: [Int]) {
-    moveRightState = MoveRightState(obj: obj, getBounds: getBounds, textures: textures)
-    super.init(startState: moveRightState)
-  }
-  
+    var current: State!
+    
+    private let moveRightState: MoveRightState
+    
+    init(obj: BehavoirObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds, textures: [Int]) {
+        moveRightState = MoveRightState(obj: obj, getBounds: getBounds, textures: textures)
+        setStartState(startState: moveRightState)
+    }
+    
 }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -20,6 +20,17 @@
 		F536B6B32416926800B3566F /* playerShip1_orange.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B02416926800B3566F /* playerShip1_orange.png */; };
 		F536B6B42416926800B3566F /* playerShip1_green.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B12416926800B3566F /* playerShip1_green.png */; };
 		F536B6B52416926800B3566F /* playerShip1_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B22416926800B3566F /* playerShip1_blue.png */; };
+		F53AAB0F2F6770A7003831F3 /* ExplosionDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */; };
+		F53AAB102F6770A7003831F3 /* FindAndGoBehavoir.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB082F6770A7003831F3 /* FindAndGoBehavoir.swift */; };
+		F53AAB112F6770A7003831F3 /* FindAndGoStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB092F6770A7003831F3 /* FindAndGoStates.swift */; };
+		F53AAB122F6770A7003831F3 /* SchedulerDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0D2F6770A7003831F3 /* SchedulerDemo.swift */; };
+		F53AAB132F6770A7003831F3 /* DemoSceneUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB062F6770A7003831F3 /* DemoSceneUI.swift */; };
+		F53AAB142F6770A7003831F3 /* PauseDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0A2F6770A7003831F3 /* PauseDemo.swift */; };
+		F53AAB152F6770A7003831F3 /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0B2F6770A7003831F3 /* PlayerState.swift */; };
+		F53AAB162F6770A7003831F3 /* PlayerStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0C2F6770A7003831F3 /* PlayerStateMachine.swift */; };
+		F53AAB172F6770A7003831F3 /* StateDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0E2F6770A7003831F3 /* StateDemo.swift */; };
+		F53AAB182F6770A7003831F3 /* CollisionDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB042F6770A7003831F3 /* CollisionDemo.swift */; };
+		F53AAB192F6770A7003831F3 /* CollisionObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB052F6770A7003831F3 /* CollisionObj.swift */; };
 		F57FE96D2426D439005D5A59 /* BehavoirObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE96C2426D439005D5A59 /* BehavoirObj.swift */; };
 		F57FE9702426D808005D5A59 /* RandomAngleBehavoir.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE96F2426D808005D5A59 /* RandomAngleBehavoir.swift */; };
 		F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */; };
@@ -43,6 +54,17 @@
 		F536B6B02416926800B3566F /* playerShip1_orange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_orange.png; sourceTree = "<group>"; };
 		F536B6B12416926800B3566F /* playerShip1_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_green.png; sourceTree = "<group>"; };
 		F536B6B22416926800B3566F /* playerShip1_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_blue.png; sourceTree = "<group>"; };
+		F53AAB042F6770A7003831F3 /* CollisionDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionDemo.swift; sourceTree = "<group>"; };
+		F53AAB052F6770A7003831F3 /* CollisionObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionObj.swift; sourceTree = "<group>"; };
+		F53AAB062F6770A7003831F3 /* DemoSceneUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSceneUI.swift; sourceTree = "<group>"; };
+		F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplosionDemo.swift; sourceTree = "<group>"; };
+		F53AAB082F6770A7003831F3 /* FindAndGoBehavoir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindAndGoBehavoir.swift; sourceTree = "<group>"; };
+		F53AAB092F6770A7003831F3 /* FindAndGoStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindAndGoStates.swift; sourceTree = "<group>"; };
+		F53AAB0A2F6770A7003831F3 /* PauseDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseDemo.swift; sourceTree = "<group>"; };
+		F53AAB0B2F6770A7003831F3 /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
+		F53AAB0C2F6770A7003831F3 /* PlayerStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStateMachine.swift; sourceTree = "<group>"; };
+		F53AAB0D2F6770A7003831F3 /* SchedulerDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerDemo.swift; sourceTree = "<group>"; };
+		F53AAB0E2F6770A7003831F3 /* StateDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateDemo.swift; sourceTree = "<group>"; };
 		F57FE96C2426D439005D5A59 /* BehavoirObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BehavoirObj.swift; sourceTree = "<group>"; };
 		F57FE96F2426D808005D5A59 /* RandomAngleBehavoir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAngleBehavoir.swift; sourceTree = "<group>"; };
 		F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAngleState.swift; sourceTree = "<group>"; };
@@ -82,6 +104,13 @@
 		F536B68D241690A800B3566F /* LiquidMetal2D-Demo */ = {
 			isa = PBXGroup;
 			children = (
+				F53AAB042F6770A7003831F3 /* CollisionDemo.swift */,
+				F53AAB052F6770A7003831F3 /* CollisionObj.swift */,
+				F53AAB062F6770A7003831F3 /* DemoSceneUI.swift */,
+				F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */,
+				F53AAB0A2F6770A7003831F3 /* PauseDemo.swift */,
+				F53AAB0D2F6770A7003831F3 /* SchedulerDemo.swift */,
+				F53AAB0E2F6770A7003831F3 /* StateDemo.swift */,
 				F57FE96E2426D486005D5A59 /* behavoirs */,
 				F57FE96B2426D3B9005D5A59 /* gameObjs */,
 				F536B6B72416939700B3566F /* textures */,
@@ -139,6 +168,10 @@
 			children = (
 				F57FE9742427C6B8005D5A59 /* MoveRight */,
 				F57FE9712426D8C5005D5A59 /* RandomAngle */,
+				F53AAB082F6770A7003831F3 /* FindAndGoBehavoir.swift */,
+				F53AAB092F6770A7003831F3 /* FindAndGoStates.swift */,
+				F53AAB0B2F6770A7003831F3 /* PlayerState.swift */,
+				F53AAB0C2F6770A7003831F3 /* PlayerStateMachine.swift */,
 			);
 			name = behavoirs;
 			sourceTree = "<group>";
@@ -242,6 +275,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */,
+				F53AAB0F2F6770A7003831F3 /* ExplosionDemo.swift in Sources */,
+				F53AAB102F6770A7003831F3 /* FindAndGoBehavoir.swift in Sources */,
+				F53AAB112F6770A7003831F3 /* FindAndGoStates.swift in Sources */,
+				F53AAB122F6770A7003831F3 /* SchedulerDemo.swift in Sources */,
+				F53AAB132F6770A7003831F3 /* DemoSceneUI.swift in Sources */,
+				F53AAB142F6770A7003831F3 /* PauseDemo.swift in Sources */,
+				F53AAB152F6770A7003831F3 /* PlayerState.swift in Sources */,
+				F53AAB162F6770A7003831F3 /* PlayerStateMachine.swift in Sources */,
+				F53AAB172F6770A7003831F3 /* StateDemo.swift in Sources */,
+				F53AAB182F6770A7003831F3 /* CollisionDemo.swift in Sources */,
+				F53AAB192F6770A7003831F3 /* CollisionObj.swift in Sources */,
 				F536B6AE2416925800B3566F /* VisualDemo.swift in Sources */,
 				F57FE96D2426D439005D5A59 /* BehavoirObj.swift in Sources */,
 				F536B693241690A800B3566F /* ViewController.swift in Sources */,
@@ -457,7 +501,7 @@
 			repositoryURL = "git@github.com:mattCasanova/LiquidMetal2D.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.3.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

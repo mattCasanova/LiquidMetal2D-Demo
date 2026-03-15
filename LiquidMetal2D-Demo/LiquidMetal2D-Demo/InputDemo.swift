@@ -10,204 +10,122 @@ import UIKit
 import simd
 import LiquidMetal2D
 
+/// Touch-spawn demo: 4500 ships spawn at the touch location and fly outward in random directions.
+/// Scale varies 0.25-1.5x, sorted by scale for depth illusion. Touch anywhere to redirect spawning.
+/// Demonstrates: touch input (world coordinates), spatial spawning, scale-based depth sorting.
 class InputDemo: Scene, @unchecked Sendable {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
-    
-    
+
     var distance: Float = 40
-    
+
     let objectCount = GameConstants.MAX_OBJECTS
     var objects = [GameObj]()
-    
+
     var spawnPos = simd_float2()
     var bounds = WorldBounds(maxX: 0, minX: 0, maxY: 0, minY: 0)
-    
-    var uiView: UIView!
-    var nextButton: UIButton!
-    var prevButton: UIButton!
-    var popButton: UIButton!
-    
+
+    private var ui: DemoSceneUI!
     private var textures = [Int]()
-    
+
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
-        
-        textures.append(renderer.loadTexture(name: "playerShip1_blue", ext: "png", isMipmaped: true))
-        textures.append(renderer.loadTexture(name: "playerShip1_green", ext: "png", isMipmaped: true))
-        textures.append(renderer.loadTexture(name: "playerShip1_orange", ext: "png", isMipmaped: true))
-        
+
+        ["playerShip1_blue", "playerShip1_green", "playerShip1_orange"].forEach {
+            textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
+        }
+
         renderer.setCamera(point: simd_float3(0, 0, distance))
         renderer.setPerspective(
             fov: degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        
         renderer.setClearColor(color: simd_float3())
-        
+
         createObjects()
-        createUI()
+
+        ui = DemoSceneUI(
+            parentView: renderer.view, sceneType: .inputDemo, target: self,
+            prevAction: #selector(onPrev), nextAction: #selector(onNext),
+            pauseAction: #selector(onPause))
     }
-    
-    func resume() {
-        
-    }
-    
-    func update(dt: Float) {
-        
-        let touch = input.getWorldTouch(forZ: 0)
-        
-        if let touch = touch {
-            spawnPos.set(touch.x, touch.y)
-        }
-        
-        
-        for i in 0..<objectCount {
-            let obj = objects[i] as! BehavoirObj
-            obj.behavoir.update(dt: dt)
-        }
-        
-        //We can sort by scale to give the illusion of 3D
-        objects.sort(by: {first, second in return first.scale.x < second.scale.x })
-    }
-    
-    func draw() {
-        let worldUniforms = WorldUniform()
-        
-        renderer.beginPass()
-        renderer.usePerspective()
-        
-        for i in 0..<objectCount {
-            let obj = objects[i]
-            
-            renderer.useTexture(textureId: obj.textureID)
-            
-            worldUniforms.transform.setToTransform2D(
-                scale: obj.scale,
-                angle: obj.rotation,
-                translate: simd_float3(obj.position, obj.zOrder))
-            renderer.draw(uniforms: worldUniforms)
-        }
-        
-        renderer.endPass()
-    }
-    
-    func shutdown() {
-        objects.removeAll()
-        uiView.removeFromSuperview()
-        
-        textures.forEach({ renderer.unloadTexture(textureId: $0) })
-        textures.removeAll()
-    }
-    
+
+    func resume() { ui.view.isHidden = false }
+
     func resize() {
-        uiView.frame = renderer.view.safeAreaLayoutGuide.layoutFrame
-        
-        nextButton.frame = CGRect(
-            x: 0,
-            y: uiView.frame.height - 44,
-            width: 100,
-            height: 44)
-        
-        let x = uiView.frame.width - 100
-        prevButton.frame = CGRect(
-            x: x,
-            y: uiView.frame.height - 44,
-            width: 100,
-            height: 44)
-        
-        popButton.frame = CGRect(
-            x: uiView.frame.width / 2 - 50,
-            y: uiView.frame.height - 44,
-            width: 100,
-            height: 44)
-        
+        ui.layout()
         renderer.setPerspective(
             fov: degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        
         bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
     }
-    
-    private func getFOV() -> Float {
-        return renderer.screenWidth <= renderer.screenHeight ? 90 : 45;
+
+    func update(dt: Float) {
+        if let touch = input.getWorldTouch(forZ: 0) {
+            spawnPos.set(touch.x, touch.y)
+        }
+
+        for i in 0..<objectCount {
+            let obj = objects[i] as! BehavoirObj
+            obj.behavoir.update(dt: dt)
+        }
+
+        objects.sort(by: { $0.scale.x < $1.scale.x })
     }
-    
+
+    func draw() {
+        let worldUniforms = WorldUniform()
+        renderer.beginPass()
+        renderer.usePerspective()
+
+        for i in 0..<objectCount {
+            let obj = objects[i]
+            renderer.useTexture(textureId: obj.textureID)
+            worldUniforms.transform.setToTransform2D(
+                scale: obj.scale, angle: obj.rotation,
+                translate: simd_float3(obj.position, obj.zOrder))
+            renderer.draw(uniforms: worldUniforms)
+        }
+
+        renderer.endPass()
+    }
+
+    func shutdown() {
+        objects.removeAll()
+        ui.removeFromSuperview()
+        textures.forEach { renderer.unloadTexture(textureId: $0) }
+        textures.removeAll()
+    }
+
+    private func getFOV() -> Float {
+        renderer.screenWidth <= renderer.screenHeight ? 90 : 45
+    }
+
     private func createObjects() {
         objects.removeAll()
-        
         bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
-        
-        let getSpawnLocation = { [unowned self] in
-            return self.spawnPos
-        }
-        
-        let getBounds = { [unowned self] in
-            return self.bounds
-        }
-        
+
+        let getSpawnLocation = { [unowned self] in self.spawnPos }
+        let getBounds = { [unowned self] in self.bounds }
+
         for _ in 0..<objectCount {
             let obj = BehavoirObj()
             obj.behavoir = RandomAngleBehavoir(
-                obj: obj,
-                getSpawnLocation: getSpawnLocation,
-                getBounds: getBounds,
-                textures: textures)
-            
-            
+                obj: obj, getSpawnLocation: getSpawnLocation,
+                getBounds: getBounds, textures: textures)
             objects.append(obj)
         }
     }
-    
-    
-    private func createUI() {
-        uiView = UIView(frame: renderer.view.safeAreaLayoutGuide.layoutFrame)
-        renderer.view.addSubview(uiView)
-        
-        nextButton = UIButton(frame: CGRect(x: 0, y: uiView.frame.height - 44, width: 100, height: 44))
-        nextButton.backgroundColor = UIColor.blue
-        nextButton.setTitle("Next", for: .normal)
-        nextButton.layer.cornerRadius = 4
-        nextButton.addTarget(self, action: #selector(onNext), for: .touchUpInside)
-        uiView.addSubview(nextButton)
-        
-        prevButton = UIButton(frame: CGRect(x: uiView.frame.width + 100, y: uiView.frame.height - 44, width: 100, height: 44))
-        prevButton.backgroundColor = UIColor.blue
-        prevButton.setTitle("Prev", for: .normal)
-        prevButton.layer.cornerRadius = 4
-        prevButton.addTarget(self, action: #selector(onPrev), for: .touchUpInside)
-        uiView.addSubview(prevButton)
-        
-        popButton = UIButton(frame: CGRect(x: (uiView.frame.width / 2) - 50 , y: uiView.frame.height - 44, width: 100, height: 44))
-        popButton.backgroundColor = UIColor.red
-        popButton.setTitle("Pop", for: .normal)
-        popButton.layer.cornerRadius = 4
-        popButton.addTarget(self, action: #selector(onPop), for: .touchUpInside)
-        uiView.addSubview(popButton)
-    }
-    
-    @objc func onNext() {
-        sceneMgr.setScene(type: SceneTypes.visualDemo)
-    }
-    
-    @objc func onPrev() {
-        sceneMgr.setScene(type: SceneTypes.visualDemo)
-    }
-    
-    @objc func onPop() {
-        sceneMgr.popScene()
-    }
-    
-    static func build() -> Scene {
-        return InputDemo()
-    }
-    
+
+    @objc func onPrev() { if let s = SceneTypes.inputDemo.prev() { sceneMgr.setScene(type: s) } }
+    @objc func onNext() { if let s = SceneTypes.inputDemo.next() { sceneMgr.setScene(type: s) } }
+    @objc func onPause() { ui.view.isHidden = true; sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
+
+    static func build() -> Scene { return InputDemo() }
 }
-
-

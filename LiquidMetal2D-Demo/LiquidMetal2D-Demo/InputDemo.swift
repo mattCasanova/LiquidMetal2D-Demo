@@ -8,10 +8,9 @@
 
 import UIKit
 import simd
-import MetalMath
 import LiquidMetal2D
 
-class InputDemo: Scene {
+class InputDemo: Scene, @unchecked Sendable {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
@@ -77,7 +76,7 @@ class InputDemo: Scene {
     }
     
     func draw() {
-        let worldUniforms = TransformUniformData()
+        let worldUniforms = WorldUniform()
         
         renderer.beginPass()
         renderer.usePerspective()

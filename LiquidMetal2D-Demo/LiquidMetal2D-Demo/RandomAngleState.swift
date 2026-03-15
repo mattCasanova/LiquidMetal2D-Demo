@@ -7,7 +7,6 @@
 //
 
 import simd
-import MetalMath
 import LiquidMetal2D
 
 class RandomAngleState: State {

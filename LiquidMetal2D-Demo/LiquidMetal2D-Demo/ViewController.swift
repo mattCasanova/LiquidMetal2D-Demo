@@ -21,7 +21,7 @@ class ViewController: LiquidViewController {
     let renderer = DefaultRenderer(
       parentView: self.view,
       maxObjects: GameConstants.MAX_OBJECTS,
-      uniformSize: TransformUniformData.typeSize())
+      uniformSize: WorldUniform.typeSize())
     
     gameEngine = DefaultEngine(
       renderer: renderer,

@@ -1,25 +1,105 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "LiquidMetal2D",
-        "repositoryURL": "git@github.com:mattCasanova/LiquidMetal2D.git",
-        "state": {
-          "branch": null,
-          "revision": "f03123ee6e343b8ca0da0afafff25641600c62dd",
-          "version": "0.1.1"
-        }
-      },
-      {
-        "package": "MetalMath",
-        "repositoryURL": "https://github.com/mattCasanova/MetalMath.git",
-        "state": {
-          "branch": null,
-          "revision": "ed063fbf0c02567f104cb0ace859c42d172ea4c8",
-          "version": "0.1.0"
-        }
+  "originHash" : "dc7d42d5ad047447d7b4e4ef1f8ba363b1fca60a20c01ae0d55fe6f6209245d8",
+  "pins" : [
+    {
+      "identity" : "collectionconcurrencykit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JohnSundell/CollectionConcurrencyKit.git",
+      "state" : {
+        "revision" : "b4f23e24b5a1bff301efc5e70871083ca029ff95",
+        "version" : "0.2.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "cryptoswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
+      "state" : {
+        "revision" : "e45a26384239e028ec87fbcc788f513b67e10d8f",
+        "version" : "1.9.0"
+      }
+    },
+    {
+      "identity" : "liquidmetal2d",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:mattCasanova/LiquidMetal2D.git",
+      "state" : {
+        "revision" : "68c25c5cd238ca77eaedef2f2f99e3d3ee840d95",
+        "version" : "0.3.0"
+      }
+    },
+    {
+      "identity" : "sourcekitten",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jpsim/SourceKitten.git",
+      "state" : {
+        "revision" : "731ffe6a35344a19bab00cdca1c952d5b4fee4d8",
+        "version" : "0.37.2"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "c5d11a805e765f52ba34ec7284bd4fcd6ba68615",
+        "version" : "1.7.0"
+      }
+    },
+    {
+      "identity" : "swift-filename-matcher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ileitch/swift-filename-matcher",
+      "state" : {
+        "revision" : "eef5ac0b6b3cdc64b3039b037bed2def8a1edaeb",
+        "version" : "2.0.1"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "revision" : "65b02a90ad2cc213e09309faeb7f6909e0a8577a",
+        "version" : "604.0.0-prerelease-2026-01-20"
+      }
+    },
+    {
+      "identity" : "swiftlint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/realm/SwiftLint",
+      "state" : {
+        "revision" : "88952528a590ed366c6f76f6bfb980b5ebdcefc1",
+        "version" : "0.63.2"
+      }
+    },
+    {
+      "identity" : "swiftytexttable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scottrhoyt/SwiftyTextTable.git",
+      "state" : {
+        "revision" : "c6df6cf533d120716bff38f8ff9885e1ce2a4ac3",
+        "version" : "0.9.0"
+      }
+    },
+    {
+      "identity" : "swxmlhash",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/drmohundro/SWXMLHash.git",
+      "state" : {
+        "revision" : "a853604c9e9a83ad9954c7e3d2a565273982471f",
+        "version" : "7.0.2"
+      }
+    },
+    {
+      "identity" : "yams",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jpsim/Yams.git",
+      "state" : {
+        "revision" : "deaf82e867fa2cbd3cd865978b079bfcf384ac28",
+        "version" : "6.2.1"
+      }
+    }
+  ],
+  "version" : 3
 }

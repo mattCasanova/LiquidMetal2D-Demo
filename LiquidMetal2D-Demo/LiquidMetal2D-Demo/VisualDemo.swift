@@ -9,7 +9,6 @@
 
 import UIKit
 import simd
-import MetalMath
 import LiquidMetal2D
 
 /*
@@ -24,7 +23,7 @@ import LiquidMetal2D
  
  
  */
-class VisualDemo: Scene {
+class VisualDemo: Scene, @unchecked Sendable {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
@@ -102,7 +101,7 @@ class VisualDemo: Scene {
         // This task will fire indefinitly since we don't give a count
         // Also notice that we are capturing unowned self.  If we do this, we must clear
         // the task in the shutdown method
-        scheduler.add(task: Task(time: maxBackgroundChangeTime, action: { [unowned self] in
+        scheduler.add(task: ScheduledTask(time: maxBackgroundChangeTime, action: { [unowned self] in
             self.backgroundTime = 0
             let temp = self.startColor
             self.startColor = self.endColor
@@ -193,7 +192,7 @@ class VisualDemo: Scene {
     }
     
     func draw() {
-        let worldUniforms = TransformUniformData()
+        let worldUniforms = WorldUniform()
         
         renderer.beginPass()
         renderer.usePerspective()

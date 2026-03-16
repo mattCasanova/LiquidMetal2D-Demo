@@ -36,8 +36,8 @@ class RandomAngleState: State {
         
         let bounds = getBounds()
         
-        if !isInRange(value: obj.position.x, low: bounds.minX, high: bounds.maxX) ||
-            !isInRange(value: obj.position.y, low: bounds.minY, high: bounds.maxY) {
+        if !GameMath.isInRange(value: obj.position.x, low: bounds.minX, high: bounds.maxX) ||
+            !GameMath.isInRange(value: obj.position.y, low: bounds.minY, high: bounds.maxY) {
             randomize()
         }
     }
@@ -52,7 +52,7 @@ class RandomAngleState: State {
         let scale = Float.random(in: 0.25...1.5)
         obj.scale.set(scale, scale)
         
-        obj.rotation = Float.random(in: 0...twoPi)
+        obj.rotation = Float.random(in: 0...GameMath.twoPi)
         obj.velocity.set(angle: obj.rotation)
         obj.velocity *= 5 * scale
         obj.textureID = textures[Int.random(in: 0..<textures.count)]

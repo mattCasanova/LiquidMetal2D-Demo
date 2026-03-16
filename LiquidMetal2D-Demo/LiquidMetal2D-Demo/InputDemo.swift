@@ -40,7 +40,7 @@ class InputDemo: Scene, @unchecked Sendable {
 
         renderer.setCamera(point: simd_float3(0, 0, distance))
         renderer.setPerspective(
-            fov: degreeToRadian(getFOV()),
+            fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -59,7 +59,7 @@ class InputDemo: Scene, @unchecked Sendable {
     func resize() {
         ui.layout()
         renderer.setPerspective(
-            fov: degreeToRadian(getFOV()),
+            fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)

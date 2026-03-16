@@ -109,7 +109,7 @@ class SchedulerDemo: Scene, @unchecked Sendable {
         let scale = Float.random(in: 0.25...5)
         obj.scale.set(scale, scale)
         obj.textureID = textures[Int.random(in: 0...2)]
-        obj.rotation = Float.random(in: 0...twoPi)
+        obj.rotation = Float.random(in: 0...GameMath.twoPi)
         obj.velocity.set(angle: obj.rotation)
         obj.velocity *= Float.random(in: 1...10)
     }

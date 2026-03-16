@@ -40,7 +40,7 @@ class CollisionDemo: Scene, @unchecked Sendable {
 
         renderer.setCamera(point: simd_float3(0, 0, Camera2D.defaultDistance))
         renderer.setPerspective(
-            fov: degreeToRadian(getFOV()),
+            fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -71,7 +71,7 @@ class CollisionDemo: Scene, @unchecked Sendable {
 
     func resize() {
         renderer.setPerspective(
-            fov: degreeToRadian(getFOV()),
+            fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)

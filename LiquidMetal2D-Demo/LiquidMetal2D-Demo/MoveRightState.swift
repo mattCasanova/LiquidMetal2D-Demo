@@ -32,8 +32,8 @@ class MoveRightState: State {
     func update(dt: Float) {
         obj.position += obj.velocity * dt
         
-        if !isInRange(value: obj.position.x, low: bounds.minX, high: bounds.maxX) ||
-            !isInRange(value: obj.position.y, low: bounds.minY, high: bounds.maxY) {
+        if !GameMath.isInRange(value: obj.position.x, low: bounds.minX, high: bounds.maxX) ||
+            !GameMath.isInRange(value: obj.position.y, low: bounds.minY, high: bounds.maxY) {
             randomize()
         }
     }

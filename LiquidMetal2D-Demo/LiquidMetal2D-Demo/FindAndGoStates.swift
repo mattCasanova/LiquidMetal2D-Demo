@@ -52,16 +52,16 @@ class RotateState: State {
         rotationVelocity = Float.random(in: 1...3) * ((crossZ < 0) ? -1 : 1)
 
         rotation = targetDirection.angle
-        rotation = wrap(value: rotation, low: 0, high: twoPi)
+        rotation = GameMath.wrap(value: rotation, low: 0, high: GameMath.twoPi)
     }
 
     func exit() {}
 
     func update(dt: Float) {
         parent.obj.rotation += rotationVelocity * dt
-        parent.obj.rotation = wrap(value: parent.obj.rotation, low: 0, high: twoPi)
+        parent.obj.rotation = GameMath.wrap(value: parent.obj.rotation, low: 0, high: GameMath.twoPi)
 
-        if isInRange(value: parent.obj.rotation, low: rotation - 0.1, high: rotation + 0.1) {
+        if GameMath.isInRange(value: parent.obj.rotation, low: rotation - 0.1, high: rotation + 0.1) {
             parent.obj.rotation = rotation
             parent.setToGo()
         }

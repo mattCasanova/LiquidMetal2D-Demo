@@ -43,7 +43,7 @@ class StateDemo: Scene, @unchecked Sendable {
     func resize() {
         sceneDelegate.resize()
         ui.layout()
-        createObjects()
+        repositionPlayer()
     }
 
     func update(dt: Float) {
@@ -80,6 +80,12 @@ class StateDemo: Scene, @unchecked Sendable {
         player.behavior = PlayerStateMachine(obj: player, inputReader: sceneDelegate.input)
 
         sceneDelegate.objects.append(player)
+    }
+
+    private func repositionPlayer() {
+        guard let player = sceneDelegate.objects.first else { return }
+        let bounds = sceneDelegate.renderer.getWorldBoundsFromCamera(zOrder: player.zOrder)
+        player.position.set(bounds.maxX - 3, bounds.maxY - 3)
     }
 
     @objc func onPrev() { if let s = SceneTypes.stateDemo.prev() { sceneDelegate.sceneMgr.setScene(type: s) } }

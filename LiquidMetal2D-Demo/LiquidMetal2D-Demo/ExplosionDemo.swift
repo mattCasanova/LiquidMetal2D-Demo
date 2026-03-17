@@ -18,7 +18,7 @@ class ExplosionDemo: Scene, @unchecked Sendable {
     var changeTime: Float = 0
     let maxChangeTime: Float = 2
     var distance: Float = 40
-    let objectCount = 4500
+    let objectCount = GameConstants.MAX_OBJECTS
 
     var startColor = Vec3(0, 1, 1)
     var endColor = Vec3(1, 0, 0)

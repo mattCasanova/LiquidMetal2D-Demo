@@ -9,21 +9,26 @@
 import UIKit
 import LiquidMetal2D
 
-/// Touch-spawn demo: 4500 ships spawn at the touch location and fly outward in random directions.
-/// Scale varies 0.25-1.5x, sorted by scale for depth illusion. Touch anywhere to redirect spawning.
-/// Demonstrates: touch input (world coordinates), spatial spawning, scale-based depth sorting.
+/// Touch input & camera zoom demo: One center ship orients toward touch,
+/// four corner ships pin to world bounds. Touch toggles a smooth camera
+/// zoom in/out using easing. Corner ships reposition as bounds change.
+/// Demonstrates: touch input, world bounds, camera Z, Easing functions.
 class InputDemo: Scene, @unchecked Sendable {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
 
-    var distance: Float = 40
+    private let nearZ: Float = 30
+    private let farZ: Float = 70
+    private var targetZ: Float = 50
+    private var startZ: Float = 50
+    private var currentZ: Float = 50
+    private var zoomT: Float = 1
+    private let zoomDuration: Float = 1.0
+    private var isZoomedIn = false
 
-    let objectCount = GameConstants.MAX_OBJECTS
-    var objects = [GameObj]()
-
-    var spawnPos = Vec2()
-    var bounds = WorldBounds(maxX: 0, minX: 0, maxY: 0, minY: 0)
+    private var centerShip: GameObj!
+    private var cornerShips = [GameObj]()
 
     private var ui: DemoSceneUI!
     private var textures = [Int]()
@@ -37,13 +42,17 @@ class InputDemo: Scene, @unchecked Sendable {
             textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
         }
 
-        renderer.setCamera(point: Vec3(0, 0, distance))
+        currentZ = Camera2D.defaultDistance
+        startZ = currentZ
+        targetZ = currentZ
+
+        renderer.setCamera(point: Vec3(0, 0, currentZ))
         renderer.setPerspective(
             fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        renderer.setClearColor(color: Vec3())
+        renderer.setClearColor(color: Vec3(0.15, 0.1, 0.2))
 
         createObjects()
 
@@ -62,20 +71,31 @@ class InputDemo: Scene, @unchecked Sendable {
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        positionCornerShips()
     }
 
     func update(dt: Float) {
         if let touch = input.getWorldTouch(forZ: 0) {
-            spawnPos.set(touch.x, touch.y)
+            let dir = Vec2(touch.x, touch.y) - centerShip.position
+            centerShip.rotation = atan2(dir.y, dir.x)
+
+            // Toggle zoom on touch
+            if zoomT >= 1.0 {
+                isZoomedIn.toggle()
+                startZ = currentZ
+                targetZ = isZoomedIn ? nearZ : farZ
+                zoomT = 0
+            }
         }
 
-        for i in 0..<objectCount {
-            let obj = objects[i] as! BehaviorObj
-            obj.behavior.update(dt: dt)
+        // Animate camera zoom
+        if zoomT < 1.0 {
+            zoomT = min(zoomT + dt / zoomDuration, 1.0)
+            let easedT = Easing.easeInOutCubic(zoomT)
+            currentZ = GameMath.lerp(a: startZ, b: targetZ, t: easedT)
+            renderer.setCamera(point: Vec3(0, 0, currentZ))
+            positionCornerShips()
         }
-
-        objects.sort(by: { $0.scale.x < $1.scale.x })
     }
 
     func draw() {
@@ -83,8 +103,8 @@ class InputDemo: Scene, @unchecked Sendable {
         renderer.beginPass()
         renderer.usePerspective()
 
-        for i in 0..<objectCount {
-            let obj = objects[i]
+        let allObjects = [centerShip!] + cornerShips
+        for obj in allObjects {
             renderer.useTexture(textureId: obj.textureID)
             worldUniforms.transform.setToTransform2D(
                 scale: obj.scale, angle: obj.rotation,
@@ -96,7 +116,6 @@ class InputDemo: Scene, @unchecked Sendable {
     }
 
     func shutdown() {
-        objects.removeAll()
         ui.removeFromSuperview()
         textures.forEach { renderer.unloadTexture(textureId: $0) }
         textures.removeAll()
@@ -107,18 +126,37 @@ class InputDemo: Scene, @unchecked Sendable {
     }
 
     private func createObjects() {
-        objects.removeAll()
-        bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        centerShip = GameObj()
+        centerShip.position.set(0, 0)
+        centerShip.scale.set(3, 3)
+        centerShip.textureID = textures[0]
 
-        let getSpawnLocation = { [unowned self] in self.spawnPos }
-        let getBounds = { [unowned self] in self.bounds }
+        cornerShips.removeAll()
+        for i in 0..<4 {
+            let ship = GameObj()
+            ship.scale.set(1.5, 1.5)
+            ship.textureID = textures[1 + (i % 2)]
+            cornerShips.append(ship)
+        }
 
-        for _ in 0..<objectCount {
-            let obj = BehaviorObj()
-            obj.behavior = RandomAngleBehavior(
-                obj: obj, getSpawnLocation: getSpawnLocation,
-                getBounds: getBounds, textures: textures)
-            objects.append(obj)
+        positionCornerShips()
+    }
+
+    private func positionCornerShips() {
+        let bounds = renderer.getWorldBounds(cameraDistance: currentZ, zOrder: 0)
+        let offset: Float = 3
+
+        // Top-right, top-left, bottom-left, bottom-right
+        let positions: [(Float, Float, Float)] = [
+            (bounds.maxX - offset, bounds.maxY - offset, GameMath.degreeToRadian(135)),
+            (bounds.minX + offset, bounds.maxY - offset, GameMath.degreeToRadian(225)),
+            (bounds.minX + offset, bounds.minY + offset, GameMath.degreeToRadian(315)),
+            (bounds.maxX - offset, bounds.minY + offset, GameMath.degreeToRadian(45))
+        ]
+
+        for i in 0..<cornerShips.count {
+            cornerShips[i].position.set(positions[i].0, positions[i].1)
+            cornerShips[i].rotation = positions[i].2
         }
     }
 

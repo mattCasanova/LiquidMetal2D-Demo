@@ -16,16 +16,18 @@ enum SceneTypes: SceneType {
     case schedulerDemo
     case stateDemo
     case collisionDemo
+    case bezierDemo
     case pauseDemo
 
     var title: String {
         switch self {
-        case .visualDemo: return "Visual Demo"
-        case .inputDemo: return "Input Demo"
-        case .explosionDemo: return "Explosion Demo"
-        case .schedulerDemo: return "Scheduler Demo"
-        case .stateDemo: return "State Machine Demo"
-        case .collisionDemo: return "Collision Demo"
+        case .visualDemo: return "4,500 Ships - Batched Rendering"
+        case .inputDemo: return "Touch Input & Camera Zoom"
+        case .explosionDemo: return "4,500 Ships - Touch Rotation"
+        case .schedulerDemo: return "Timed Tasks & Callbacks"
+        case .stateDemo: return "Behavior / State Pattern"
+        case .collisionDemo: return "Circle Collision & AI"
+        case .bezierDemo: return "Cubic Bezier Curves"
         case .pauseDemo: return "Paused"
         }
     }
@@ -33,7 +35,8 @@ enum SceneTypes: SceneType {
     /// Navigable scenes in order (excludes pauseDemo which is push-only)
     static let navigable: [SceneTypes] = [
         .visualDemo, .inputDemo, .explosionDemo,
-        .schedulerDemo, .stateDemo, .collisionDemo
+        .schedulerDemo, .stateDemo, .collisionDemo,
+        .bezierDemo
     ]
 
     func next() -> SceneTypes? {

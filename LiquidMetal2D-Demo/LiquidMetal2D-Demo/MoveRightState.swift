@@ -13,7 +13,7 @@ class MoveRightState: State {
     
     private let textures: [Int]
     private let getBounds: (_ zOrder: Float) -> WorldBounds
-    private var bounds = WorldBounds(maxX: 0, minX: 0, maxY: 0, minY: 0)
+    private var bounds = WorldBounds(minX: 0, maxX: 0, minY: 0, maxY: 0)
     
     init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds, textures: [Int]) {
         self.obj       = obj

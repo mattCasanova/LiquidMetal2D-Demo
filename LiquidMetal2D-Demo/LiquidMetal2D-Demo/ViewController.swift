@@ -21,6 +21,7 @@ class ViewController: LiquidViewController {
         sceneFactory.addScene(type: SceneTypes.schedulerDemo, builder: TSceneBuilder<SchedulerDemo>())
         sceneFactory.addScene(type: SceneTypes.stateDemo, builder: TSceneBuilder<StateDemo>())
         sceneFactory.addScene(type: SceneTypes.collisionDemo, builder: TSceneBuilder<CollisionDemo>())
+        sceneFactory.addScene(type: SceneTypes.bezierDemo, builder: TSceneBuilder<BezierDemo>())
         sceneFactory.addScene(type: SceneTypes.pauseDemo, builder: TSceneBuilder<PauseDemo>())
 
         let renderer = DefaultRenderer(

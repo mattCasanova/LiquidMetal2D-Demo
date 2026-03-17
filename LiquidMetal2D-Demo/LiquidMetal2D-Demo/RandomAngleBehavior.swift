@@ -1,5 +1,5 @@
 //
-//  RandomCircleBehavoir.swift
+//  RandomCircleBehavior.swift
 //  LiquidMetal2D-Demo
 //
 //  Created by Matt Casanova on 3/21/20.
@@ -8,13 +8,13 @@
 
 import LiquidMetal2D
 
-class RandomAngleBehavoir: Behavoir {
+class RandomAngleBehavior: Behavior {
     var current: State!
     
     
     private let randomAngleState: RandomAngleState
     
-    init(obj: BehavoirObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds, textures: [Int]) {
+    init(obj: BehaviorObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds, textures: [Int]) {
         randomAngleState = RandomAngleState(
             obj: obj,
             getSpawnLocation: getSpawnLocation,

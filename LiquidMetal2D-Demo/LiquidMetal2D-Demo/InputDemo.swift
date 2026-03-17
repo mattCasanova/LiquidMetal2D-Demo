@@ -71,8 +71,8 @@ class InputDemo: Scene, @unchecked Sendable {
         }
 
         for i in 0..<objectCount {
-            let obj = objects[i] as! BehavoirObj
-            obj.behavoir.update(dt: dt)
+            let obj = objects[i] as! BehaviorObj
+            obj.behavior.update(dt: dt)
         }
 
         objects.sort(by: { $0.scale.x < $1.scale.x })
@@ -114,8 +114,8 @@ class InputDemo: Scene, @unchecked Sendable {
         let getBounds = { [unowned self] in self.bounds }
 
         for _ in 0..<objectCount {
-            let obj = BehavoirObj()
-            obj.behavoir = RandomAngleBehavoir(
+            let obj = BehaviorObj()
+            obj.behavior = RandomAngleBehavior(
                 obj: obj, getSpawnLocation: getSpawnLocation,
                 getBounds: getBounds, textures: textures)
             objects.append(obj)

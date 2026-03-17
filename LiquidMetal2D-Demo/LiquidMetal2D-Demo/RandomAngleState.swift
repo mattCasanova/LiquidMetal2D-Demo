@@ -9,13 +9,13 @@
 import LiquidMetal2D
 
 class RandomAngleState: State {
-    private unowned let obj: BehavoirObj
+    private unowned let obj: BehaviorObj
     
     private let textures: [Int]
     private let getSpawnLocation: () -> Vec2
     private let getBounds: () -> WorldBounds
     
-    init(obj: BehavoirObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds, textures: [Int]) {
+    init(obj: BehaviorObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds, textures: [Int]) {
         self.obj              = obj
         self.getSpawnLocation = getSpawnLocation
         self.getBounds        = getBounds

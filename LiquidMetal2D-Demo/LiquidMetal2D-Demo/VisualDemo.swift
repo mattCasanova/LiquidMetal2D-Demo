@@ -25,7 +25,7 @@ class VisualDemo: Scene, @unchecked Sendable {
     var distance: Float = 40
 
     let objectCount = GameConstants.MAX_OBJECTS
-    var objects = [BehavoirObj]()
+    var objects = [BehaviorObj]()
 
     var startColor = Vec3(0.7, 0, 0.7)
     var endColor = Vec3(0.0, 1, 1.0)
@@ -88,7 +88,7 @@ class VisualDemo: Scene, @unchecked Sendable {
         renderer.setClearColor(color: simd_mix(startColor, endColor, Vec3(repeating: t)))
 
         for i in 0..<objectCount {
-            objects[i].behavoir.update(dt: dt)
+            objects[i].behavior.update(dt: dt)
         }
 
         objects.sort(by: { $0.zOrder < $1.zOrder })
@@ -129,8 +129,8 @@ class VisualDemo: Scene, @unchecked Sendable {
             self.renderer.getWorldBounds(cameraDistance: self.distance + self.camDistance, zOrder: zOrder)
         }
         for _ in 0..<objectCount {
-            let obj = BehavoirObj()
-            obj.behavoir = MoveRightBehavoir(obj: obj, getBounds: getBounds, textures: textures)
+            let obj = BehaviorObj()
+            obj.behavior = MoveRightBehavior(obj: obj, getBounds: getBounds, textures: textures)
             objects.append(obj)
         }
     }

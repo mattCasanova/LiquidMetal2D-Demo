@@ -10,8 +10,8 @@ import LiquidMetal2D
 
 /// State machine demo: A single large ship sits near the corner of the screen.
 /// Touch the screen and the ship rotates to face the touch point.
-/// Uses PlayerStateMachine (Behavoir protocol) with a PlayerState that reads touch input each frame.
-/// Demonstrates: Behavoir/State protocol pattern, InputReader for touch, single-object scene.
+/// Uses PlayerStateMachine (Behavior protocol) with a PlayerState that reads touch input each frame.
+/// Demonstrates: Behavior/State protocol pattern, InputReader for touch, single-object scene.
 class StateDemo: Scene, @unchecked Sendable {
     var sceneDelegate = DefaultScene()
 
@@ -26,7 +26,7 @@ class StateDemo: Scene, @unchecked Sendable {
             textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
         }
 
-        sceneDelegate.objects = [BehavoirObj]()
+        sceneDelegate.objects = [BehaviorObj]()
         createObjects()
 
         sceneDelegate.renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
@@ -48,8 +48,8 @@ class StateDemo: Scene, @unchecked Sendable {
 
     func update(dt: Float) {
         for i in 0..<objectCount {
-            let obj = sceneDelegate.objects[i] as! BehavoirObj
-            obj.behavoir.update(dt: dt)
+            let obj = sceneDelegate.objects[i] as! BehaviorObj
+            obj.behavior.update(dt: dt)
         }
         sceneDelegate.objects.sort(by: { $0.zOrder < $1.zOrder })
     }
@@ -69,7 +69,7 @@ class StateDemo: Scene, @unchecked Sendable {
         let zDepth: Float = 0
         let bounds = sceneDelegate.renderer.getWorldBoundsFromCamera(zOrder: zDepth)
 
-        let player = BehavoirObj()
+        let player = BehaviorObj()
         player.zOrder = zDepth
         player.position.x = bounds.maxX - 3
         player.position.y = bounds.maxY - 3
@@ -77,7 +77,7 @@ class StateDemo: Scene, @unchecked Sendable {
         player.textureID = textures[0]
         player.rotation = 0
         player.velocity.set(0, 0)
-        player.behavoir = PlayerStateMachine(obj: player, inputReader: sceneDelegate.input)
+        player.behavior = PlayerStateMachine(obj: player, inputReader: sceneDelegate.input)
 
         sceneDelegate.objects.append(player)
     }

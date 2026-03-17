@@ -8,6 +8,6 @@
 
 import LiquidMetal2D
 
-class BehavoirObj: GameObj {
-  var behavoir: Behavoir = NilBehavoir()
+class BehaviorObj: GameObj {
+  var behavior: Behavior = NilBehavior()
 }

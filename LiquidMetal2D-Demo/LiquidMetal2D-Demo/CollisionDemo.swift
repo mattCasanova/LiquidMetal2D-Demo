@@ -12,7 +12,7 @@ import LiquidMetal2D
 /// Each ship picks a random target, rotates toward it, moves to it, then picks a new target.
 /// There's a 1% chance each spawn is orange. When an orange ship collides with a blue ship,
 /// the blue ship turns orange too — creating a spreading "infection" effect.
-/// Demonstrates: Collision detection (CircleCollider), AI behavior (FindAndGoBehavoir with
+/// Demonstrates: Collision detection (CircleCollider), AI behavior (FindAndGoBehavior with
 /// Find/Rotate/Go state machine), Scheduler for timed spawning, object pooling (isActive flag).
 class CollisionDemo: Scene, @unchecked Sendable {
     private var sceneMgr: SceneManager!
@@ -61,7 +61,7 @@ class CollisionDemo: Scene, @unchecked Sendable {
             safeObj.scale = Vec2(2, 2)
             safeObj.textureID = self.textures[chance == 0 ? self.orangeTextureIndex : 0]
             safeObj.isActive = true
-            safeObj.behavoir = FindAndGoBehavoir(obj: safeObj, bounds: bounds)
+            safeObj.behavior = FindAndGoBehavior(obj: safeObj, bounds: bounds)
             safeObj.collider = CircleCollider(obj: safeObj, radius: 1)
         }))
     }
@@ -80,7 +80,7 @@ class CollisionDemo: Scene, @unchecked Sendable {
 
     func update(dt: Float) {
         scheduler.update(dt: dt)
-        for i in 0..<objects.count { objects[i].behavoir.update(dt: dt) }
+        for i in 0..<objects.count { objects[i].behavior.update(dt: dt) }
         checkCollision()
         objects.sort(by: { $0.isActive.toInt() > $1.isActive.toInt() })
     }

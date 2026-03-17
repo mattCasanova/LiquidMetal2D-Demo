@@ -10,10 +10,10 @@ import LiquidMetal2D
 
 /// Picks a random target position within the world bounds, then immediately transitions to RotateState.
 class FindState: State {
-    private unowned let parent: FindAndGoBehavoir
+    private unowned let parent: FindAndGoBehavior
     private let bounds: WorldBounds
 
-    init(parent: FindAndGoBehavoir, bounds: WorldBounds) {
+    init(parent: FindAndGoBehavior, bounds: WorldBounds) {
         self.parent = parent
         self.bounds = bounds
     }
@@ -33,12 +33,12 @@ class FindState: State {
 /// Rotates the ship toward the target using a 2D cross product to determine turn direction.
 /// Once the ship's rotation is within 0.1 radians of the target angle, transitions to GoState.
 class RotateState: State {
-    private unowned let parent: FindAndGoBehavoir
+    private unowned let parent: FindAndGoBehavior
 
     private var rotation: Float = 0.0
     private var rotationVelocity: Float = 0.0
 
-    init(parent: FindAndGoBehavoir) {
+    init(parent: FindAndGoBehavior) {
         self.parent = parent
     }
 
@@ -70,9 +70,9 @@ class RotateState: State {
 /// Moves the ship forward in its facing direction at a random speed.
 /// When the ship reaches the target (point-in-circle check), transitions back to FindState.
 class GoState: State {
-    private unowned let parent: FindAndGoBehavoir
+    private unowned let parent: FindAndGoBehavior
 
-    init(parent: FindAndGoBehavoir) {
+    init(parent: FindAndGoBehavior) {
         self.parent = parent
     }
 

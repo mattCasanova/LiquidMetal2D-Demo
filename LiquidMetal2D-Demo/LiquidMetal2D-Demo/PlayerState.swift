@@ -9,10 +9,10 @@
 import LiquidMetal2D
 
 class PlayerState: State, @unchecked Sendable {
-    private unowned let obj: BehavoirObj
+    private unowned let obj: BehaviorObj
     private unowned let inputReader: InputReader
 
-    init(obj: BehavoirObj, inputReader: InputReader) {
+    init(obj: BehaviorObj, inputReader: InputReader) {
         self.obj = obj
         self.inputReader = inputReader
     }

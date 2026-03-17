@@ -1,5 +1,5 @@
 //
-//  FindAndGoBehavoir.swift
+//  FindAndGoBehavior.swift
 //  LiquidMetal
 //
 //  Created by Matt Casanova on 3/24/20.
@@ -11,7 +11,7 @@ import LiquidMetal2D
 /// AI behavior: Find a random target → Rotate toward it → Move to it → Repeat.
 /// Uses a 3-state state machine (FindState → RotateState → GoState → FindState...).
 /// The target position is shared between states via the `target` property.
-class FindAndGoBehavoir: Behavoir {
+class FindAndGoBehavior: Behavior {
     unowned let obj: CollisionObj
 
     var current: State!

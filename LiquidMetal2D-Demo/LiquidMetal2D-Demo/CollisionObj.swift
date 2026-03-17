@@ -10,6 +10,6 @@ import LiquidMetal2D
 
 class CollisionObj: GameObj {
   var isActive: Bool = false
-  var behavoir: Behavoir = NilBehavoir()
+  var behavior: Behavior = NilBehavior()
   var collider: Collider = NilCollider()
 }

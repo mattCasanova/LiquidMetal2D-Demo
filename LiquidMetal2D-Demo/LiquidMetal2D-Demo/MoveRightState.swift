@@ -9,13 +9,13 @@
 import LiquidMetal2D
 
 class MoveRightState: State {
-    private unowned let obj: BehavoirObj
+    private unowned let obj: BehaviorObj
     
     private let textures: [Int]
     private let getBounds: (_ zOrder: Float) -> WorldBounds
     private var bounds = WorldBounds(maxX: 0, minX: 0, maxY: 0, minY: 0)
     
-    init(obj: BehavoirObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds, textures: [Int]) {
+    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds, textures: [Int]) {
         self.obj       = obj
         self.textures  = textures
         self.getBounds = getBounds

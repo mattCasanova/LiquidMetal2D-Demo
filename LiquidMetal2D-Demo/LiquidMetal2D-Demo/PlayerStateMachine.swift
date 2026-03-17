@@ -8,14 +8,14 @@
 
 import LiquidMetal2D
 
-class PlayerStateMachine: Behavoir {
+class PlayerStateMachine: Behavior {
   var current: State!
 
-  private unowned let obj: BehavoirObj
+  private unowned let obj: BehaviorObj
   
   private let playerState: PlayerState
   
-  init(obj: BehavoirObj, inputReader: InputReader) {
+  init(obj: BehaviorObj, inputReader: InputReader) {
     self.obj = obj
     self.playerState = PlayerState(obj: self.obj, inputReader: inputReader)
     setStartState(startState: playerState)

@@ -6,7 +6,6 @@
 //  Copyright © 2020 Matt Casanova. All rights reserved.
 //
 
-import simd
 import LiquidMetal2D
 
 class PlayerState: State, @unchecked Sendable {

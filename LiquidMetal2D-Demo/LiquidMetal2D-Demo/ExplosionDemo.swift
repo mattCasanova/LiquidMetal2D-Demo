@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import simd
 import LiquidMetal2D
 
 /// Explosion demo: 4500 ships spawn at center and fly outward in random directions.
@@ -21,8 +20,8 @@ class ExplosionDemo: Scene, @unchecked Sendable {
     var distance: Float = 40
     let objectCount = 4500
 
-    var startColor = simd_float3(0, 1, 1)
-    var endColor = simd_float3(1, 0, 0)
+    var startColor = Vec3(0, 1, 1)
+    var endColor = Vec3(1, 0, 0)
 
     private var ui: DemoSceneUI!
     private var textures = [Int]()
@@ -53,8 +52,8 @@ class ExplosionDemo: Scene, @unchecked Sendable {
         changeTime += dt
         let t = changeTime / maxChangeTime
         sceneDelegate.renderer.setClearColor(
-            color: simd_mix(startColor, endColor, simd_float3(repeating: t)))
-        sceneDelegate.renderer.setCamera(point: simd_float3(0, 0, distance))
+            color: simd_mix(startColor, endColor, Vec3(repeating: t)))
+        sceneDelegate.renderer.setCamera(point: Vec3(0, 0, distance))
 
         let vec = sceneDelegate.input.getWorldTouch(forZ: 0)
 

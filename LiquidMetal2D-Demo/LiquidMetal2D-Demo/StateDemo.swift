@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import simd
 import LiquidMetal2D
 
 /// State machine demo: A single large ship sits near the corner of the screen.
@@ -30,8 +29,8 @@ class StateDemo: Scene, @unchecked Sendable {
         sceneDelegate.objects = [BehavoirObj]()
         createObjects()
 
-        sceneDelegate.renderer.setCamera(point: simd_float3(0, 0, Camera2D.defaultDistance))
-        sceneDelegate.renderer.setClearColor(color: simd_float3(0.7, 0.5, 0.7))
+        sceneDelegate.renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
+        sceneDelegate.renderer.setClearColor(color: Vec3(0.7, 0.5, 0.7))
 
         ui = DemoSceneUI(
             parentView: renderer.view, sceneType: .stateDemo, target: self,

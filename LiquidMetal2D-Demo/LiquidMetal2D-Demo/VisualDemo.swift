@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import simd
 import LiquidMetal2D
 
 /// Mass rendering demo: 4500 ships at different z-depths (0-60) moving right across screen.
@@ -28,8 +27,8 @@ class VisualDemo: Scene, @unchecked Sendable {
     let objectCount = GameConstants.MAX_OBJECTS
     var objects = [BehavoirObj]()
 
-    var startColor = simd_float3(0.7, 0, 0.7)
-    var endColor = simd_float3(0.0, 1, 1.0)
+    var startColor = Vec3(0.7, 0, 0.7)
+    var endColor = Vec3(0.0, 1, 1.0)
 
     private var ui: DemoSceneUI!
     private let scheduler = Scheduler()
@@ -44,7 +43,7 @@ class VisualDemo: Scene, @unchecked Sendable {
             textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
         }
 
-        renderer.setCamera(point: simd_float3(0, 0, distance))
+        renderer.setCamera(point: Vec3(0, 0, distance))
         renderer.setPerspective(
             fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
@@ -82,11 +81,11 @@ class VisualDemo: Scene, @unchecked Sendable {
 
         cameraTime += dt * 0.5
         let newDist = -sinf(cameraTime) * camDistance + distance
-        renderer.setCamera(point: simd_float3(0, 0, newDist))
+        renderer.setCamera(point: Vec3(0, 0, newDist))
 
         backgroundTime += dt
         let t = backgroundTime / maxBackgroundChangeTime
-        renderer.setClearColor(color: simd_mix(startColor, endColor, simd_float3(repeating: t)))
+        renderer.setClearColor(color: simd_mix(startColor, endColor, Vec3(repeating: t)))
 
         for i in 0..<objectCount {
             objects[i].behavoir.update(dt: dt)
@@ -105,7 +104,7 @@ class VisualDemo: Scene, @unchecked Sendable {
             renderer.useTexture(textureId: obj.textureID)
             worldUniforms.transform.setToTransform2D(
                 scale: obj.scale, angle: obj.rotation,
-                translate: simd_float3(obj.position, obj.zOrder))
+                translate: Vec3(obj.position, obj.zOrder))
             renderer.draw(uniforms: worldUniforms)
         }
 

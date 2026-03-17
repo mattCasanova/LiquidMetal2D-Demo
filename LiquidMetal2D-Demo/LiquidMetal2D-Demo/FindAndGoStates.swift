@@ -6,7 +6,6 @@
 //  Copyright © 2020 Matt Casanova. All rights reserved.
 //
 
-import simd
 import LiquidMetal2D
 
 /// Picks a random target position within the world bounds, then immediately transitions to RotateState.
@@ -45,7 +44,7 @@ class RotateState: State {
 
     func enter() {
         let targetDirection = parent.target - parent.obj.position
-        let currentRotationVec = simd_float2(angle: parent.obj.rotation)
+        let currentRotationVec = Vec2(angle: parent.obj.rotation)
 
         let crossZ = currentRotationVec.cross(targetDirection)
 
@@ -78,7 +77,7 @@ class GoState: State {
     }
 
     func enter() {
-        var direction = simd_float2(angle: parent.obj.rotation)
+        var direction = Vec2(angle: parent.obj.rotation)
         direction *= Float.random(in: 6...10)
 
         parent.obj.velocity = direction

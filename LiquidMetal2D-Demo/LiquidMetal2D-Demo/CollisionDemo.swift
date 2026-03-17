@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import simd
 import LiquidMetal2D
 
 /// Collision + AI demo: Ships spawn one per second (up to 200) and wander using FindAndGo AI.
@@ -38,7 +37,7 @@ class CollisionDemo: Scene, @unchecked Sendable {
             textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
         }
 
-        renderer.setCamera(point: simd_float3(0, 0, Camera2D.defaultDistance))
+        renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
         renderer.setPerspective(
             fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
@@ -59,7 +58,7 @@ class CollisionDemo: Scene, @unchecked Sendable {
             let bounds = self.renderer.getWorldBoundsFromCamera(zOrder: 0)
             let chance = Int.random(in: 0..<100)
 
-            safeObj.scale = simd_float2(2, 2)
+            safeObj.scale = Vec2(2, 2)
             safeObj.textureID = self.textures[chance == 0 ? self.orangeTextureIndex : 0]
             safeObj.isActive = true
             safeObj.behavoir = FindAndGoBehavoir(obj: safeObj, bounds: bounds)
@@ -97,7 +96,7 @@ class CollisionDemo: Scene, @unchecked Sendable {
             renderer.useTexture(textureId: obj.textureID)
             worldUniforms.transform.setToTransform2D(
                 scale: obj.scale, angle: obj.rotation,
-                translate: simd_float3(obj.position, obj.zOrder))
+                translate: Vec3(obj.position, obj.zOrder))
             renderer.draw(uniforms: worldUniforms)
         }
 

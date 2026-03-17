@@ -6,7 +6,6 @@
 //  Copyright © 2020 Matt Casanova. All rights reserved.
 //
 
-import simd
 import LiquidMetal2D
 
 /// AI behavior: Find a random target → Rotate toward it → Move to it → Repeat.
@@ -16,7 +15,7 @@ class FindAndGoBehavoir: Behavoir {
     unowned let obj: CollisionObj
 
     var current: State!
-    var target = simd_float2()
+    var target = Vec2()
 
     private var findState: FindState!
     private var rotateState: RotateState!

@@ -104,13 +104,6 @@
 		F536B68D241690A800B3566F /* LiquidMetal2D-Demo */ = {
 			isa = PBXGroup;
 			children = (
-				F53AAB042F6770A7003831F3 /* CollisionDemo.swift */,
-				F53AAB052F6770A7003831F3 /* CollisionObj.swift */,
-				F53AAB062F6770A7003831F3 /* DemoSceneUI.swift */,
-				F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */,
-				F53AAB0A2F6770A7003831F3 /* PauseDemo.swift */,
-				F53AAB0D2F6770A7003831F3 /* SchedulerDemo.swift */,
-				F53AAB0E2F6770A7003831F3 /* StateDemo.swift */,
 				F57FE96E2426D486005D5A59 /* behavoirs */,
 				F57FE96B2426D3B9005D5A59 /* gameObjs */,
 				F536B6B72416939700B3566F /* textures */,
@@ -141,6 +134,12 @@
 				F536B6AD2416925800B3566F /* SceneTypes.swift */,
 				F536B6AC2416925800B3566F /* VisualDemo.swift */,
 				F5EDA0B32416952400C42A29 /* InputDemo.swift */,
+				F53AAB042F6770A7003831F3 /* CollisionDemo.swift */,
+				F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */,
+				F53AAB0A2F6770A7003831F3 /* PauseDemo.swift */,
+				F53AAB0D2F6770A7003831F3 /* SchedulerDemo.swift */,
+				F53AAB0E2F6770A7003831F3 /* StateDemo.swift */,
+				F53AAB062F6770A7003831F3 /* DemoSceneUI.swift */,
 			);
 			name = scenes;
 			sourceTree = "<group>";
@@ -159,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				F57FE96C2426D439005D5A59 /* BehavoirObj.swift */,
+				F53AAB052F6770A7003831F3 /* CollisionObj.swift */,
 			);
 			name = gameObjs;
 			sourceTree = "<group>";
@@ -372,7 +372,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -426,7 +426,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -501,7 +501,7 @@
 			repositoryURL = "git@github.com:mattCasanova/LiquidMetal2D.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.5;
+				minimumVersion = 0.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

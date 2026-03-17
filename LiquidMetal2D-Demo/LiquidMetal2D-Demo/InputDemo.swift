@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import simd
 import LiquidMetal2D
 
 /// Touch-spawn demo: 4500 ships spawn at the touch location and fly outward in random directions.
@@ -23,7 +22,7 @@ class InputDemo: Scene, @unchecked Sendable {
     let objectCount = GameConstants.MAX_OBJECTS
     var objects = [GameObj]()
 
-    var spawnPos = simd_float2()
+    var spawnPos = Vec2()
     var bounds = WorldBounds(maxX: 0, minX: 0, maxY: 0, minY: 0)
 
     private var ui: DemoSceneUI!
@@ -38,13 +37,13 @@ class InputDemo: Scene, @unchecked Sendable {
             textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
         }
 
-        renderer.setCamera(point: simd_float3(0, 0, distance))
+        renderer.setCamera(point: Vec3(0, 0, distance))
         renderer.setPerspective(
             fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        renderer.setClearColor(color: simd_float3())
+        renderer.setClearColor(color: Vec3())
 
         createObjects()
 
@@ -89,7 +88,7 @@ class InputDemo: Scene, @unchecked Sendable {
             renderer.useTexture(textureId: obj.textureID)
             worldUniforms.transform.setToTransform2D(
                 scale: obj.scale, angle: obj.rotation,
-                translate: simd_float3(obj.position, obj.zOrder))
+                translate: Vec3(obj.position, obj.zOrder))
             renderer.draw(uniforms: worldUniforms)
         }
 

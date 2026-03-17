@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import simd
 import LiquidMetal2D
 
 /// Scheduler demo: 100 ships explode outward from center.
@@ -23,8 +22,8 @@ class SchedulerDemo: Scene, @unchecked Sendable {
     var distance: Float = 40
     let objectCount = 100
 
-    var startColor = simd_float3(0, 0.5, 0.7)
-    var endColor = simd_float3(0.4, 0, 0)
+    var startColor = Vec3(0, 0.5, 0.7)
+    var endColor = Vec3(0.4, 0, 0)
 
     private var ui: DemoSceneUI!
     private var textures = [Int]()
@@ -68,12 +67,12 @@ class SchedulerDemo: Scene, @unchecked Sendable {
         if shouldChange {
             let t = changeTime / maxChangeTime
             sceneDelegate.renderer.setClearColor(
-                color: simd_mix(startColor, endColor, simd_float3(repeating: t)))
+                color: simd_mix(startColor, endColor, Vec3(repeating: t)))
         } else {
             sceneDelegate.renderer.setClearColor(color: startColor)
         }
 
-        sceneDelegate.renderer.setCamera(point: simd_float3(0, 0, distance))
+        sceneDelegate.renderer.setCamera(point: Vec3(0, 0, distance))
         let vec = sceneDelegate.input.getWorldTouch(forZ: 0)
 
         for i in 0..<objectCount {

@@ -6,7 +6,6 @@
 //  Copyright © 2020 Matt Casanova. All rights reserved.
 //
 
-import simd
 import LiquidMetal2D
 
 class RandomAngleBehavoir: Behavoir {
@@ -15,7 +14,7 @@ class RandomAngleBehavoir: Behavoir {
     
     private let randomAngleState: RandomAngleState
     
-    init(obj: BehavoirObj, getSpawnLocation: @escaping () -> simd_float2, getBounds: @escaping () -> WorldBounds, textures: [Int]) {
+    init(obj: BehavoirObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds, textures: [Int]) {
         randomAngleState = RandomAngleState(
             obj: obj,
             getSpawnLocation: getSpawnLocation,

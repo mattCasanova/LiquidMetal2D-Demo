@@ -30,7 +30,7 @@ class ViewController: LiquidViewController {
 
         gameEngine = DefaultEngine(
             renderer: renderer,
-            intitialSceneType: SceneTypes.visualDemo,
+            initialSceneType: SceneTypes.visualDemo,
             sceneFactory: sceneFactory)
 
         gameEngine.run()

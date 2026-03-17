@@ -9,16 +9,14 @@
 import Foundation
 import LiquidMetal2D
 
-enum SceneTypes: Int, SceneType {
-    case visualDemo = 0
-    case inputDemo = 1
-    case explosionDemo = 2
-    case schedulerDemo = 3
-    case stateDemo = 4
-    case collisionDemo = 5
-    case pauseDemo = 6
-
-    var value: Int { return self.rawValue }
+enum SceneTypes: SceneType {
+    case visualDemo
+    case inputDemo
+    case explosionDemo
+    case schedulerDemo
+    case stateDemo
+    case collisionDemo
+    case pauseDemo
 
     var title: String {
         switch self {

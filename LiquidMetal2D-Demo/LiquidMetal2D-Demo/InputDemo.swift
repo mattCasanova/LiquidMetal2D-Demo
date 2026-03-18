@@ -32,7 +32,7 @@ import LiquidMetal2D
 /// every frame by the engine. `resize()` is called on device rotation. `resume()` is called
 /// when a pushed scene (PauseDemo) pops and this scene becomes active again. `shutdown()` is
 /// called when the scene is removed from the scene stack.
-class InputDemo: Scene, @unchecked Sendable {
+class InputDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

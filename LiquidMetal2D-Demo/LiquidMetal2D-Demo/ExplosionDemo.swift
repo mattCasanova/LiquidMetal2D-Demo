@@ -32,7 +32,7 @@ import LiquidMetal2D
 /// `DefaultScene` instance and delegate common work (camera setup, projection, drawing)
 /// to it. You still implement the Scene protocol yourself, but forward calls you do not
 /// want to customize. This avoids boilerplate while keeping full control over update logic.
-class ExplosionDemo: Scene, @unchecked Sendable {
+class ExplosionDemo: Scene {
     /// DefaultScene handles standard camera/projection setup and provides a draw() that
     /// iterates over its `objects` array. Access its `renderer`, `input`, `sceneMgr`,
     /// and `objects` properties to interact with the engine through the delegate.

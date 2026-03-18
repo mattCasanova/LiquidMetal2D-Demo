@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1B2C3D42F6780A7003831F3 /* BezierDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */; };
+		A1B2C3D62F6790A7003831F3 /* FOVDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D52F6790A7003831F3 /* FOVDemo.swift */; };
+		A1B2C3D82F67A0A7003831F3 /* MoveRightBehaviorFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D72F67A0A7003831F3 /* MoveRightBehaviorFOV.swift */; };
+		A1B2C3DA2F67A0A7003831F3 /* MoveRightStateFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */; };
 		F536B68F241690A800B3566F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B68E241690A800B3566F /* AppDelegate.swift */; };
 		F536B691241690A800B3566F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B690241690A800B3566F /* SceneDelegate.swift */; };
 		F536B693241690A800B3566F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B692241690A800B3566F /* ViewController.swift */; };
@@ -20,8 +24,6 @@
 		F536B6B32416926800B3566F /* playerShip1_orange.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B02416926800B3566F /* playerShip1_orange.png */; };
 		F536B6B42416926800B3566F /* playerShip1_green.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B12416926800B3566F /* playerShip1_green.png */; };
 		F536B6B52416926800B3566F /* playerShip1_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B22416926800B3566F /* playerShip1_blue.png */; };
-		A1B2C3D42F6780A7003831F3 /* BezierDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */; };
-		A1B2C3D62F6790A7003831F3 /* FOVDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D52F6790A7003831F3 /* FOVDemo.swift */; };
 		F53AAB0F2F6770A7003831F3 /* ExplosionDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */; };
 		F53AAB102F6770A7003831F3 /* FindAndGoBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB082F6770A7003831F3 /* FindAndGoBehavior.swift */; };
 		F53AAB112F6770A7003831F3 /* FindAndGoStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB092F6770A7003831F3 /* FindAndGoStates.swift */; };
@@ -37,13 +39,15 @@
 		F57FE9702426D808005D5A59 /* RandomAngleBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE96F2426D808005D5A59 /* RandomAngleBehavior.swift */; };
 		F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */; };
 		F57FE9762427C72F005D5A59 /* MoveRightBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9752427C72F005D5A59 /* MoveRightBehavior.swift */; };
-		A1B2C3D82F67A0A7003831F3 /* MoveRightBehaviorFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D72F67A0A7003831F3 /* MoveRightBehaviorFOV.swift */; };
-		A1B2C3DA2F67A0A7003831F3 /* MoveRightStateFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */; };
 		F57FE9782427CEF3005D5A59 /* MoveRightState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9772427CEF3005D5A59 /* MoveRightState.swift */; };
 		F5EDA0B42416952400C42A29 /* InputDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EDA0B32416952400C42A29 /* InputDemo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezierDemo.swift; sourceTree = "<group>"; };
+		A1B2C3D52F6790A7003831F3 /* FOVDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FOVDemo.swift; sourceTree = "<group>"; };
+		A1B2C3D72F67A0A7003831F3 /* MoveRightBehaviorFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightBehaviorFOV.swift; sourceTree = "<group>"; };
+		A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightStateFOV.swift; sourceTree = "<group>"; };
 		F536B68B241690A800B3566F /* LiquidMetal2D-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LiquidMetal2D-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F536B68E241690A800B3566F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F536B690241690A800B3566F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -58,8 +62,6 @@
 		F536B6B02416926800B3566F /* playerShip1_orange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_orange.png; sourceTree = "<group>"; };
 		F536B6B12416926800B3566F /* playerShip1_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_green.png; sourceTree = "<group>"; };
 		F536B6B22416926800B3566F /* playerShip1_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_blue.png; sourceTree = "<group>"; };
-		A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezierDemo.swift; sourceTree = "<group>"; };
-		A1B2C3D52F6790A7003831F3 /* FOVDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FOVDemo.swift; sourceTree = "<group>"; };
 		F53AAB042F6770A7003831F3 /* CollisionDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionDemo.swift; sourceTree = "<group>"; };
 		F53AAB052F6770A7003831F3 /* CollisionObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionObj.swift; sourceTree = "<group>"; };
 		F53AAB062F6770A7003831F3 /* DemoSceneUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSceneUI.swift; sourceTree = "<group>"; };
@@ -75,8 +77,6 @@
 		F57FE96F2426D808005D5A59 /* RandomAngleBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAngleBehavior.swift; sourceTree = "<group>"; };
 		F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAngleState.swift; sourceTree = "<group>"; };
 		F57FE9752427C72F005D5A59 /* MoveRightBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightBehavior.swift; sourceTree = "<group>"; };
-		A1B2C3D72F67A0A7003831F3 /* MoveRightBehaviorFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightBehaviorFOV.swift; sourceTree = "<group>"; };
-		A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightStateFOV.swift; sourceTree = "<group>"; };
 		F57FE9772427CEF3005D5A59 /* MoveRightState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightState.swift; sourceTree = "<group>"; };
 		F5EDA0B32416952400C42A29 /* InputDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputDemo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -514,10 +514,10 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		F536B6A3241691DB00B3566F /* XCRemoteSwiftPackageReference "LiquidMetal2D" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:mattCasanova/LiquidMetal2D.git";
+			repositoryURL = "https://github.com/mattCasanova/LiquidMetal2D.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.5;
+				minimumVersion = 0.5.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

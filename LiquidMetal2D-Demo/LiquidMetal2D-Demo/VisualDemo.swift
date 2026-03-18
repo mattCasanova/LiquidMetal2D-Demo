@@ -25,13 +25,7 @@ import LiquidMetal2D
 /// - **Perspective projection:** FOV-based projection with configurable near/far planes.
 /// - **Texture loading:** `renderer.loadTexture(name:ext:isMipmaped:)` caches textures by ID.
 /// - **MoveRightBehavior:** A single-state Behavior that moves ships right and wraps them.
-///
-/// **Why `@unchecked Sendable`?**
-/// The engine's game loop runs entirely on the main thread (via CADisplayLink), so there are
-/// no data races. However, Swift 6 strict concurrency requires Scene implementations to be
-/// Sendable. `@unchecked Sendable` tells the compiler to trust that we handle thread safety
-/// ourselves (which we do, by staying on the main thread).
-class VisualDemo: Scene, @unchecked Sendable {
+class VisualDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

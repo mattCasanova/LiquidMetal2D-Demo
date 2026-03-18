@@ -29,7 +29,7 @@ import LiquidMetal2D
 ///   draw loop can `break` early when it hits an inactive object.
 /// - **NilBehavior / NilCollider:** Default no-op implementations of Behavior and Collider.
 ///   Inactive objects use these so update/collision calls are safe without nil checks.
-class CollisionDemo: Scene, @unchecked Sendable {
+class CollisionDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

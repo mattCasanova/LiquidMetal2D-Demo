@@ -29,7 +29,7 @@ import LiquidMetal2D
 /// - **Camera zoom:** Varying the camera's Z distance changes the visible world area.
 /// - **DefaultScene delegation:** Reuses DefaultScene for camera setup, projection, and drawing.
 /// - **simd_mix:** Component-wise linear interpolation for smooth color transitions.
-class SchedulerDemo: Scene, @unchecked Sendable {
+class SchedulerDemo: Scene {
     var sceneDelegate = DefaultScene()
 
     // Phase 1: Color crossfade

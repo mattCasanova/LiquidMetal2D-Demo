@@ -29,7 +29,7 @@ import LiquidMetal2D
 /// - **Sine-wave oscillation:** `sin(time * speed) * amplitude` creates
 ///   smooth pendulum motion, a common pattern for idle animations, bobbing,
 ///   or breathing effects.
-class FOVDemo: Scene, @unchecked Sendable {
+class FOVDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

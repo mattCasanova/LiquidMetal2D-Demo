@@ -32,7 +32,7 @@ import LiquidMetal2D
 ///   a pure UI overlay -- no game objects to simulate or render.
 /// **Why NSObject?** PauseDemo conforms to UITableViewDataSource and UITableViewDelegate,
 /// which are Objective-C protocols that require NSObject inheritance.
-class PauseDemo: NSObject, Scene, @unchecked Sendable {
+class PauseDemo: NSObject, Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

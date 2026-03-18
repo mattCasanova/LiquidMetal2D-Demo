@@ -27,7 +27,7 @@ import LiquidMetal2D
 ///   on the curve (t + 0.02) and computing `atan2` of the direction vector.
 /// - **zOrder for draw ordering:** The ship has zOrder = -1 (closer to camera) so it draws
 ///   on top of the control point markers at zOrder = 0.
-class BezierDemo: Scene, @unchecked Sendable {
+class BezierDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

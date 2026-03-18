@@ -1,5 +1,5 @@
 {
-  "originHash" : "dc7d42d5ad047447d7b4e4ef1f8ba363b1fca60a20c01ae0d55fe6f6209245d8",
+  "originHash" : "0e188217058b98a1a355322924e7a12e4539f69a34c72fdbd95d9913b444466b",
   "pins" : [
     {
       "identity" : "collectionconcurrencykit",
@@ -22,10 +22,10 @@
     {
       "identity" : "liquidmetal2d",
       "kind" : "remoteSourceControl",
-      "location" : "git@github.com:mattCasanova/LiquidMetal2D.git",
+      "location" : "https://github.com/mattCasanova/LiquidMetal2D.git",
       "state" : {
-        "revision" : "2ae882e2ceb3280bfbecd0dab865f7d2a812e98a",
-        "version" : "0.5.5"
+        "revision" : "eb45ca8495da4094df31756df9d9db09cb28fcba",
+        "version" : "0.5.6"
       }
     },
     {

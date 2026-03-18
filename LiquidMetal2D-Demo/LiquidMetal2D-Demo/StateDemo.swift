@@ -26,7 +26,7 @@ import LiquidMetal2D
 ///   (unlike `getWorldBounds` which takes an explicit camera distance). Simpler when you
 ///   do not need bounds for a different camera distance than the current one.
 /// - **Sort by scale for depth:** Objects sorted by scale.x so smaller ships draw first.
-class StateDemo: Scene, @unchecked Sendable {
+class StateDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

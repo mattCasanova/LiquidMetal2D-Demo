@@ -39,14 +39,14 @@ class ViewController: LiquidViewController {
         // Step 1: Register all scenes with the factory.
         // Each SceneType maps to a builder that can create instances of that scene.
         let sceneFactory = SceneFactory()
-        sceneFactory.addScene(type: SceneTypes.visualDemo, builder: TSceneBuilder<VisualDemo>())
-        sceneFactory.addScene(type: SceneTypes.inputDemo, builder: TSceneBuilder<InputDemo>())
-        sceneFactory.addScene(type: SceneTypes.explosionDemo, builder: TSceneBuilder<ExplosionDemo>())
+        sceneFactory.addScene(type: SceneTypes.massRenderDemo, builder: TSceneBuilder<MassRenderDemo>())
+        sceneFactory.addScene(type: SceneTypes.touchZoomDemo, builder: TSceneBuilder<TouchZoomDemo>())
+        sceneFactory.addScene(type: SceneTypes.instanceDemo, builder: TSceneBuilder<InstanceDemo>())
         sceneFactory.addScene(type: SceneTypes.schedulerDemo, builder: TSceneBuilder<SchedulerDemo>())
-        sceneFactory.addScene(type: SceneTypes.stateDemo, builder: TSceneBuilder<StateDemo>())
+        sceneFactory.addScene(type: SceneTypes.spawnDemo, builder: TSceneBuilder<SpawnDemo>())
         sceneFactory.addScene(type: SceneTypes.collisionDemo, builder: TSceneBuilder<CollisionDemo>())
         sceneFactory.addScene(type: SceneTypes.bezierDemo, builder: TSceneBuilder<BezierDemo>())
-        sceneFactory.addScene(type: SceneTypes.fovDemo, builder: TSceneBuilder<FOVDemo>())
+        sceneFactory.addScene(type: SceneTypes.cameraRotationDemo, builder: TSceneBuilder<CameraRotationDemo>())
         sceneFactory.addScene(type: SceneTypes.pauseDemo, builder: TSceneBuilder<PauseDemo>())
 
         // Step 2: Create the Metal renderer.
@@ -62,7 +62,7 @@ class ViewController: LiquidViewController {
         // and routes input events from LiquidViewController to the active scene.
         gameEngine = DefaultEngine(
             renderer: renderer,
-            initialSceneType: SceneTypes.visualDemo,
+            initialSceneType: SceneTypes.massRenderDemo,
             sceneFactory: sceneFactory)
 
         gameEngine.run()

@@ -15,7 +15,7 @@ import LiquidMetal2D
 /// The engine identifies scenes by `SceneType` values. You define your own enum conforming
 /// to `SceneType`, then register each case with the `SceneFactory` in your ViewController.
 /// This decouples scene transitions from concrete scene classes -- you call
-/// `sceneMgr.setScene(type: .inputDemo)` without importing InputDemo directly.
+/// `sceneMgr.setScene(type: .touchZoomDemo)` without importing TouchZoomDemo directly.
 ///
 /// **Registration flow:**
 /// 1. Define your enum cases here
@@ -26,36 +26,36 @@ import LiquidMetal2D
 /// The `navigable` list controls which scenes appear in the menu (excludes pauseDemo
 /// since it is a push-only overlay, not a standalone scene).
 enum SceneTypes: SceneType {
-    case visualDemo
-    case inputDemo
-    case explosionDemo
+    case massRenderDemo
+    case touchZoomDemo
+    case instanceDemo
     case schedulerDemo
-    case stateDemo
+    case spawnDemo
     case collisionDemo
     case bezierDemo
-    case fovDemo
+    case cameraRotationDemo
     case pauseDemo
 
     /// Human-readable display name for each scene, used in the PauseDemo menu table view.
     var title: String {
         switch self {
-        case .visualDemo: return "\(GameConstants.MAX_OBJECTS.formatted()) Ships - Instanced Rendering"
-        case .inputDemo: return "Touch Input & Camera Zoom"
-        case .explosionDemo: return "\(GameConstants.MAX_OBJECTS.formatted()) Ships - Touch Rotation"
-        case .schedulerDemo: return "Timed Tasks & Callbacks"
-        case .stateDemo: return "Touch Spawn & Easing"
+        case .massRenderDemo: return "\(GameConstants.MAX_OBJECTS.formatted()) Ships - Z-Depth Parallax"
+        case .touchZoomDemo: return "Touch Input & Camera Zoom"
+        case .instanceDemo: return "\(GameConstants.MAX_OBJECTS.formatted()) Ships - Instanced Rendering"
+        case .schedulerDemo: return "Scheduler - Task Chaining"
+        case .spawnDemo: return "Touch Spawn & Easing"
         case .collisionDemo: return "Collision & AI States"
         case .bezierDemo: return "Cubic Bezier Curves"
-        case .fovDemo: return "Camera Rotation"
+        case .cameraRotationDemo: return "Camera Rotation & Shake"
         case .pauseDemo: return "Paused"
         }
     }
 
     /// Navigable scenes in order (excludes pauseDemo which is push-only, not a standalone scene).
     static let navigable: [SceneTypes] = [
-        .visualDemo, .inputDemo, .explosionDemo,
-        .schedulerDemo, .stateDemo, .collisionDemo,
-        .bezierDemo, .fovDemo
+        .massRenderDemo, .touchZoomDemo, .instanceDemo,
+        .schedulerDemo, .spawnDemo, .collisionDemo,
+        .bezierDemo, .cameraRotationDemo
     ]
 
     /// Returns the next scene in the navigable list, or nil if this is the last one.

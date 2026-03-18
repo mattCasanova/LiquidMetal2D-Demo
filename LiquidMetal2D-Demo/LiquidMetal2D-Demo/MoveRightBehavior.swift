@@ -21,7 +21,7 @@ import LiquidMetal2D
 /// the visible rectangle at that depth. Ships at z=60 have much wider bounds than ships at z=0,
 /// so they correctly wrap at the screen edges regardless of their depth.
 ///
-/// **Used by:** `VisualDemo` -- 4,500 ships scrolling right at different z-depths.
+/// **Used by:** `MassRenderDemo` -- 4,500 ships scrolling right at different z-depths.
 class MoveRightBehavior: Behavior {
     /// Required by the Behavior protocol. Holds the currently active State.
     var current: State!

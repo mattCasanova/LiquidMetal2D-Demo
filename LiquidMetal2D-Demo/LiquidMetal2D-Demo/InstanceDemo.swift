@@ -1,5 +1,5 @@
 //
-//  ExplosionDemo.swift
+//  InstanceDemo.swift
 //  LiquidMetal2D-Demo
 //
 //  Originally SecondScene by Matt Casanova on 3/13/20.
@@ -32,7 +32,7 @@ import LiquidMetal2D
 /// `DefaultScene` instance and delegate common work (camera setup, projection, drawing)
 /// to it. You still implement the Scene protocol yourself, but forward calls you do not
 /// want to customize. This avoids boilerplate while keeping full control over update logic.
-class ExplosionDemo: Scene {
+class InstanceDemo: Scene {
     /// DefaultScene handles standard camera/projection setup and provides a draw() that
     /// iterates over its `objects` array. Access its `renderer`, `input`, `sceneMgr`,
     /// and `objects` properties to interact with the engine through the delegate.
@@ -157,5 +157,5 @@ class ExplosionDemo: Scene {
     @objc func onMenu() { ui.view.isHidden = true; sceneDelegate.sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
 
     /// Required factory method for TSceneBuilder. Every Scene must provide this.
-    static func build() -> Scene { return ExplosionDemo() }
+    static func build() -> Scene { return InstanceDemo() }
 }

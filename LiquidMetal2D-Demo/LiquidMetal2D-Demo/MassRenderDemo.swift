@@ -1,5 +1,5 @@
 //
-//  VisualDemo.swift
+//  MassRenderDemo.swift
 //  LiquidMetal2D-Demo
 //
 //  Created by Matt Casanova on 3/8/20.
@@ -25,7 +25,7 @@ import LiquidMetal2D
 /// - **Perspective projection:** FOV-based projection with configurable near/far planes.
 /// - **Texture loading:** `renderer.loadTexture(name:ext:isMipmaped:)` caches textures by ID.
 /// - **MoveRightBehavior:** A single-state Behavior that moves ships right and wraps them.
-class VisualDemo: Scene {
+class MassRenderDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
@@ -179,5 +179,5 @@ class VisualDemo: Scene {
     @objc func onMenu() { ui.view.isHidden = true; sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
 
     /// Every Scene needs a static build() method used by TSceneBuilder for the SceneFactory.
-    static func build() -> Scene { return VisualDemo() }
+    static func build() -> Scene { return MassRenderDemo() }
 }

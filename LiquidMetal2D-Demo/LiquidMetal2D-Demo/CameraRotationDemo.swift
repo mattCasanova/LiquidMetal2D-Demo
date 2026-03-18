@@ -1,5 +1,5 @@
 //
-//  FOVDemo.swift
+//  CameraRotationDemo.swift
 //  LiquidMetal2D-Demo
 //
 //  Created by Matt Casanova on 3/17/26.
@@ -29,7 +29,7 @@ import LiquidMetal2D
 /// - **Sine-wave oscillation:** `sin(time * speed) * amplitude` creates
 ///   smooth pendulum motion, a common pattern for idle animations, bobbing,
 ///   or breathing effects.
-class FOVDemo: Scene {
+class CameraRotationDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
@@ -235,5 +235,5 @@ class FOVDemo: Scene {
         sceneMgr.pushScene(type: SceneTypes.pauseDemo)
     }
 
-    static func build() -> Scene { return FOVDemo() }
+    static func build() -> Scene { return CameraRotationDemo() }
 }

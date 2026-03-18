@@ -197,7 +197,7 @@ class SchedulerDemo: Scene {
         }
     }
 
-    /// Respawn a ship at center with random properties (same pattern as ExplosionDemo).
+    /// Respawn a ship at center with random properties (same pattern as InstanceDemo).
     private func randomize(obj: GameObj) {
         obj.position.set(0, 0)
         let scale = Float.random(in: 0.25...5)

@@ -23,7 +23,7 @@ import LiquidMetal2D
 /// `setStartState` calls `enter()` on the state, which randomizes the object's initial
 /// properties. From then on, `update(dt:)` drives the state each frame.
 ///
-/// **Used by:** `StateDemo` -- ships spawn at the touch location and fly outward in
+/// **Used by:** `SpawnDemo` -- ships spawn at the touch location and fly outward in
 /// random directions, respawning when they leave the visible area.
 class RandomAngleBehavior: Behavior {
     /// Required by the Behavior protocol. Holds the currently active State.

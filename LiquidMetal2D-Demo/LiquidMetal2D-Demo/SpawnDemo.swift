@@ -1,5 +1,5 @@
 //
-//  StateDemo.swift
+//  SpawnDemo.swift
 //  LiquidMetal2D-Demo
 //
 //  Originally StateTestScene by Matt Casanova on 3/20/20.
@@ -26,7 +26,7 @@ import LiquidMetal2D
 ///   (unlike `getWorldBounds` which takes an explicit camera distance). Simpler when you
 ///   do not need bounds for a different camera distance than the current one.
 /// - **Sort by scale for depth:** Objects sorted by scale.x so smaller ships draw first.
-class StateDemo: Scene {
+class SpawnDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
@@ -161,5 +161,5 @@ class StateDemo: Scene {
     @objc func onMenu() { ui.view.isHidden = true; sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
 
     /// Required factory method for TSceneBuilder.
-    static func build() -> Scene { return StateDemo() }
+    static func build() -> Scene { return SpawnDemo() }
 }

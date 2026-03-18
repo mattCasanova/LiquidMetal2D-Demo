@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A1B2C3D42F6780A7003831F3 /* BezierDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */; };
-		A1B2C3D62F6790A7003831F3 /* FOVDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D52F6790A7003831F3 /* FOVDemo.swift */; };
+		A1B2C3D62F6790A7003831F3 /* CameraRotationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D52F6790A7003831F3 /* CameraRotationDemo.swift */; };
 		A1B2C3D82F67A0A7003831F3 /* MoveRightBehaviorFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D72F67A0A7003831F3 /* MoveRightBehaviorFOV.swift */; };
 		A1B2C3DA2F67A0A7003831F3 /* MoveRightStateFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */; };
 		F536B68F241690A800B3566F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B68E241690A800B3566F /* AppDelegate.swift */; };
@@ -19,12 +19,12 @@
 		F536B69B241690A900B3566F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F536B699241690A900B3566F /* LaunchScreen.storyboard */; };
 		F536B6A5241691DB00B3566F /* LiquidMetal2D in Frameworks */ = {isa = PBXBuildFile; productRef = F536B6A4241691DB00B3566F /* LiquidMetal2D */; };
 		F536B6AB2416922F00B3566F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B6AA2416922E00B3566F /* Constants.swift */; };
-		F536B6AE2416925800B3566F /* VisualDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B6AC2416925800B3566F /* VisualDemo.swift */; };
+		F536B6AE2416925800B3566F /* MassRenderDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B6AC2416925800B3566F /* MassRenderDemo.swift */; };
 		F536B6AF2416925800B3566F /* SceneTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B6AD2416925800B3566F /* SceneTypes.swift */; };
 		F536B6B32416926800B3566F /* playerShip1_orange.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B02416926800B3566F /* playerShip1_orange.png */; };
 		F536B6B42416926800B3566F /* playerShip1_green.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B12416926800B3566F /* playerShip1_green.png */; };
 		F536B6B52416926800B3566F /* playerShip1_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = F536B6B22416926800B3566F /* playerShip1_blue.png */; };
-		F53AAB0F2F6770A7003831F3 /* ExplosionDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */; };
+		F53AAB0F2F6770A7003831F3 /* InstanceDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB072F6770A7003831F3 /* InstanceDemo.swift */; };
 		F53AAB102F6770A7003831F3 /* FindAndGoBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB082F6770A7003831F3 /* FindAndGoBehavior.swift */; };
 		F53AAB112F6770A7003831F3 /* FindAndGoStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB092F6770A7003831F3 /* FindAndGoStates.swift */; };
 		F53AAB122F6770A7003831F3 /* SchedulerDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0D2F6770A7003831F3 /* SchedulerDemo.swift */; };
@@ -32,7 +32,7 @@
 		F53AAB142F6770A7003831F3 /* PauseDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0A2F6770A7003831F3 /* PauseDemo.swift */; };
 		F53AAB152F6770A7003831F3 /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0B2F6770A7003831F3 /* PlayerState.swift */; };
 		F53AAB162F6770A7003831F3 /* PlayerStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0C2F6770A7003831F3 /* PlayerStateMachine.swift */; };
-		F53AAB172F6770A7003831F3 /* StateDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0E2F6770A7003831F3 /* StateDemo.swift */; };
+		F53AAB172F6770A7003831F3 /* SpawnDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB0E2F6770A7003831F3 /* SpawnDemo.swift */; };
 		F53AAB182F6770A7003831F3 /* CollisionDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB042F6770A7003831F3 /* CollisionDemo.swift */; };
 		F53AAB192F6770A7003831F3 /* CollisionObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AAB052F6770A7003831F3 /* CollisionObj.swift */; };
 		F57FE96D2426D439005D5A59 /* BehaviorObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE96C2426D439005D5A59 /* BehaviorObj.swift */; };
@@ -40,12 +40,12 @@
 		F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */; };
 		F57FE9762427C72F005D5A59 /* MoveRightBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9752427C72F005D5A59 /* MoveRightBehavior.swift */; };
 		F57FE9782427CEF3005D5A59 /* MoveRightState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57FE9772427CEF3005D5A59 /* MoveRightState.swift */; };
-		F5EDA0B42416952400C42A29 /* InputDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EDA0B32416952400C42A29 /* InputDemo.swift */; };
+		F5EDA0B42416952400C42A29 /* TouchZoomDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EDA0B32416952400C42A29 /* TouchZoomDemo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezierDemo.swift; sourceTree = "<group>"; };
-		A1B2C3D52F6790A7003831F3 /* FOVDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FOVDemo.swift; sourceTree = "<group>"; };
+		A1B2C3D52F6790A7003831F3 /* CameraRotationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraRotationDemo.swift; sourceTree = "<group>"; };
 		A1B2C3D72F67A0A7003831F3 /* MoveRightBehaviorFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightBehaviorFOV.swift; sourceTree = "<group>"; };
 		A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightStateFOV.swift; sourceTree = "<group>"; };
 		F536B68B241690A800B3566F /* LiquidMetal2D-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LiquidMetal2D-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,7 +57,7 @@
 		F536B69A241690A900B3566F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F536B69C241690A900B3566F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F536B6AA2416922E00B3566F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		F536B6AC2416925800B3566F /* VisualDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualDemo.swift; sourceTree = "<group>"; };
+		F536B6AC2416925800B3566F /* MassRenderDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MassRenderDemo.swift; sourceTree = "<group>"; };
 		F536B6AD2416925800B3566F /* SceneTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneTypes.swift; sourceTree = "<group>"; };
 		F536B6B02416926800B3566F /* playerShip1_orange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_orange.png; sourceTree = "<group>"; };
 		F536B6B12416926800B3566F /* playerShip1_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip1_green.png; sourceTree = "<group>"; };
@@ -65,20 +65,20 @@
 		F53AAB042F6770A7003831F3 /* CollisionDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionDemo.swift; sourceTree = "<group>"; };
 		F53AAB052F6770A7003831F3 /* CollisionObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionObj.swift; sourceTree = "<group>"; };
 		F53AAB062F6770A7003831F3 /* DemoSceneUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSceneUI.swift; sourceTree = "<group>"; };
-		F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplosionDemo.swift; sourceTree = "<group>"; };
+		F53AAB072F6770A7003831F3 /* InstanceDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstanceDemo.swift; sourceTree = "<group>"; };
 		F53AAB082F6770A7003831F3 /* FindAndGoBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindAndGoBehavior.swift; sourceTree = "<group>"; };
 		F53AAB092F6770A7003831F3 /* FindAndGoStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindAndGoStates.swift; sourceTree = "<group>"; };
 		F53AAB0A2F6770A7003831F3 /* PauseDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseDemo.swift; sourceTree = "<group>"; };
 		F53AAB0B2F6770A7003831F3 /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
 		F53AAB0C2F6770A7003831F3 /* PlayerStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStateMachine.swift; sourceTree = "<group>"; };
 		F53AAB0D2F6770A7003831F3 /* SchedulerDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerDemo.swift; sourceTree = "<group>"; };
-		F53AAB0E2F6770A7003831F3 /* StateDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateDemo.swift; sourceTree = "<group>"; };
+		F53AAB0E2F6770A7003831F3 /* SpawnDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpawnDemo.swift; sourceTree = "<group>"; };
 		F57FE96C2426D439005D5A59 /* BehaviorObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BehaviorObj.swift; sourceTree = "<group>"; };
 		F57FE96F2426D808005D5A59 /* RandomAngleBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAngleBehavior.swift; sourceTree = "<group>"; };
 		F57FE9722426D8E4005D5A59 /* RandomAngleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAngleState.swift; sourceTree = "<group>"; };
 		F57FE9752427C72F005D5A59 /* MoveRightBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightBehavior.swift; sourceTree = "<group>"; };
 		F57FE9772427CEF3005D5A59 /* MoveRightState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightState.swift; sourceTree = "<group>"; };
-		F5EDA0B32416952400C42A29 /* InputDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputDemo.swift; sourceTree = "<group>"; };
+		F5EDA0B32416952400C42A29 /* TouchZoomDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchZoomDemo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,15 +140,15 @@
 			isa = PBXGroup;
 			children = (
 				F536B6AD2416925800B3566F /* SceneTypes.swift */,
-				F536B6AC2416925800B3566F /* VisualDemo.swift */,
-				F5EDA0B32416952400C42A29 /* InputDemo.swift */,
+				F536B6AC2416925800B3566F /* MassRenderDemo.swift */,
+				F5EDA0B32416952400C42A29 /* TouchZoomDemo.swift */,
 				A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */,
 				F53AAB042F6770A7003831F3 /* CollisionDemo.swift */,
-				A1B2C3D52F6790A7003831F3 /* FOVDemo.swift */,
-				F53AAB072F6770A7003831F3 /* ExplosionDemo.swift */,
+				A1B2C3D52F6790A7003831F3 /* CameraRotationDemo.swift */,
+				F53AAB072F6770A7003831F3 /* InstanceDemo.swift */,
 				F53AAB0A2F6770A7003831F3 /* PauseDemo.swift */,
 				F53AAB0D2F6770A7003831F3 /* SchedulerDemo.swift */,
-				F53AAB0E2F6770A7003831F3 /* StateDemo.swift */,
+				F53AAB0E2F6770A7003831F3 /* SpawnDemo.swift */,
 				F53AAB062F6770A7003831F3 /* DemoSceneUI.swift */,
 			);
 			name = scenes;
@@ -287,9 +287,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1B2C3D42F6780A7003831F3 /* BezierDemo.swift in Sources */,
-				A1B2C3D62F6790A7003831F3 /* FOVDemo.swift in Sources */,
+				A1B2C3D62F6790A7003831F3 /* CameraRotationDemo.swift in Sources */,
 				F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */,
-				F53AAB0F2F6770A7003831F3 /* ExplosionDemo.swift in Sources */,
+				F53AAB0F2F6770A7003831F3 /* InstanceDemo.swift in Sources */,
 				F53AAB102F6770A7003831F3 /* FindAndGoBehavior.swift in Sources */,
 				F53AAB112F6770A7003831F3 /* FindAndGoStates.swift in Sources */,
 				F53AAB122F6770A7003831F3 /* SchedulerDemo.swift in Sources */,
@@ -297,16 +297,16 @@
 				F53AAB142F6770A7003831F3 /* PauseDemo.swift in Sources */,
 				F53AAB152F6770A7003831F3 /* PlayerState.swift in Sources */,
 				F53AAB162F6770A7003831F3 /* PlayerStateMachine.swift in Sources */,
-				F53AAB172F6770A7003831F3 /* StateDemo.swift in Sources */,
+				F53AAB172F6770A7003831F3 /* SpawnDemo.swift in Sources */,
 				F53AAB182F6770A7003831F3 /* CollisionDemo.swift in Sources */,
 				F53AAB192F6770A7003831F3 /* CollisionObj.swift in Sources */,
-				F536B6AE2416925800B3566F /* VisualDemo.swift in Sources */,
+				F536B6AE2416925800B3566F /* MassRenderDemo.swift in Sources */,
 				F57FE96D2426D439005D5A59 /* BehaviorObj.swift in Sources */,
 				F536B693241690A800B3566F /* ViewController.swift in Sources */,
 				F536B6AF2416925800B3566F /* SceneTypes.swift in Sources */,
 				F536B68F241690A800B3566F /* AppDelegate.swift in Sources */,
 				F536B691241690A800B3566F /* SceneDelegate.swift in Sources */,
-				F5EDA0B42416952400C42A29 /* InputDemo.swift in Sources */,
+				F5EDA0B42416952400C42A29 /* TouchZoomDemo.swift in Sources */,
 				F57FE9762427C72F005D5A59 /* MoveRightBehavior.swift in Sources */,
 				A1B2C3D82F67A0A7003831F3 /* MoveRightBehaviorFOV.swift in Sources */,
 				A1B2C3DA2F67A0A7003831F3 /* MoveRightStateFOV.swift in Sources */,

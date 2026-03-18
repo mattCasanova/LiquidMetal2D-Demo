@@ -1,5 +1,5 @@
 //
-//  InputDemo.swift
+//  TouchZoomDemo.swift
 //  LiquidMetal2D-Demo
 //
 //  Created by Matt Casanova on 3/9/20.
@@ -32,7 +32,7 @@ import LiquidMetal2D
 /// every frame by the engine. `resize()` is called on device rotation. `resume()` is called
 /// when a pushed scene (PauseDemo) pops and this scene becomes active again. `shutdown()` is
 /// called when the scene is removed from the scene stack.
-class InputDemo: Scene {
+class TouchZoomDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
@@ -210,5 +210,5 @@ class InputDemo: Scene {
 
     /// Every Scene must provide a static build() method. The SceneFactory uses this
     /// (via TSceneBuilder<T>) to create new instances when transitioning between scenes.
-    static func build() -> Scene { return InputDemo() }
+    static func build() -> Scene { return TouchZoomDemo() }
 }

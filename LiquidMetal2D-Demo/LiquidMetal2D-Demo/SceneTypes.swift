@@ -33,6 +33,7 @@ enum SceneTypes: SceneType {
     case stateDemo
     case collisionDemo
     case bezierDemo
+    case fovDemo
     case pauseDemo
 
     /// Human-readable display name for each scene, used in the PauseDemo menu table view.
@@ -45,6 +46,7 @@ enum SceneTypes: SceneType {
         case .stateDemo: return "Touch Spawn & Easing"
         case .collisionDemo: return "Collision & AI States"
         case .bezierDemo: return "Cubic Bezier Curves"
+        case .fovDemo: return "Camera Rotation"
         case .pauseDemo: return "Paused"
         }
     }
@@ -53,7 +55,7 @@ enum SceneTypes: SceneType {
     static let navigable: [SceneTypes] = [
         .visualDemo, .inputDemo, .explosionDemo,
         .schedulerDemo, .stateDemo, .collisionDemo,
-        .bezierDemo
+        .bezierDemo, .fovDemo
     ]
 
     /// Returns the next scene in the navigable list, or nil if this is the last one.

@@ -8,29 +8,44 @@
 import UIKit
 import LiquidMetal2D
 
-/// State machine demo: A single large ship sits near the corner of the screen.
-/// Touch the screen and the ship rotates to face the touch point.
-/// Uses PlayerStateMachine (Behavior protocol) with a PlayerState that reads touch input each frame.
-/// Demonstrates: Behavior/State protocol pattern, InputReader for touch, single-object scene.
+/// Touch-spawn demo: Ships spawn at the touch location and fly outward in
+/// random directions with varying speeds and scales. Ships ease out as they
+/// spawn (scale from 0 to full over a short duration). Touch to redirect.
+/// Demonstrates: touch input (world coords), RandomAngleBehavior, easing.
 class StateDemo: Scene, @unchecked Sendable {
-    var sceneDelegate = DefaultScene()
+    private var sceneMgr: SceneManager!
+    private var renderer: Renderer!
+    private var input: InputReader!
 
-    let objectCount = 1
+    let distance: Float = 40
+    let objectCount = GameConstants.MAX_OBJECTS
+    var objects = [BehaviorObj]()
+
+    var spawnPos = Vec2()
+    private var spawnAge = [Float]()
+    private let spawnEaseDuration: Float = 0.3
+
     private var ui: DemoSceneUI!
     private var textures = [Int]()
 
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        sceneDelegate.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
+        self.sceneMgr = sceneMgr
+        self.renderer = renderer
+        self.input = input
 
         ["playerShip1_blue", "playerShip1_green", "playerShip1_orange"].forEach {
             textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
         }
 
-        sceneDelegate.objects = [BehaviorObj]()
-        createObjects()
+        renderer.setCamera(point: Vec3(0, 0, distance))
+        renderer.setPerspective(
+            fov: GameMath.degreeToRadian(getFOV()),
+            aspect: renderer.screenAspect,
+            nearZ: PerspectiveProjection.defaultNearZ,
+            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setClearColor(color: Vec3(0.1, 0.05, 0.15))
 
-        sceneDelegate.renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
-        sceneDelegate.renderer.setClearColor(color: Vec3(0.7, 0.5, 0.7))
+        createObjects()
 
         ui = DemoSceneUI(
             parentView: renderer.view, sceneType: .stateDemo, target: self,
@@ -41,56 +56,85 @@ class StateDemo: Scene, @unchecked Sendable {
     func resume() { ui.view.isHidden = false }
 
     func resize() {
-        sceneDelegate.resize()
         ui.layout()
-        repositionPlayer()
+        renderer.setPerspective(
+            fov: GameMath.degreeToRadian(getFOV()),
+            aspect: renderer.screenAspect,
+            nearZ: PerspectiveProjection.defaultNearZ,
+            farZ: PerspectiveProjection.defaultFarZ)
     }
 
     func update(dt: Float) {
-        for i in 0..<objectCount {
-            let obj = sceneDelegate.objects[i] as! BehaviorObj
-            obj.behavior.update(dt: dt)
+        if let touch = input.getWorldTouch(forZ: 0) {
+            spawnPos.set(touch.x, touch.y)
         }
-        sceneDelegate.objects.sort(by: { $0.zOrder < $1.zOrder })
+
+        for i in 0..<objectCount {
+            objects[i].behavior.update(dt: dt)
+
+            // Ease in the scale on spawn
+            if spawnAge[i] < spawnEaseDuration {
+                spawnAge[i] += dt
+                let t = min(spawnAge[i] / spawnEaseDuration, 1.0)
+                let eased = Easing.easeOutBack(t)
+                let baseScale = objects[i].zOrder // stash base scale in zOrder
+                objects[i].scale.set(baseScale * eased, baseScale * eased)
+            }
+        }
+
+        objects.sort(by: { $0.scale.x < $1.scale.x })
     }
 
-    func draw() { sceneDelegate.draw() }
+    func draw() {
+        let worldUniforms = WorldUniform()
+        renderer.beginPass()
+        renderer.usePerspective()
+
+        for i in 0..<objectCount {
+            let obj = objects[i]
+            renderer.useTexture(textureId: obj.textureID)
+            worldUniforms.transform.setToTransform2D(
+                scale: obj.scale, angle: obj.rotation,
+                translate: Vec3(obj.position, 0))
+            renderer.draw(uniforms: worldUniforms)
+        }
+
+        renderer.endPass()
+    }
 
     func shutdown() {
-        sceneDelegate.shutdown()
-        textures.forEach { sceneDelegate.renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
+        objects.removeAll()
+        spawnAge.removeAll()
         ui.removeFromSuperview()
+        textures.forEach { renderer.unloadTexture(textureId: $0) }
+        textures.removeAll()
+    }
+
+    private func getFOV() -> Float {
+        renderer.screenWidth <= renderer.screenHeight ? 90 : 45
     }
 
     private func createObjects() {
-        sceneDelegate.objects.removeAll()
+        objects.removeAll()
+        spawnAge.removeAll()
 
-        let zDepth: Float = 0
-        let bounds = sceneDelegate.renderer.getWorldBoundsFromCamera(zOrder: zDepth)
+        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        let getSpawnLocation = { [unowned self] in self.spawnPos }
+        let getBounds = { bounds }
 
-        let player = BehaviorObj()
-        player.zOrder = zDepth
-        player.position.x = bounds.maxX - 3
-        player.position.y = bounds.maxY - 3
-        player.scale.set(5, 5)
-        player.textureID = textures[0]
-        player.rotation = 0
-        player.velocity.set(0, 0)
-        player.behavior = PlayerStateMachine(obj: player, inputReader: sceneDelegate.input)
-
-        sceneDelegate.objects.append(player)
+        for _ in 0..<objectCount {
+            let obj = BehaviorObj()
+            obj.behavior = RandomAngleBehavior(
+                obj: obj, getSpawnLocation: getSpawnLocation,
+                getBounds: getBounds, textures: textures)
+            objects.append(obj)
+            spawnAge.append(spawnEaseDuration) // start fully eased in
+        }
     }
 
-    private func repositionPlayer() {
-        guard let player = sceneDelegate.objects.first else { return }
-        let bounds = sceneDelegate.renderer.getWorldBoundsFromCamera(zOrder: player.zOrder)
-        player.position.set(bounds.maxX - 3, bounds.maxY - 3)
-    }
-
-    @objc func onPrev() { if let s = SceneTypes.stateDemo.prev() { sceneDelegate.sceneMgr.setScene(type: s) } }
-    @objc func onNext() { if let s = SceneTypes.stateDemo.next() { sceneDelegate.sceneMgr.setScene(type: s) } }
-    @objc func onPause() { ui.view.isHidden = true; sceneDelegate.sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
+    @objc func onPrev() { if let s = SceneTypes.stateDemo.prev() { sceneMgr.setScene(type: s) } }
+    @objc func onNext() { if let s = SceneTypes.stateDemo.next() { sceneMgr.setScene(type: s) } }
+    @objc func onPause() { ui.view.isHidden = true; sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
 
     static func build() -> Scene { return StateDemo() }
 }

@@ -76,8 +76,16 @@ class InputDemo: Scene, @unchecked Sendable {
 
     func update(dt: Float) {
         if let touch = input.getWorldTouch(forZ: 0) {
-            let dir = Vec2(touch.x, touch.y) - centerShip.position
-            centerShip.rotation = atan2(dir.y, dir.x)
+            let touchPos = Vec2(touch.x, touch.y)
+
+            // Orient all ships toward touch
+            let centerDir = touchPos - centerShip.position
+            centerShip.rotation = atan2(centerDir.y, centerDir.x)
+
+            for ship in cornerShips {
+                let dir = touchPos - ship.position
+                ship.rotation = atan2(dir.y, dir.x)
+            }
 
             // Toggle zoom on touch
             if zoomT >= 1.0 {
@@ -94,7 +102,6 @@ class InputDemo: Scene, @unchecked Sendable {
             let easedT = Easing.easeInOutCubic(zoomT)
             currentZ = GameMath.lerp(a: startZ, b: targetZ, t: easedT)
             renderer.setCamera(point: Vec3(0, 0, currentZ))
-            positionCornerShips()
         }
     }
 
@@ -128,13 +135,13 @@ class InputDemo: Scene, @unchecked Sendable {
     private func createObjects() {
         centerShip = GameObj()
         centerShip.position.set(0, 0)
-        centerShip.scale.set(3, 3)
+        centerShip.scale.set(5, 5)
         centerShip.textureID = textures[0]
 
         cornerShips.removeAll()
         for i in 0..<4 {
             let ship = GameObj()
-            ship.scale.set(1.5, 1.5)
+            ship.scale.set(7, 7)
             ship.textureID = textures[1 + (i % 2)]
             cornerShips.append(ship)
         }
@@ -142,21 +149,20 @@ class InputDemo: Scene, @unchecked Sendable {
         positionCornerShips()
     }
 
+    /// Positions corner ships at the world bounds for the zoomed-in distance.
+    /// They stay fixed — as the camera zooms out, they come into full view.
     private func positionCornerShips() {
-        let bounds = renderer.getWorldBounds(cameraDistance: currentZ, zOrder: 0)
-        let offset: Float = 3
+        let bounds = renderer.getWorldBounds(cameraDistance: nearZ, zOrder: 0)
 
-        // Top-right, top-left, bottom-left, bottom-right
-        let positions: [(Float, Float, Float)] = [
-            (bounds.maxX - offset, bounds.maxY - offset, GameMath.degreeToRadian(135)),
-            (bounds.minX + offset, bounds.maxY - offset, GameMath.degreeToRadian(225)),
-            (bounds.minX + offset, bounds.minY + offset, GameMath.degreeToRadian(315)),
-            (bounds.maxX - offset, bounds.minY + offset, GameMath.degreeToRadian(45))
+        let positions: [(Float, Float)] = [
+            (bounds.maxX, bounds.maxY),
+            (bounds.minX, bounds.maxY),
+            (bounds.minX, bounds.minY),
+            (bounds.maxX, bounds.minY)
         ]
 
         for i in 0..<cornerShips.count {
             cornerShips[i].position.set(positions[i].0, positions[i].1)
-            cornerShips[i].rotation = positions[i].2
         }
     }
 

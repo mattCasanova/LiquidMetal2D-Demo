@@ -8,9 +8,10 @@
 import UIKit
 import LiquidMetal2D
 
-/// Bezier curve demo: A ship follows a cubic bezier path defined by 4 control
-/// points. Touch the screen to move the draggable control point (p1).
-/// Demonstrates: GameMath.cubicBezier, touch input, orientation along curve.
+/// Bezier curve demo: A ship follows two chained cubic bezier segments
+/// (7 control points). Touch near a control point to grab it, then drag
+/// to reshape the curve. Demonstrates: GameMath.cubicBezier, click-and-drag
+/// input, orientation along curve tangent.
 class BezierDemo: Scene, @unchecked Sendable {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
@@ -19,13 +20,23 @@ class BezierDemo: Scene, @unchecked Sendable {
     private var ship: GameObj!
     private var controlPointShips = [GameObj]()
 
-    private var p0 = Vec2(-20, -15)
-    private var p1 = Vec2(-10, 20)
-    private var p2 = Vec2(10, 20)
-    private var p3 = Vec2(20, -15)
+    // Two chained cubic bezier segments: [0..3] and [3..6]
+    private var controlPoints: [Vec2] = [
+        Vec2(-25, -10),
+        Vec2(-18, 20),
+        Vec2(-5, 15),
+        Vec2(0, -5),
+        Vec2(5, -20),
+        Vec2(18, 15),
+        Vec2(25, -10)
+    ]
 
     private var t: Float = 0
-    private let speed: Float = 0.4
+    private let speed: Float = 0.3
+
+    private let grabRadius: Float = 4
+    private var dragIndex: Int? = nil
+    private var wasTouching = false
 
     private var ui: DemoSceneUI!
     private var textures = [Int]()
@@ -67,26 +78,27 @@ class BezierDemo: Scene, @unchecked Sendable {
     }
 
     func update(dt: Float) {
-        // Touch moves control point p1
-        if let touch = input.getWorldTouch(forZ: 0) {
-            p1.set(touch.x, touch.y)
-            controlPointShips[1].position.set(p1.x, p1.y)
-        }
+        handleDrag()
 
-        // Advance t along the curve
+        // Advance t along the full path (0→2 maps to two segments)
         t += speed * dt
-        if t > 1 { t -= 1 }
+        if t > 2 { t -= 2 }
 
-        // Position ship on curve
-        let pos = GameMath.cubicBezier(p0: p0, p1: p1, p2: p2, p3: p3, t: t)
+        // Evaluate position on chained curves
+        let pos = evaluatePath(at: t)
         ship.position.set(pos.x, pos.y)
 
-        // Orient ship along curve tangent (sample a point slightly ahead)
-        let lookAhead = min(t + 0.02, 1.0)
-        let next = GameMath.cubicBezier(p0: p0, p1: p1, p2: p2, p3: p3, t: lookAhead)
+        // Orient along tangent
+        let lookAhead = t + 0.02 < 2 ? t + 0.02 : t + 0.02 - 2
+        let next = evaluatePath(at: lookAhead)
         let dir = next - pos
         if dir.lengthSquared > GameMath.epsilon {
             ship.rotation = atan2(dir.y, dir.x)
+        }
+
+        // Sync control point visuals
+        for i in 0..<controlPoints.count {
+            controlPointShips[i].position.set(controlPoints[i].x, controlPoints[i].y)
         }
     }
 
@@ -95,7 +107,6 @@ class BezierDemo: Scene, @unchecked Sendable {
         renderer.beginPass()
         renderer.usePerspective()
 
-        // Draw control points first (behind the ship)
         for cp in controlPointShips {
             renderer.useTexture(textureId: cp.textureID)
             worldUniforms.transform.setToTransform2D(
@@ -104,7 +115,6 @@ class BezierDemo: Scene, @unchecked Sendable {
             renderer.draw(uniforms: worldUniforms)
         }
 
-        // Draw the main ship
         renderer.useTexture(textureId: ship.textureID)
         worldUniforms.transform.setToTransform2D(
             scale: ship.scale, angle: ship.rotation,
@@ -120,8 +130,53 @@ class BezierDemo: Scene, @unchecked Sendable {
         textures.removeAll()
     }
 
+    // MARK: - Private
+
     private func getFOV() -> Float {
         renderer.screenWidth <= renderer.screenHeight ? 90 : 45
+    }
+
+    /// Evaluates the chained bezier path. t in [0,1) = first segment, [1,2) = second.
+    private func evaluatePath(at t: Float) -> Vec2 {
+        if t < 1 {
+            return GameMath.cubicBezier(
+                p0: controlPoints[0], p1: controlPoints[1],
+                p2: controlPoints[2], p3: controlPoints[3], t: t)
+        } else {
+            return GameMath.cubicBezier(
+                p0: controlPoints[3], p1: controlPoints[4],
+                p2: controlPoints[5], p3: controlPoints[6], t: t - 1)
+        }
+    }
+
+    private func handleDrag() {
+        guard let touch = input.getWorldTouch(forZ: 0) else {
+            wasTouching = false
+            dragIndex = nil
+            return
+        }
+
+        let touchPos = Vec2(touch.x, touch.y)
+
+        if !wasTouching {
+            // New touch — find closest control point within grab radius
+            var bestDist: Float = grabRadius * grabRadius
+            var bestIndex: Int? = nil
+            for i in 0..<controlPoints.count {
+                let dist = (touchPos - controlPoints[i]).lengthSquared
+                if dist < bestDist {
+                    bestDist = dist
+                    bestIndex = i
+                }
+            }
+            dragIndex = bestIndex
+        }
+
+        if let index = dragIndex {
+            controlPoints[index] = touchPos
+        }
+
+        wasTouching = true
     }
 
     private func createObjects() {
@@ -130,13 +185,13 @@ class BezierDemo: Scene, @unchecked Sendable {
         ship.textureID = textures[0]
         ship.zOrder = -1
 
-        let points = [p0, p1, p2, p3]
         controlPointShips.removeAll()
-        for i in 0..<4 {
+        for i in 0..<controlPoints.count {
             let cp = GameObj()
-            cp.position.set(points[i].x, points[i].y)
-            cp.scale.set(0.8, 0.8)
-            cp.textureID = textures[i == 1 ? 2 : 1]
+            cp.position.set(controlPoints[i].x, controlPoints[i].y)
+            let isPassThrough = (i == 0 || i == 3 || i == 6)
+            cp.scale.set(isPassThrough ? 4 : 3, isPassThrough ? 4 : 3)
+            cp.textureID = isPassThrough ? textures[1] : textures[2]
             cp.zOrder = 0
             controlPointShips.append(cp)
         }

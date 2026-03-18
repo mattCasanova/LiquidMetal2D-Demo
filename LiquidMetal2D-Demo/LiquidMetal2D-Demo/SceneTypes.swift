@@ -25,8 +25,8 @@ enum SceneTypes: SceneType {
         case .inputDemo: return "Touch Input & Camera Zoom"
         case .explosionDemo: return "4,500 Ships - Touch Rotation"
         case .schedulerDemo: return "Timed Tasks & Callbacks"
-        case .stateDemo: return "Behavior / State Pattern"
-        case .collisionDemo: return "Circle Collision & AI"
+        case .stateDemo: return "Touch Spawn & Easing"
+        case .collisionDemo: return "Collision & AI States"
         case .bezierDemo: return "Cubic Bezier Curves"
         case .pauseDemo: return "Paused"
         }

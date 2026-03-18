@@ -106,7 +106,7 @@ class SchedulerDemo: Scene, @unchecked Sendable {
         if isZooming {
             zoomTime += dt
             let t = min(zoomTime / zoomDuration, 1)
-            distance = baseDistance - 20 * sin(t * .pi)
+            distance = baseDistance + 50 * sin(t * .pi)
         }
 
         sceneDelegate.renderer.setCamera(point: Vec3(0, 0, distance))

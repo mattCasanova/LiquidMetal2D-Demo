@@ -34,6 +34,7 @@ class SpawnDemo: Scene {
     let distance: Float = 40
     let objectCount = GameConstants.MAX_OBJECTS
     var objects = [BehaviorObj]()
+    private let worldUniforms = WorldUniform()
 
     /// Current spawn position in world space. Updated each frame from touch input.
     var spawnPos = Vec2()
@@ -112,10 +113,20 @@ class SpawnDemo: Scene {
         objects.sort(by: { $0.scale.x < $1.scale.x })
     }
 
+    /// Uses the advanced useTexture()/draw() API instead of submit() to preserve
+    /// insertion order. This demonstrates non-batched rendering where textures
+    /// interleave naturally based on spawn order, unlike submit() which sorts
+    /// by (zOrder, textureID) and groups all same-texture objects together.
     func draw() {
         guard renderer.beginPass() else { return }
         renderer.usePerspective()
-        renderer.submit(objects: objects)
+
+        for obj in objects {
+            renderer.useTexture(textureId: obj.textureID)
+            obj.toUniform(worldUniforms)
+            renderer.draw(uniforms: worldUniforms)
+        }
+
         renderer.endPass()
     }
 

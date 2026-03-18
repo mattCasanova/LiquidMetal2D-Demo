@@ -43,7 +43,7 @@ enum SceneTypes: SceneType {
         case .touchZoomDemo: return "Touch Input & Camera Zoom"
         case .instanceDemo: return "\(GameConstants.MAX_OBJECTS.formatted()) Ships - Instanced Rendering"
         case .schedulerDemo: return "Scheduler - Task Chaining"
-        case .spawnDemo: return "Touch Spawn & Easing"
+        case .spawnDemo: return "Touch Spawn - Manual Draw Order"
         case .collisionDemo: return "Collision & AI States"
         case .bezierDemo: return "Cubic Bezier Curves"
         case .cameraRotationDemo: return "Camera Rotation & Shake"

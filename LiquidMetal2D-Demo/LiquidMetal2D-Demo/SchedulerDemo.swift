@@ -8,37 +8,50 @@
 import UIKit
 import LiquidMetal2D
 
-/// Scheduler demo showcasing timed tasks with finite repeat counts and completion callbacks.
+/// Scheduler demo showcasing task chaining, finite repeats, and completion callbacks.
 ///
-/// **What the user sees:** 100 ships explode outward from center. The background color
-/// swaps every 2 seconds, but only 4 times total. After the 4th swap, the background
-/// freezes and all ships respawn -- a visual cue that the onComplete callback fired.
-/// Touch rotates all ships toward the touch point.
+/// **What the user sees:** 100 ships explode outward from center. The demo cycles through
+/// three phases in a continuous loop:
+/// 1. Background color crossfades back and forth 4 times (6 seconds)
+/// 2. Camera rotates a full 360° (6 seconds)
+/// 3. Camera zooms in close then back out (6 seconds), ships respawn, and the cycle restarts
+///
+/// Touch rotates all ships toward the touch point at any time.
 ///
 /// **Engine features demonstrated:**
-/// - **Scheduler:** The `Scheduler` manages a list of `ScheduledTask` objects. Call
-///   `scheduler.update(dt:)` each frame to advance all tasks.
-/// - **ScheduledTask with finite count:** `ScheduledTask(time:action:count:onComplete:)`
-///   fires `action` every `time` seconds, but only `count` times. After the last fire,
-///   `onComplete` is called. This is how you create one-shot sequences or limited loops.
+/// - **Task chaining:** `task.then(time:action:count:onComplete:)` sequences multiple
+///   tasks so each starts automatically when the previous one completes.
+/// - **Finite repeat count:** Phase 1 uses `count: 4` to fire exactly 4 times.
+/// - **onComplete callbacks:** Each phase's completion triggers the next phase's setup.
+/// - **Infinite looping via chaining:** The final onComplete rebuilds the entire chain,
+///   creating a self-restarting cycle.
+/// - **Camera rotation:** `setCameraRotation(angle:)` rotates the view around the Z axis.
+/// - **Camera zoom:** Varying the camera's Z distance changes the visible world area.
 /// - **DefaultScene delegation:** Reuses DefaultScene for camera setup, projection, and drawing.
 /// - **simd_mix:** Component-wise linear interpolation for smooth color transitions.
 class SchedulerDemo: Scene, @unchecked Sendable {
     var sceneDelegate = DefaultScene()
 
-    /// Becomes false after the scheduled task completes, freezing the background color
+    // Phase 1: Color crossfade
     var shouldChange = true
-    /// Tracks color interpolation progress (0 to maxChangeTime seconds)
     var changeTime: Float = 0
-    /// Duration of one color crossfade cycle in seconds
-    let maxChangeTime: Float = 2
-    /// Camera z-distance
-    var distance: Float = 40
-    /// Fewer objects than VisualDemo to keep focus on the scheduler behavior
-    let objectCount = 100
-
+    let maxChangeTime: Float = 1.5
     var startColor = Vec3(0, 0.5, 0.7)
     var endColor = Vec3(0.4, 0, 0)
+
+    // Phase 2: Camera rotation
+    var isRotating = false
+    var cameraAngle: Float = 0
+    let rotationDuration: Float = 6
+
+    // Phase 3: Camera zoom
+    var isZooming = false
+    var zoomTime: Float = 0
+    let zoomDuration: Float = 6
+
+    let baseDistance: Float = 40
+    var distance: Float = 40
+    let objectCount = 100
 
     private var ui: DemoSceneUI!
     private var textures = [Int]()
@@ -46,7 +59,6 @@ class SchedulerDemo: Scene, @unchecked Sendable {
 
     /// Scene protocol: called once when the scene is created.
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        // Delegate handles camera, projection, and stores engine references
         sceneDelegate.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
 
         ["playerShip1_blue", "playerShip1_green", "playerShip1_orange"].forEach {
@@ -59,22 +71,7 @@ class SchedulerDemo: Scene, @unchecked Sendable {
             parentView: renderer.view, target: self,
             menuAction: #selector(onMenu))
 
-        // ScheduledTask with count: 4 means the action fires exactly 4 times (every 2 seconds).
-        // After the 4th fire, onComplete runs once. Compare with VisualDemo's scheduler which
-        // omits count, making it repeat indefinitely.
-        //
-        // action: fires every `maxChangeTime` seconds -- swaps the two colors
-        // count: 4 -- limits how many times action fires
-        // onComplete: fires once after all 4 actions complete -- stops color changes and respawns ships
-        scheduler.add(task: ScheduledTask(time: maxChangeTime, action: { [unowned self] in
-            self.changeTime = 0
-            let temp = self.startColor
-            self.startColor = self.endColor
-            self.endColor = temp
-        }, count: 4, onComplete: { [unowned self] in
-            self.shouldChange = false
-            self.createObjects()
-        }))
+        buildDemoChain()
     }
 
     /// Scene protocol: re-show the menu button when returning from PauseDemo.
@@ -87,17 +84,29 @@ class SchedulerDemo: Scene, @unchecked Sendable {
     }
 
     func update(dt: Float) {
-        // Advance the scheduler -- this ticks all active ScheduledTasks
         scheduler.update(dt: dt)
 
-        // Only animate background color while the scheduler task is still active
+        // Phase 1: Smooth color crossfade between swaps
         if shouldChange {
-            let t = changeTime / maxChangeTime
+            changeTime += dt
+            let t = min(changeTime / maxChangeTime, 1)
             sceneDelegate.renderer.setClearColor(
                 color: simd_mix(startColor, endColor, Vec3(repeating: t)))
         } else {
-            // After onComplete fires, lock the background to the current startColor
             sceneDelegate.renderer.setClearColor(color: startColor)
+        }
+
+        // Phase 2: Smooth 360° camera rotation
+        if isRotating {
+            cameraAngle += (GameMath.twoPi / rotationDuration) * dt
+            sceneDelegate.renderer.setCameraRotation(angle: cameraAngle)
+        }
+
+        // Phase 3: Zoom in then back out (sine curve)
+        if isZooming {
+            zoomTime += dt
+            let t = min(zoomTime / zoomDuration, 1)
+            distance = baseDistance - 20 * sin(t * .pi)
         }
 
         sceneDelegate.renderer.setCamera(point: Vec3(0, 0, distance))
@@ -107,7 +116,6 @@ class SchedulerDemo: Scene, @unchecked Sendable {
             let obj = sceneDelegate.objects[i]
             obj.position += obj.velocity * dt
             if let v = vec { obj.rotation = atan2(v.y, v.x) }
-            // Respawn ships that travel beyond 60 units from center
             if simd_length_squared(obj.position) >= 3600 { randomize(obj: obj) }
         }
 
@@ -122,9 +130,62 @@ class SchedulerDemo: Scene, @unchecked Sendable {
     /// and unload textures to free GPU memory.
     func shutdown() {
         scheduler.clear()
+        sceneDelegate.renderer.setCameraRotation(angle: 0)
         textures.forEach { sceneDelegate.renderer.unloadTexture(textureId: $0) }
         textures.removeAll()
         ui.removeFromSuperview()
+    }
+
+    /// Builds the three-phase task chain and adds it to the scheduler.
+    /// Called on init and again from the final onComplete to loop forever.
+    private func buildDemoChain() {
+        // Reset all phase state
+        shouldChange = true
+        changeTime = 0
+        isRotating = false
+        cameraAngle = 0
+        isZooming = false
+        zoomTime = 0
+        distance = baseDistance
+        startColor = Vec3(0, 0.5, 0.7)
+        endColor = Vec3(0.4, 0, 0)
+        sceneDelegate.renderer.setCameraRotation(angle: 0)
+
+        // Phase 1: Swap background color 4 times with smooth crossfades
+        let colorSwap = ScheduledTask(time: maxChangeTime, action: { [unowned self] in
+            self.changeTime = 0
+            let temp = self.startColor
+            self.startColor = self.endColor
+            self.endColor = temp
+        }, count: 4, onComplete: { [unowned self] in
+            // Phase 1 done — freeze color, start rotation
+            self.shouldChange = false
+            self.isRotating = true
+            self.cameraAngle = 0
+        })
+
+        // Phase 2: Camera rotates 360° over rotationDuration seconds
+        let rotation = colorSwap.then(time: rotationDuration, action: { [unowned self] in
+            self.isRotating = false
+            self.cameraAngle = 0
+            self.sceneDelegate.renderer.setCameraRotation(angle: 0)
+        }, count: 1, onComplete: { [unowned self] in
+            // Phase 2 done — start zoom
+            self.isZooming = true
+            self.zoomTime = 0
+        })
+
+        // Phase 3: Zoom in then back out over zoomDuration seconds
+        rotation.then(time: zoomDuration, action: { [unowned self] in
+            self.isZooming = false
+            self.distance = self.baseDistance
+        }, count: 1, onComplete: { [unowned self] in
+            // All phases done — respawn ships and restart the whole cycle
+            self.createObjects()
+            self.buildDemoChain()
+        })
+
+        scheduler.add(task: colorSwap)
     }
 
     private func createObjects() {

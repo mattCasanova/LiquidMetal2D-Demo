@@ -2,91 +2,179 @@
 //  PauseDemo.swift
 //  LiquidMetal2D-Demo
 //
-//  Freeze-frame pause overlay. The previous scene stays rendered underneath.
+//  Scene menu overlay. Slides in from the left with a table view
+//  of all available scenes. Tap to switch, or Resume to go back.
 //
 
 import UIKit
 import LiquidMetal2D
 
-/// Pause overlay: pushed on top of the current scene via pushScene.
-/// The previous scene's last frame stays visible (Metal doesn't clear).
-/// A tinted overlay and "Paused" label appear on top. Resume pops back.
-/// Demonstrates: scene stacking (pushScene/popScene) as a pause mechanism.
-class PauseDemo: Scene, @unchecked Sendable {
+/// Menu overlay scene pushed on top of the current game scene.
+///
+/// **What the user sees:** A dark semi-transparent overlay covers the screen, and a panel
+/// slides in from the left containing a "Resume" button and a list of all demo scenes.
+/// Tapping Resume slides the panel out and pops this scene, returning to the previous scene.
+/// Tapping a scene name slides out and switches to that scene.
+///
+/// **Engine features demonstrated:**
+/// - **Scene stacking (push/pop):** This scene is *pushed* on top of the current scene using
+///   `sceneMgr.pushScene(type:)`. The underlying scene is NOT destroyed -- it remains on the
+///   scene stack. Calling `sceneMgr.popScene()` removes this overlay and calls `resume()` on
+///   the scene underneath, restoring it seamlessly.
+/// - **setScene vs pushScene:** `sceneMgr.setScene(type:)` replaces the entire scene stack
+///   (shuts down all stacked scenes). `pushScene` adds on top. This demo uses setScene for
+///   scene navigation and popScene for resume.
+/// - **SlidePanel:** A library UI component that animates a content view in/out from an edge.
+///   `SlidePanel(parentView:direction:duration:)` creates it, `slideIn()` and
+///   `slideOut(completion:)` animate the entrance and exit. The completion callback is where
+///   you perform the scene transition, ensuring the animation finishes before switching.
+/// - **Scene lifecycle:** This scene has empty `update()` and `draw()` methods because it is
+///   a pure UI overlay -- no game objects to simulate or render.
+/// **Why NSObject?** PauseDemo conforms to UITableViewDataSource and UITableViewDelegate,
+/// which are Objective-C protocols that require NSObject inheritance.
+class PauseDemo: NSObject, Scene, @unchecked Sendable {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!
 
     private var overlayView: UIView!
-    private var pausedLabel: UILabel!
-    private var resumeButton: UIButton!
+    private var slidePanel: SlidePanel!
+    private var tableView: UITableView!
 
+    /// The list of scenes available for navigation (excludes pauseDemo itself)
+    private let scenes = SceneTypes.navigable
+    private let cellId = "SceneCell"
+
+    /// Scene protocol: called once when this overlay scene is pushed onto the stack.
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
 
-        // Semi-transparent dark overlay
+        // Semi-transparent dark overlay that dims the scene underneath
         overlayView = UIView(frame: renderer.view.bounds)
         overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         renderer.view.addSubview(overlayView)
 
-        // "Paused" label
-        pausedLabel = UILabel()
-        pausedLabel.text = "Paused"
-        pausedLabel.textColor = .white
-        pausedLabel.textAlignment = .center
-        pausedLabel.font = UIFont.boldSystemFont(ofSize: 36)
-        overlayView.addSubview(pausedLabel)
+        // SlidePanel animates a content view from the specified edge.
+        // .left means it slides in from the left side of the screen.
+        slidePanel = SlidePanel(
+            parentView: renderer.view,
+            direction: .left,
+            duration: 0.3)
 
-        // Resume button
-        resumeButton = UIButton(frame: .zero)
-        resumeButton.backgroundColor = .systemGreen
-        resumeButton.setTitle("Resume", for: .normal)
-        resumeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        resumeButton.layer.cornerRadius = 8
-        resumeButton.addTarget(self, action: #selector(onResume), for: .touchUpInside)
-        overlayView.addSubview(resumeButton)
-
-        layoutUI()
+        buildMenuUI()
+        // Trigger the slide-in animation after setup is complete
+        slidePanel.slideIn()
     }
 
+    /// Scene protocol: not used by this scene since nothing can push on top of it.
     func resume() {}
 
+    /// Scene protocol: called on device rotation. Resize the overlay and panel.
     func resize() {
         overlayView.frame = renderer.view.bounds
-        layoutUI()
+        // SlidePanel.layout() recalculates the panel frame for the new screen size
+        slidePanel.layout()
+        layoutMenuUI()
     }
 
-    func update(dt: Float) {
-        // No game logic — scene is paused
-    }
+    // No game logic to update in a pure UI overlay scene
+    func update(dt: Float) {}
+    // No game objects to draw -- the underlying scene's last frame is still visible
+    func draw() {}
 
-    func draw() {
-        // Don't render anything — the previous scene's last frame stays visible
-    }
-
+    /// Scene protocol: clean up UI elements. Called when this scene is popped or replaced.
     func shutdown() {
+        slidePanel.removeFromSuperview()
         overlayView.removeFromSuperview()
     }
 
-    private func layoutUI() {
-        let center = CGPoint(x: overlayView.bounds.midX, y: overlayView.bounds.midY)
+    // MARK: - Menu UI
 
-        pausedLabel.frame = CGRect(x: 0, y: center.y - 60, width: overlayView.bounds.width, height: 44)
+    private func buildMenuUI() {
+        // slidePanel.contentView is the panel's drawable area where you add your UI
+        let content = slidePanel.contentView
 
-        let buttonWidth: CGFloat = 140
-        let buttonHeight: CGFloat = 50
-        resumeButton.frame = CGRect(
-            x: center.x - buttonWidth / 2,
-            y: center.y,
-            width: buttonWidth,
-            height: buttonHeight)
+        let resumeButton = UIButton(frame: .zero)
+        resumeButton.setTitle("Resume", for: .normal)
+        resumeButton.setTitleColor(.systemBlue, for: .normal)
+        resumeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        resumeButton.contentHorizontalAlignment = .left
+        resumeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+        resumeButton.addTarget(self, action: #selector(onResume), for: .touchUpInside)
+        resumeButton.tag = 100
+        content.addSubview(resumeButton)
+
+        tableView = UITableView(frame: .zero, style: .plain)
+        tableView.backgroundColor = .clear
+        tableView.separatorColor = .clear
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        content.addSubview(tableView)
+
+        layoutMenuUI()
     }
 
+    private func layoutMenuUI() {
+        let content = slidePanel.contentView
+        let safeArea = renderer.view.safeAreaInsets
+        let topPadding = safeArea.top + 16
+        let fullWidth = content.bounds.width
+
+        if let resumeButton = content.viewWithTag(100) {
+            resumeButton.frame = CGRect(
+                x: 0, y: topPadding,
+                width: fullWidth, height: 44)
+        }
+
+        tableView.frame = CGRect(
+            x: 0, y: topPadding + 52,
+            width: fullWidth,
+            height: content.bounds.height - topPadding - 52)
+    }
+
+    /// Resume: slide the panel out, then pop this scene off the stack.
+    /// popScene returns to the previous scene and calls its resume() method.
     @objc func onResume() {
-        sceneMgr.popScene()
+        slidePanel.slideOut { [weak self] in
+            self?.sceneMgr.popScene()
+        }
     }
 
+    /// Navigate to a different scene: slide out, then setScene which replaces the
+    /// entire scene stack (shuts down this overlay AND the scene underneath).
+    private func selectScene(_ sceneType: SceneTypes) {
+        slidePanel.slideOut { [weak self] in
+            self?.sceneMgr.setScene(type: sceneType)
+        }
+    }
+
+    /// Required factory method for TSceneBuilder.
     static func build() -> Scene { return PauseDemo() }
+}
+
+// MARK: - UITableViewDataSource & Delegate
+// Standard UIKit table view pattern for displaying the list of navigable scenes.
+
+extension PauseDemo: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return scenes.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        // SceneTypes.title provides a human-readable name for each scene
+        cell.textLabel?.text = scenes[indexPath.row].title
+        cell.textLabel?.textColor = .white
+        cell.backgroundColor = .clear
+        cell.selectionStyle = .gray
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        selectScene(scenes[indexPath.row])
+    }
 }

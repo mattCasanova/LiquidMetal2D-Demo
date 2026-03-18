@@ -8,10 +8,24 @@
 import UIKit
 import LiquidMetal2D
 
-/// Touch-spawn demo: Ships spawn at the touch location and fly outward in
-/// random directions with varying speeds and scales. Ships ease out as they
-/// spawn (scale from 0 to full over a short duration). Touch to redirect.
-/// Demonstrates: touch input (world coords), RandomAngleBehavior, easing.
+/// Touch-spawn demo with easing on spawn scale.
+///
+/// **What the user sees:** Ships continuously spawn at the touch location (or center if
+/// no touch) and fly outward in random directions. Each ship "pops" into existence with
+/// an overshoot scale animation (easeOutBack). Smaller ships draw behind larger ones,
+/// creating a layered depth effect even though all ships are at z=0.
+///
+/// **Engine features demonstrated:**
+/// - **Touch input (world coords):** `input.getWorldTouch(forZ:)` maps screen touches
+///   to world-space at z=0. The spawn position updates every frame the touch is active.
+/// - **RandomAngleBehavior:** A single-state Behavior that spawns an object at a given
+///   position, assigns random rotation/velocity/scale, and respawns when out of bounds.
+/// - **Easing (easeOutBack):** `Easing.easeOutBack(t)` produces a value that overshoots
+///   1.0 then settles back, creating a satisfying "pop" effect on spawn scale.
+/// - **getWorldBoundsFromCamera:** Computes world bounds using the camera's current position
+///   (unlike `getWorldBounds` which takes an explicit camera distance). Simpler when you
+///   do not need bounds for a different camera distance than the current one.
+/// - **Sort by scale for depth:** Objects sorted by scale.x so smaller ships draw first.
 class StateDemo: Scene, @unchecked Sendable {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
@@ -21,13 +35,17 @@ class StateDemo: Scene, @unchecked Sendable {
     let objectCount = GameConstants.MAX_OBJECTS
     var objects = [BehaviorObj]()
 
+    /// Current spawn position in world space. Updated each frame from touch input.
     var spawnPos = Vec2()
+    /// Per-object age tracker for the spawn scale animation. Parallel array with `objects`.
     private var spawnAge = [Float]()
+    /// Duration of the easeOutBack scale animation in seconds
     private let spawnEaseDuration: Float = 0.3
 
     private var ui: DemoSceneUI!
     private var textures = [Int]()
 
+    /// Scene protocol: called once when the scene is created.
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
@@ -48,13 +66,14 @@ class StateDemo: Scene, @unchecked Sendable {
         createObjects()
 
         ui = DemoSceneUI(
-            parentView: renderer.view, sceneType: .stateDemo, target: self,
-            prevAction: #selector(onPrev), nextAction: #selector(onNext),
-            pauseAction: #selector(onPause))
+            parentView: renderer.view, target: self,
+            menuAction: #selector(onMenu))
     }
 
+    /// Scene protocol: re-show the menu button when returning from PauseDemo.
     func resume() { ui.view.isHidden = false }
 
+    /// Scene protocol: called on device rotation. Recalculate perspective projection.
     func resize() {
         ui.layout()
         renderer.setPerspective(
@@ -65,14 +84,20 @@ class StateDemo: Scene, @unchecked Sendable {
     }
 
     func update(dt: Float) {
+        // Update spawn position to the current touch location in world space.
+        // If no touch, spawnPos retains its last value (ships keep spawning there).
         if let touch = input.getWorldTouch(forZ: 0) {
             spawnPos.set(touch.x, touch.y)
         }
 
         for i in 0..<objectCount {
+            // Update the RandomAngleBehavior, which moves the ship and respawns when out of bounds
             objects[i].behavior.update(dt: dt)
 
-            // Ease in the scale on spawn
+            // Animate scale on spawn using Easing.easeOutBack for a satisfying "pop" effect.
+            // easeOutBack returns values that overshoot 1.0 briefly then settle, so the ship
+            // appears to expand slightly past its target size before snapping into place.
+            // obj.zOrder stores the base scale (a trick to avoid an extra property).
             if spawnAge[i] < spawnEaseDuration {
                 spawnAge[i] += dt
                 let t = min(spawnAge[i] / spawnEaseDuration, 1.0)
@@ -82,6 +107,8 @@ class StateDemo: Scene, @unchecked Sendable {
             }
         }
 
+        // Sort by scale so smaller objects (appearing further away) draw behind larger ones.
+        // Since all objects are at z=0, scale-based sorting simulates depth layering.
         objects.sort(by: { $0.scale.x < $1.scale.x })
     }
 
@@ -93,6 +120,7 @@ class StateDemo: Scene, @unchecked Sendable {
         for i in 0..<objectCount {
             let obj = objects[i]
             renderer.useTexture(textureId: obj.textureID)
+            // All ships are drawn at z=0 since depth is simulated via scale-based sorting
             worldUniforms.transform.setToTransform2D(
                 scale: obj.scale, angle: obj.rotation,
                 translate: Vec3(obj.position, 0))
@@ -102,10 +130,12 @@ class StateDemo: Scene, @unchecked Sendable {
         renderer.endPass()
     }
 
+    /// Scene protocol: clean up game objects, UI, and GPU resources.
     func shutdown() {
         objects.removeAll()
         spawnAge.removeAll()
         ui.removeFromSuperview()
+        // Always unload textures to free GPU memory
         textures.forEach { renderer.unloadTexture(textureId: $0) }
         textures.removeAll()
     }
@@ -118,23 +148,29 @@ class StateDemo: Scene, @unchecked Sendable {
         objects.removeAll()
         spawnAge.removeAll()
 
+        // getWorldBoundsFromCamera uses the camera's current position to compute the visible
+        // world rectangle at a given z-plane. This is simpler than getWorldBounds when you
+        // don't need bounds at a different camera distance.
         let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
         let getSpawnLocation = { [unowned self] in self.spawnPos }
         let getBounds = { bounds }
 
         for _ in 0..<objectCount {
             let obj = BehaviorObj()
+            // RandomAngleBehavior wraps a single RandomAngleState that assigns a random direction,
+            // speed, and scale on enter(), then checks bounds on update() to respawn when needed.
             obj.behavior = RandomAngleBehavior(
                 obj: obj, getSpawnLocation: getSpawnLocation,
                 getBounds: getBounds, textures: textures)
             objects.append(obj)
-            spawnAge.append(spawnEaseDuration) // start fully eased in
+            // Start with full ease duration so objects appear fully scaled on first frame
+            spawnAge.append(spawnEaseDuration)
         }
     }
 
-    @objc func onPrev() { if let s = SceneTypes.stateDemo.prev() { sceneMgr.setScene(type: s) } }
-    @objc func onNext() { if let s = SceneTypes.stateDemo.next() { sceneMgr.setScene(type: s) } }
-    @objc func onPause() { ui.view.isHidden = true; sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
+    /// Push PauseDemo on top. Hide menu button first so it does not overlap the overlay.
+    @objc func onMenu() { ui.view.isHidden = true; sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
 
+    /// Required factory method for TSceneBuilder.
     static func build() -> Scene { return StateDemo() }
 }

@@ -2,76 +2,53 @@
 //  DemoSceneUI.swift
 //  LiquidMetal2D-Demo
 //
-//  Shared UI helper for demo scene navigation.
-//  Provides title label, Prev/Next buttons, and Pause button.
+//  Shared UI helper for demo scenes. Provides a Menu button
+//  in the upper-left corner that pushes the scene menu.
 //
 
 import UIKit
 import LiquidMetal2D
 
-/// Reusable UI overlay for demo scenes: title + Prev / Pause / Next buttons.
+/// Reusable UI overlay that every demo scene uses to show a "Menu" button.
+///
+/// **Role in the demo app:**
+/// Each demo scene creates a DemoSceneUI in its `initialize()` method, passing the
+/// renderer's view as the parent and a target/action for the menu button. The button
+/// pushes PauseDemo (the scene menu overlay) onto the scene stack.
+///
+/// **UIKit on top of Metal:**
+/// This is a UIKit layer that sits on top of the Metal rendering view. The engine's
+/// `renderer.view` is a `MTKView` subclass, and you can add UIKit subviews to it just
+/// like any UIView. The safe area insets are used to avoid notch/status bar overlap.
+///
+/// **Visibility pattern:**
+/// The scene hides this view before pushing PauseDemo (so the button does not appear
+/// on top of the menu), and re-shows it in `resume()` when PauseDemo pops.
 @MainActor
 class DemoSceneUI {
     let view: UIView
-    let titleLabel: UILabel
-    let prevButton: UIButton?
-    let nextButton: UIButton?
-    let pauseButton: UIButton
+    private let menuButton: UIButton
 
-    private let sceneType: SceneTypes
-
-    init(parentView: UIView, sceneType: SceneTypes, target: AnyObject,
-         prevAction: Selector?, nextAction: Selector?, pauseAction: Selector) {
-        self.sceneType = sceneType
-
+    /// - Parameters:
+    ///   - parentView: The renderer's UIView (`renderer.view`), used as the superview.
+    ///   - target: The scene instance that handles the button tap (usually `self`).
+    ///   - menuAction: A selector on the target, typically `#selector(onMenu)`.
+    init(parentView: UIView, target: AnyObject, menuAction: Selector) {
         view = UIView(frame: parentView.safeAreaLayoutGuide.layoutFrame)
         parentView.addSubview(view)
 
-        // Title label
-        titleLabel = UILabel()
-        titleLabel.text = sceneType.title
-        titleLabel.textColor = .white
-        titleLabel.textAlignment = .center
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        view.addSubview(titleLabel)
-
-        // Prev button (nil if first scene)
-        if let prevAction = prevAction, sceneType.prev() != nil {
-            let btn = UIButton(frame: .zero)
-            btn.backgroundColor = .blue
-            btn.setTitle("Prev", for: .normal)
-            btn.layer.cornerRadius = 4
-            btn.addTarget(target, action: prevAction, for: .touchUpInside)
-            view.addSubview(btn)
-            prevButton = btn
-        } else {
-            prevButton = nil
-        }
-
-        // Next button (nil if last scene)
-        if let nextAction = nextAction, sceneType.next() != nil {
-            let btn = UIButton(frame: .zero)
-            btn.backgroundColor = .blue
-            btn.setTitle("Next", for: .normal)
-            btn.layer.cornerRadius = 4
-            btn.addTarget(target, action: nextAction, for: .touchUpInside)
-            view.addSubview(btn)
-            nextButton = btn
-        } else {
-            nextButton = nil
-        }
-
-        // Pause button (always present)
-        pauseButton = UIButton(frame: .zero)
-        pauseButton.backgroundColor = .red
-        pauseButton.setTitle("Pause", for: .normal)
-        pauseButton.layer.cornerRadius = 4
-        pauseButton.addTarget(target, action: pauseAction, for: .touchUpInside)
-        view.addSubview(pauseButton)
+        menuButton = UIButton(frame: .zero)
+        menuButton.backgroundColor = UIColor.darkGray.withAlphaComponent(0.8)
+        menuButton.setTitle("Menu", for: .normal)
+        menuButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        menuButton.layer.cornerRadius = 6
+        menuButton.addTarget(target, action: menuAction, for: .touchUpInside)
+        view.addSubview(menuButton)
 
         layoutButtons()
     }
 
+    /// Recalculate layout after device rotation. Call this from your scene's `resize()`.
     func layout() {
         guard let superview = view.superview else { return }
         view.frame = superview.safeAreaLayoutGuide.layoutFrame
@@ -79,17 +56,10 @@ class DemoSceneUI {
     }
 
     private func layoutButtons() {
-        let w: CGFloat = 100
-        let h: CGFloat = 44
-        let y = view.frame.height - h
-
-        titleLabel.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 40)
-
-        prevButton?.frame = CGRect(x: 0, y: y, width: w, height: h)
-        nextButton?.frame = CGRect(x: view.frame.width - w, y: y, width: w, height: h)
-        pauseButton.frame = CGRect(x: (view.frame.width - w) / 2, y: y, width: w, height: h)
+        menuButton.frame = CGRect(x: 8, y: 8, width: 70, height: 36)
     }
 
+    /// Remove the overlay from the view hierarchy. Call this from your scene's `shutdown()`.
     func removeFromSuperview() {
         view.removeFromSuperview()
     }

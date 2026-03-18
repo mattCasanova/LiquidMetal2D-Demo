@@ -117,6 +117,10 @@ class SpawnDemo: Scene {
     /// insertion order. This demonstrates non-batched rendering where textures
     /// interleave naturally based on spawn order, unlike submit() which sorts
     /// by (zOrder, textureID) and groups all same-texture objects together.
+    ///
+    /// **Important:** draw() does no sorting — objects render in the order you
+    /// submit them. If you need correct z-ordering or depth layering, sort your
+    /// objects before the loop (as shown in update() which sorts by scale).
     func draw() {
         guard renderer.beginPass() else { return }
         renderer.usePerspective()

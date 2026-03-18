@@ -39,9 +39,9 @@ enum SceneTypes: SceneType {
     /// Human-readable display name for each scene, used in the PauseDemo menu table view.
     var title: String {
         switch self {
-        case .visualDemo: return "4,500 Ships - Batched Rendering"
+        case .visualDemo: return "\(GameConstants.MAX_OBJECTS.formatted()) Ships - Instanced Rendering"
         case .inputDemo: return "Touch Input & Camera Zoom"
-        case .explosionDemo: return "4,500 Ships - Touch Rotation"
+        case .explosionDemo: return "\(GameConstants.MAX_OBJECTS.formatted()) Ships - Touch Rotation"
         case .schedulerDemo: return "Timed Tasks & Callbacks"
         case .stateDemo: return "Touch Spawn & Easing"
         case .collisionDemo: return "Collision & AI States"

@@ -142,6 +142,7 @@ class ExplosionDemo: Scene {
         let scale = Float.random(in: 0.25...5)
         obj.scale.set(scale, scale)
         obj.textureID = textures[Int.random(in: 0...2)]
+        obj.zOrder = [-10, 0, 10].randomElement()!
 
         // GameMath.twoPi is a convenience constant for 2 * pi
         obj.rotation = Float.random(in: 0...GameMath.twoPi)

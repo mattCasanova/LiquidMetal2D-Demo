@@ -21,5 +21,5 @@ import Foundation
 /// in a single frame, the renderer will not have enough buffer space. Set this value to
 /// the maximum number of objects any scene in your game needs to draw simultaneously.
 class GameConstants {
-  public static let MAX_OBJECTS = 4500
+  public static let MAX_OBJECTS = 10000
 }

@@ -172,20 +172,9 @@ class FOVDemo: Scene {
     }
 
     func draw() {
-        let worldUniforms = WorldUniform()
         guard renderer.beginPass() else { return }
         renderer.usePerspective()
-
-        // Draw back to front (highest z first) for correct depth ordering
-        for i in stride(from: objects.count - 1, through: 0, by: -1) {
-            let obj = objects[i]
-            renderer.useTexture(textureId: obj.textureID)
-            worldUniforms.transform.setToTransform2D(
-                scale: obj.scale, angle: obj.rotation,
-                translate: Vec3(obj.position, obj.zOrder))
-            renderer.draw(uniforms: worldUniforms)
-        }
-
+        renderer.submit(objects: objects)
         renderer.endPass()
     }
 

@@ -113,20 +113,9 @@ class StateDemo: Scene {
     }
 
     func draw() {
-        let worldUniforms = WorldUniform()
         guard renderer.beginPass() else { return }
         renderer.usePerspective()
-
-        for i in 0..<objectCount {
-            let obj = objects[i]
-            renderer.useTexture(textureId: obj.textureID)
-            // All ships are drawn at z=0 since depth is simulated via scale-based sorting
-            worldUniforms.transform.setToTransform2D(
-                scale: obj.scale, angle: obj.rotation,
-                translate: Vec3(obj.position, 0))
-            renderer.draw(uniforms: worldUniforms)
-        }
-
+        renderer.submit(objects: objects)
         renderer.endPass()
     }
 

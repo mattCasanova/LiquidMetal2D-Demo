@@ -136,35 +136,9 @@ class VisualDemo: Scene {
     }
 
     func draw() {
-        // WorldUniform holds the per-object transform matrix sent to the GPU
-        let worldUniforms = WorldUniform()
-
-        // beginPass starts a new Metal render pass (clears the screen with the clear color)
-        // Returns false if the GPU is behind — skip this frame to avoid blocking the main thread
         guard renderer.beginPass() else { return }
-
-        // usePerspective tells the renderer to use the perspective projection matrix
-        // (as opposed to orthographic, if the engine supported it)
         renderer.usePerspective()
-
-        for i in 0..<objectCount {
-            let obj = objects[i]
-
-            // Bind the texture for this object. The renderer batches draws by texture state.
-            renderer.useTexture(textureId: obj.textureID)
-
-            // Build a 2D transform matrix: scale, rotate, then translate.
-            // The z component of translate is the zOrder, which places the object at that depth
-            // in perspective space -- objects at higher z appear smaller (further away).
-            worldUniforms.transform.setToTransform2D(
-                scale: obj.scale, angle: obj.rotation,
-                translate: Vec3(obj.position, obj.zOrder))
-
-            // Submit the draw call with this object's transform
-            renderer.draw(uniforms: worldUniforms)
-        }
-
-        // endPass finalizes and presents the frame
+        renderer.submit(objects: objects)
         renderer.endPass()
     }
 

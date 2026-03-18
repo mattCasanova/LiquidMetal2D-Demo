@@ -148,26 +148,9 @@ class InputDemo: Scene {
 
     /// Scene protocol: called every frame after update(). Submit draw calls here.
     func draw() {
-        let worldUniforms = WorldUniform()
-        // beginPass starts a new Metal render pass and clears the screen with the clear color
-        // Returns false if the GPU is behind — skip this frame to avoid blocking the main thread
         guard renderer.beginPass() else { return }
-        // usePerspective tells the renderer to apply the perspective projection matrix
         renderer.usePerspective()
-
-        let allObjects = [centerShip!] + cornerShips
-        for obj in allObjects {
-            // Bind the texture for this object before drawing
-            renderer.useTexture(textureId: obj.textureID)
-            // Build a 2D transform matrix: scale, rotate, then translate (with z-depth)
-            worldUniforms.transform.setToTransform2D(
-                scale: obj.scale, angle: obj.rotation,
-                translate: Vec3(obj.position, obj.zOrder))
-            // Submit the draw call with this object's transform uniform
-            renderer.draw(uniforms: worldUniforms)
-        }
-
-        // endPass finalizes the render pass and presents the frame to the screen
+        renderer.submit(objects: [centerShip!] + cornerShips)
         renderer.endPass()
     }
 

@@ -129,26 +129,9 @@ class BezierDemo: Scene {
     }
 
     func draw() {
-        let worldUniforms = WorldUniform()
         guard renderer.beginPass() else { return }
         renderer.usePerspective()
-
-        // Draw control point markers first (zOrder = 0, behind the ship)
-        for cp in controlPointShips {
-            renderer.useTexture(textureId: cp.textureID)
-            worldUniforms.transform.setToTransform2D(
-                scale: cp.scale, angle: cp.rotation,
-                translate: Vec3(cp.position, cp.zOrder))
-            renderer.draw(uniforms: worldUniforms)
-        }
-
-        // Draw the ship on top (zOrder = -1, closer to camera = drawn last / on top)
-        renderer.useTexture(textureId: ship.textureID)
-        worldUniforms.transform.setToTransform2D(
-            scale: ship.scale, angle: ship.rotation,
-            translate: Vec3(ship.position, ship.zOrder))
-        renderer.draw(uniforms: worldUniforms)
-
+        renderer.submit(objects: controlPointShips + [ship!])
         renderer.endPass()
     }
 

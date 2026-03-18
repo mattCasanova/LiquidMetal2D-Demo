@@ -124,22 +124,9 @@ class CollisionDemo: Scene {
     }
 
     func draw() {
-        let worldUniforms = WorldUniform()
         guard renderer.beginPass() else { return }
         renderer.usePerspective()
-
-        for i in 0..<objects.count {
-            let obj = objects[i]
-            // Early exit: since active objects are sorted first, hitting an inactive one
-            // means all remaining objects are also inactive -- skip them.
-            if !obj.isActive { break }
-            renderer.useTexture(textureId: obj.textureID)
-            worldUniforms.transform.setToTransform2D(
-                scale: obj.scale, angle: obj.rotation,
-                translate: Vec3(obj.position, obj.zOrder))
-            renderer.draw(uniforms: worldUniforms)
-        }
-
+        renderer.submit(objects: objects.filter { $0.isActive })
         renderer.endPass()
     }
 

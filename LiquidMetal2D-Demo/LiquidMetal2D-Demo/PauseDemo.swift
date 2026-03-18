@@ -169,7 +169,10 @@ extension PauseDemo: UITableViewDataSource, UITableViewDelegate {
         cell.textLabel?.text = scenes[indexPath.row].title
         cell.textLabel?.textColor = .white
         cell.backgroundColor = .clear
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .none
+        let selectedView = UIView()
+        selectedView.backgroundColor = UIColor.white.withAlphaComponent(0.15)
+        cell.selectedBackgroundView = selectedView
         return cell
     }
 

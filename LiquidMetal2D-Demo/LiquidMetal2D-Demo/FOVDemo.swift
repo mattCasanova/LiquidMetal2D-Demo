@@ -173,7 +173,7 @@ class FOVDemo: Scene, @unchecked Sendable {
 
     func draw() {
         let worldUniforms = WorldUniform()
-        renderer.beginPass()
+        guard renderer.beginPass() else { return }
         renderer.usePerspective()
 
         // Draw back to front (highest z first) for correct depth ordering

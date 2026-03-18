@@ -150,7 +150,8 @@ class InputDemo: Scene, @unchecked Sendable {
     func draw() {
         let worldUniforms = WorldUniform()
         // beginPass starts a new Metal render pass and clears the screen with the clear color
-        renderer.beginPass()
+        // Returns false if the GPU is behind — skip this frame to avoid blocking the main thread
+        guard renderer.beginPass() else { return }
         // usePerspective tells the renderer to apply the perspective projection matrix
         renderer.usePerspective()
 

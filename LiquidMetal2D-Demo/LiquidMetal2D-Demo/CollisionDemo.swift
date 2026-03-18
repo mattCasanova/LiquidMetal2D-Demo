@@ -125,7 +125,7 @@ class CollisionDemo: Scene, @unchecked Sendable {
 
     func draw() {
         let worldUniforms = WorldUniform()
-        renderer.beginPass()
+        guard renderer.beginPass() else { return }
         renderer.usePerspective()
 
         for i in 0..<objects.count {

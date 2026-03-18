@@ -146,7 +146,8 @@ class VisualDemo: Scene, @unchecked Sendable {
         let worldUniforms = WorldUniform()
 
         // beginPass starts a new Metal render pass (clears the screen with the clear color)
-        renderer.beginPass()
+        // Returns false if the GPU is behind — skip this frame to avoid blocking the main thread
+        guard renderer.beginPass() else { return }
 
         // usePerspective tells the renderer to use the perspective projection matrix
         // (as opposed to orthographic, if the engine supported it)

@@ -130,7 +130,7 @@ class BezierDemo: Scene, @unchecked Sendable {
 
     func draw() {
         let worldUniforms = WorldUniform()
-        renderer.beginPass()
+        guard renderer.beginPass() else { return }
         renderer.usePerspective()
 
         // Draw control point markers first (zOrder = 0, behind the ship)

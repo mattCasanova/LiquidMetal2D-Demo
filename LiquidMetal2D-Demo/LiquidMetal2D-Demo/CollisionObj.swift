@@ -28,6 +28,13 @@ class CollisionObj: GameObj {
     /// The collision shape for this object. Defaults to NilCollider (never collides).
     var collider: Collider = NilCollider()
 
-    /// Time alive in seconds. Blue/green die of natural causes; zombies persist.
+    /// Time alive in seconds. Blue/green die after 30s; zombies persist forever.
     var age: Float = 0
+
+    /// For green: cures remaining before dying (starts at 3).
+    /// For super zombie: hits needed to cure (starts at 3).
+    var charges: Int = 0
+
+    /// Whether this is a super zombie (2x size, requires 3 green hits).
+    var isSuper: Bool = false
 }

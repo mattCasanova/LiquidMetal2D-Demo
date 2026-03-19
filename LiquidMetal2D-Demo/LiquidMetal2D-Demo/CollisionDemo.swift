@@ -111,10 +111,8 @@ class CollisionDemo: Scene {
             obj.behavior.update(dt: dt)
             obj.age += dt
 
-            // Blue dies after 30s, green after 15s. Zombies persist forever.
-            if obj.textureID == textures[greenIndex] && obj.age >= maxAge * 0.5 {
-                obj.isActive = false
-            } else if obj.textureID == textures[blueIndex] && obj.age >= maxAge {
+            // Blue and green die after 30s. Zombies persist forever.
+            if obj.textureID != textures[redIndex] && obj.age >= maxAge {
                 obj.isActive = false
             }
         }
@@ -158,19 +156,33 @@ class CollisionDemo: Scene {
         guard let obj = objects.last(where: { !$0.isActive }) else { return }
         let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
 
+        // 5% zombie, 2% super zombie, 3% cure, rest normal
         let roll = Int.random(in: 0..<100)
         let texIndex: Int
-        if roll < 5 { texIndex = redIndex }
-        else if roll < 8 { texIndex = greenIndex }
-        else { texIndex = blueIndex }
+        let isSuperZombie: Bool
+        if roll < 2 {
+            texIndex = redIndex; isSuperZombie = true
+        } else if roll < 7 {
+            texIndex = redIndex; isSuperZombie = false
+        } else if roll < 10 {
+            texIndex = greenIndex; isSuperZombie = false
+        } else {
+            texIndex = blueIndex; isSuperZombie = false
+        }
 
-        obj.scale = Vec2(2, 2)
+        obj.position.set(
+            Float.random(in: bounds.minX...bounds.maxX),
+            Float.random(in: bounds.minY...bounds.maxY))
+
+        obj.isSuper = isSuperZombie
+        obj.scale = isSuperZombie ? Vec2(4, 4) : Vec2(2, 2)
+        obj.charges = texIndex == greenIndex ? 3 : (isSuperZombie ? 3 : 0)
         obj.textureID = textures[texIndex]
         obj.tintColor = TokyoNight.shipTints[texIndex]
         obj.age = 0
         obj.isActive = true
         obj.behavior = FindAndGoBehavior(obj: obj, bounds: bounds)
-        obj.collider = CircleCollider(obj: obj, radius: 1)
+        obj.collider = CircleCollider(obj: obj, radius: isSuperZombie ? 2 : 1)
     }
 
     private func setType(_ obj: CollisionObj, index: Int) {
@@ -180,10 +192,10 @@ class CollisionDemo: Scene {
     }
 
     /// O(n^2) brute-force collision check with zombie/cure mechanics:
-    /// - Red (zombie) touches blue (normal) → blue becomes red
-    /// - Green (cure) touches red (zombie) → red dies (deactivated)
-    /// - Green (cure) touches blue (normal) → blue becomes green (immune)
-    /// - Green is immune to infection
+    /// - Red + Blue → 80% chance blue becomes red, 20% blue resists
+    /// - Green + Red (normal) → red becomes blue, green loses a charge (dies after 3)
+    /// - Green + Red (super) → super loses a hit point, green loses a charge
+    /// - Green + Blue → nothing
     private func checkCollision() {
         let redTex = textures[redIndex]
         let blueTex = textures[blueIndex]
@@ -200,19 +212,59 @@ class CollisionDemo: Scene {
                 let fTex = first.textureID
                 let sTex = second.textureID
 
-                // Red + Blue → Blue becomes Red (infection)
+                // Red + Blue → 80% chance infection
                 if fTex == redTex && sTex == blueTex {
-                    setType(second, index: redIndex)
+                    if Float.random(in: 0...1) > 0.2 { infect(second) }
                 } else if sTex == redTex && fTex == blueTex {
-                    setType(first, index: redIndex)
+                    if Float.random(in: 0...1) > 0.2 { infect(first) }
 
-                // Green touches anything → they become green (cure spreads to all)
-                } else if fTex == greenTex && sTex != greenTex {
-                    setType(second, index: greenIndex)
-                } else if sTex == greenTex && fTex != greenTex {
-                    setType(first, index: greenIndex)
+                // Green + Red → cure the zombie, green loses a charge
+                } else if fTex == greenTex && sTex == redTex {
+                    cure(zombie: second, healer: first)
+                } else if sTex == greenTex && fTex == redTex {
+                    cure(zombie: first, healer: second)
+
+                // Green + Blue → 80% chance blue becomes green (healer spreads)
+                } else if fTex == greenTex && sTex == blueTex {
+                    if Float.random(in: 0...1) > 0.2 { recruit(second) }
+                } else if sTex == greenTex && fTex == blueTex {
+                    if Float.random(in: 0...1) > 0.2 { recruit(first) }
                 }
             }
+        }
+    }
+
+    /// Convert a blue ship to green (healer). Gets fresh 3 charges.
+    private func recruit(_ obj: CollisionObj) {
+        setType(obj, index: greenIndex)
+        obj.charges = 3
+    }
+
+    /// Infect a blue ship — becomes a normal red zombie.
+    private func infect(_ obj: CollisionObj) {
+        setType(obj, index: redIndex)
+        obj.isSuper = false
+        obj.charges = 0
+    }
+
+    /// Green cures a zombie. Normal zombies become blue. Super zombies
+    /// lose a hit point and become blue when charges hit 0. Green loses
+    /// a charge and dies after 3 cures.
+    private func cure(zombie: CollisionObj, healer: CollisionObj) {
+        if zombie.isSuper {
+            zombie.charges -= 1
+            if zombie.charges <= 0 {
+                setType(zombie, index: blueIndex)
+                zombie.isSuper = false
+                zombie.scale = Vec2(2, 2)
+            }
+        } else {
+            setType(zombie, index: blueIndex)
+        }
+
+        healer.charges -= 1
+        if healer.charges <= 0 {
+            healer.isActive = false
         }
     }
 

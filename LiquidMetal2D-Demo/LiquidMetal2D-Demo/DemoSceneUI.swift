@@ -38,8 +38,9 @@ class DemoSceneUI {
         parentView.addSubview(view)
 
         menuButton = UIButton(frame: .zero)
-        menuButton.backgroundColor = UIColor.darkGray.withAlphaComponent(0.8)
+        menuButton.backgroundColor = TokyoNight.uiDarker
         menuButton.setTitle("Menu", for: .normal)
+        menuButton.setTitleColor(TokyoNight.uiBlue, for: .normal)
         menuButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         menuButton.layer.cornerRadius = 6
         menuButton.addTarget(target, action: menuAction, for: .touchUpInside)

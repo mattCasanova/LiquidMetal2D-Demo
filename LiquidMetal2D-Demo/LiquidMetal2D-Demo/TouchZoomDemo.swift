@@ -84,7 +84,7 @@ class TouchZoomDemo: Scene {
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        renderer.setClearColor(color: Vec3(0.15, 0.1, 0.2))
+        renderer.setClearColor(color: TokyoNight.clearColor)
 
         createObjects()
 
@@ -172,12 +172,15 @@ class TouchZoomDemo: Scene {
         centerShip.position.set(0, 0)
         centerShip.scale.set(5, 5)
         centerShip.textureID = textures[0]
+        centerShip.tintColor = TokyoNight.shipTints[0]
 
         cornerShips.removeAll()
         for i in 0..<4 {
             let ship = GameObj()
             ship.scale.set(7, 7)
-            ship.textureID = textures[1 + (i % 2)]
+            let texIndex = 1 + (i % 2)
+            ship.textureID = textures[texIndex]
+            ship.tintColor = TokyoNight.shipTints[texIndex]
             cornerShips.append(ship)
         }
 

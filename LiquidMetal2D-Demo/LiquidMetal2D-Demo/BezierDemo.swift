@@ -79,7 +79,7 @@ class BezierDemo: Scene {
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        renderer.setClearColor(color: Vec3(0.05, 0.1, 0.15))
+        renderer.setClearColor(color: TokyoNight.clearColor)
 
         createObjects()
 
@@ -206,6 +206,7 @@ class BezierDemo: Scene {
         ship = GameObj()
         ship.scale.set(2, 2)
         ship.textureID = textures[0]
+        ship.tintColor = TokyoNight.shipTints[0]
         // Negative zOrder = closer to camera = drawn on top of control point markers
         ship.zOrder = -1
 
@@ -217,7 +218,9 @@ class BezierDemo: Scene {
             // Handle points (indices 1, 2, 4, 5) are smaller orange markers.
             let isPassThrough = (i == 0 || i == 3 || i == 6)
             cp.scale.set(isPassThrough ? 4 : 3, isPassThrough ? 4 : 3)
-            cp.textureID = isPassThrough ? textures[1] : textures[2]
+            let texIndex = isPassThrough ? 1 : 2
+            cp.textureID = textures[texIndex]
+            cp.tintColor = TokyoNight.shipTints[texIndex]
             cp.zOrder = 0
             controlPointShips.append(cp)
         }

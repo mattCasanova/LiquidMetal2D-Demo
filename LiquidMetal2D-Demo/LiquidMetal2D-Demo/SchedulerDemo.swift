@@ -36,8 +36,8 @@ class SchedulerDemo: Scene {
     var shouldChange = true
     var changeTime: Float = 0
     let maxChangeTime: Float = 1.5
-    var startColor = Vec3(0, 0.5, 0.7)
-    var endColor = Vec3(0.4, 0, 0)
+    var startColor = Vec3(0.102, 0.106, 0.149)
+    var endColor = Vec3(0.255, 0.282, 0.408)
 
     // Phase 2: Camera rotation
     var isRotating = false
@@ -147,8 +147,8 @@ class SchedulerDemo: Scene {
         isZooming = false
         zoomTime = 0
         distance = baseDistance
-        startColor = Vec3(0, 0.5, 0.7)
-        endColor = Vec3(0.4, 0, 0)
+        startColor = Vec3(0.102, 0.106, 0.149)
+        endColor = Vec3(0.255, 0.282, 0.408)
         sceneDelegate.renderer.setCameraRotation(angle: 0)
 
         // Phase 1: Swap background color 4 times with smooth crossfades
@@ -202,7 +202,9 @@ class SchedulerDemo: Scene {
         obj.position.set(0, 0)
         let scale = Float.random(in: 0.25...5)
         obj.scale.set(scale, scale)
-        obj.textureID = textures[Int.random(in: 0...2)]
+        let texIndex = Int.random(in: 0...2)
+        obj.textureID = textures[texIndex]
+        obj.tintColor = TokyoNight.shipTints[texIndex]
         // Random rotation in full circle
         obj.rotation = Float.random(in: 0...GameMath.twoPi)
         // set(angle:) creates a unit vector from the rotation, then scale by random speed

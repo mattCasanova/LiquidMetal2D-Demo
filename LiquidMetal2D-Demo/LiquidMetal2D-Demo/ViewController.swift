@@ -47,6 +47,7 @@ class ViewController: LiquidViewController {
         sceneFactory.addScene(type: SceneTypes.collisionDemo, builder: TSceneBuilder<CollisionDemo>())
         sceneFactory.addScene(type: SceneTypes.bezierDemo, builder: TSceneBuilder<BezierDemo>())
         sceneFactory.addScene(type: SceneTypes.cameraRotationDemo, builder: TSceneBuilder<CameraRotationDemo>())
+        sceneFactory.addScene(type: SceneTypes.asyncLoadDemo, builder: TSceneBuilder<AsyncLoadDemo>())
         sceneFactory.addScene(type: SceneTypes.pauseDemo, builder: TSceneBuilder<PauseDemo>())
 
         // Step 2: Create the Metal renderer.

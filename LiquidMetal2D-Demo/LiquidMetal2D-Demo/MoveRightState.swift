@@ -80,7 +80,9 @@ class MoveRightState: State {
         obj.rotation = 0
         // Velocity is purely horizontal (rightward) with random speed
         obj.velocity.set(Float.random(in: 2...10), 0)
-        obj.textureID = textures[Int.random(in: 0...2)]
+        let texIndex = Int.random(in: 0...2)
+        obj.textureID = textures[texIndex]
+        obj.tintColor = TokyoNight.shipTints[texIndex]
     }
 
 }

@@ -22,13 +22,12 @@ import LiquidMetal2D
 ///
 /// See `CollisionDemo` for how this class is used with `FindAndGoBehavior` and `CircleCollider`.
 class CollisionObj: GameObj {
-  /// Controls whether this object participates in update, draw, and collision.
-  /// The scene skips inactive objects during rendering and collision checks.
-  var isActive: Bool = false
+    /// The AI state machine driving this object's movement. Defaults to NilBehavior (no-op).
+    var behavior: Behavior = NilBehavior()
 
-  /// The AI state machine driving this object's movement. Defaults to NilBehavior (no-op).
-  var behavior: Behavior = NilBehavior()
+    /// The collision shape for this object. Defaults to NilCollider (never collides).
+    var collider: Collider = NilCollider()
 
-  /// The collision shape for this object. Defaults to NilCollider (never collides).
-  var collider: Collider = NilCollider()
+    /// Time alive in seconds. Blue/green die of natural causes; zombies persist.
+    var age: Float = 0
 }

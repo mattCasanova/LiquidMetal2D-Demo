@@ -45,8 +45,8 @@ class MassRenderDemo: Scene {
     let objectCount = GameConstants.MAX_OBJECTS
     var objects = [BehaviorObj]()
 
-    var startColor = Vec3(0.7, 0, 0.7)
-    var endColor = Vec3(0.0, 1, 1.0)
+    var startColor = Vec3(0.102, 0.106, 0.149)
+    var endColor = Vec3(0.255, 0.282, 0.408)
 
     private var ui: DemoSceneUI!
     /// Scheduler manages a list of timed tasks. Call scheduler.update(dt:) each frame.
@@ -70,6 +70,9 @@ class MassRenderDemo: Scene {
 
         // Position the camera at z=40. Higher z = further back = more of the world visible.
         renderer.setCamera(point: Vec3(0, 0, distance))
+
+        // Random camera tilt for visual variety — ships scroll at a slight angle
+        renderer.setCameraRotation(angle: Float.random(in: 0...GameMath.twoPi))
 
         // Set up perspective projection. FOV adapts to portrait vs landscape orientation.
         // PerspectiveProjection.defaultNearZ/defaultFarZ provide sensible clip plane defaults.

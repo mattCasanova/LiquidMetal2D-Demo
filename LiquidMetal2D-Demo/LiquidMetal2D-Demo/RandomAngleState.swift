@@ -91,7 +91,9 @@ class RandomAngleState: State {
         // Scale velocity by 5 * scale: larger ships move faster, creating a parallax effect
         obj.velocity *= 5 * scale
         // Randomly assign one of the available textures
-        obj.textureID = textures[Int.random(in: 0..<textures.count)]
+        let texIndex = Int.random(in: 0..<textures.count)
+        obj.textureID = textures[texIndex]
+        obj.tintColor = TokyoNight.shipTints[texIndex]
     }
 
 }

@@ -39,7 +39,9 @@ class CollisionDemo: Scene {
 
     private let scheduler = Scheduler()
     private var textures = [Int]()
-    private let orangeTextureIndex = 2
+    private let blueIndex = 0    // normal (vulnerable)
+    private let greenIndex = 1   // cure (immune, spreads immunity)
+    private let redIndex = 2     // infected (zombie)
 
     private var ui: DemoSceneUI!
 
@@ -63,32 +65,16 @@ class CollisionDemo: Scene {
 
         createObjects()
 
+        // Spawn 20 ships immediately so the scene starts populated
+        for _ in 0..<20 { spawnShip() }
+
         ui = DemoSceneUI(
             parentView: renderer.view, target: self,
             menuAction: #selector(onMenu))
 
-        // Spawn one ship per second using a repeating scheduled task (no count = infinite).
-        // Uses the object pool pattern: find the last inactive object and activate it.
+        // Spawn one ship per second using a repeating scheduled task
         scheduler.add(task: ScheduledTask(time: 1, action: { [unowned self] in
-            // Find an inactive object from the pool to reuse
-            let obj = self.objects.last(where: { !$0.isActive })
-            guard let safeObj = obj else { return }
-
-            // getWorldBoundsFromCamera computes visible area at z=0 using current camera position
-            let bounds = self.renderer.getWorldBoundsFromCamera(zOrder: 0)
-
-            // 1% chance of spawning orange (the "infection" seed)
-            let chance = Int.random(in: 0..<100)
-
-            safeObj.scale = Vec2(2, 2)
-            safeObj.textureID = self.textures[chance == 0 ? self.orangeTextureIndex : 0]
-            safeObj.isActive = true
-
-            // FindAndGoBehavior is the 3-state AI: Find -> Rotate -> Go -> Find (loop)
-            safeObj.behavior = FindAndGoBehavior(obj: safeObj, bounds: bounds)
-
-            // CircleCollider wraps the object with a collision circle of the given radius
-            safeObj.collider = CircleCollider(obj: safeObj, radius: 1)
+            self.spawnShip()
         }))
     }
 
@@ -108,25 +94,37 @@ class CollisionDemo: Scene {
         createObjects()
     }
 
+    private let maxAge: Float = 30.0
+
     func update(dt: Float) {
         // Advance the spawn timer
         scheduler.update(dt: dt)
 
-        // Update all objects' behaviors (inactive objects use NilBehavior, which is a no-op)
-        for i in 0..<objects.count { objects[i].behavior.update(dt: dt) }
+        // Update all objects' behaviors and age them
+        let redTex = textures[redIndex]
+        for i in 0..<objects.count {
+            let obj = objects[i]
+            guard obj.isActive else { continue }
 
-        // Check for collisions between active objects
+            obj.behavior.update(dt: dt)
+            obj.age += dt
+
+            // Blue and green die of natural causes after maxAge seconds.
+            // Zombies (red) persist forever — only green can kill them.
+            if obj.textureID != redTex && obj.age >= maxAge {
+                obj.isActive = false
+            }
+        }
+
         checkCollision()
 
-        // Sort active objects to the front of the array so draw() can break early.
-        // toInt() converts Bool to 0/1; active (1) sorts before inactive (0) in descending order.
         objects.sort(by: { $0.isActive.toInt() > $1.isActive.toInt() })
     }
 
     func draw() {
         guard renderer.beginPass() else { return }
         renderer.usePerspective()
-        renderer.submit(objects: objects.filter { $0.isActive })
+        renderer.submit(objects: objects)
         renderer.endPass()
     }
 
@@ -142,32 +140,73 @@ class CollisionDemo: Scene {
     /// with NilBehavior and NilCollider, and get activated one per second by the scheduler.
     private func createObjects() {
         objects.removeAll()
-        for _ in 0..<objectCount { objects.append(CollisionObj()) }
+        for _ in 0..<objectCount {
+            let obj = CollisionObj()
+            obj.isActive = false
+            objects.append(obj)
+        }
     }
 
     private func getFOV() -> Float {
         renderer.screenWidth <= renderer.screenHeight ? 90 : 45
     }
 
-    /// O(n^2) brute-force collision check. For each pair of active objects, if at least one
-    /// is orange and they collide (circle-circle), both become orange. This creates the
-    /// spreading "infection" effect.
+    private func spawnShip() {
+        guard let obj = objects.last(where: { !$0.isActive }) else { return }
+        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+
+        let roll = Int.random(in: 0..<100)
+        let texIndex: Int
+        if roll < 5 { texIndex = redIndex }
+        else if roll < 8 { texIndex = greenIndex }
+        else { texIndex = blueIndex }
+
+        obj.scale = Vec2(2, 2)
+        obj.textureID = textures[texIndex]
+        obj.tintColor = TokyoNight.shipTints[texIndex]
+        obj.age = 0
+        obj.isActive = true
+        obj.behavior = FindAndGoBehavior(obj: obj, bounds: bounds)
+        obj.collider = CircleCollider(obj: obj, radius: 1)
+    }
+
+    private func setType(_ obj: CollisionObj, index: Int) {
+        obj.textureID = textures[index]
+        obj.tintColor = TokyoNight.shipTints[index]
+    }
+
+    /// O(n^2) brute-force collision check with zombie/cure mechanics:
+    /// - Red (zombie) touches blue (normal) → blue becomes red
+    /// - Green (cure) touches red (zombie) → red dies (deactivated)
+    /// - Green (cure) touches blue (normal) → blue becomes green (immune)
+    /// - Green is immune to infection
     private func checkCollision() {
+        let redTex = textures[redIndex]
+        let blueTex = textures[blueIndex]
+        let greenTex = textures[greenIndex]
+
         for i in 0..<objects.count {
             let first = objects[i]
             guard first.isActive else { continue }
             for j in (i + 1)..<objects.count {
                 let second = objects[j]
                 guard second.isActive else { continue }
+                guard first.collider.doesCollideWith(collider: second.collider) else { continue }
 
-                // Only check collision if at least one ship is orange (infected)
-                if (first.textureID == textures[orangeTextureIndex] ||
-                    second.textureID == textures[orangeTextureIndex]) &&
-                    // doesCollideWith performs circle-circle intersection test
-                    first.collider.doesCollideWith(collider: second.collider) {
-                    // Both ships become orange on collision (infection spreads)
-                    first.textureID = textures[orangeTextureIndex]
-                    second.textureID = textures[orangeTextureIndex]
+                let fTex = first.textureID
+                let sTex = second.textureID
+
+                // Red + Blue → Blue becomes Red (infection)
+                if fTex == redTex && sTex == blueTex {
+                    setType(second, index: redIndex)
+                } else if sTex == redTex && fTex == blueTex {
+                    setType(first, index: redIndex)
+
+                // Green touches anything → they become green (cure spreads to all)
+                } else if fTex == greenTex && sTex != greenTex {
+                    setType(second, index: greenIndex)
+                } else if sTex == greenTex && fTex != greenTex {
+                    setType(first, index: greenIndex)
                 }
             }
         }

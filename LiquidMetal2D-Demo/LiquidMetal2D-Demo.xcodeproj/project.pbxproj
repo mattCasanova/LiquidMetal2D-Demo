@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1B2C3D02F67C0A7003831F3 /* TokyoNight.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3CF2F67C0A7003831F3 /* TokyoNight.swift */; };
+		A1B2C3D22F67B0A7003831F3 /* AsyncLoadDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D12F67B0A7003831F3 /* AsyncLoadDemo.swift */; };
 		A1B2C3D42F6780A7003831F3 /* BezierDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */; };
 		A1B2C3D62F6790A7003831F3 /* CameraRotationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D52F6790A7003831F3 /* CameraRotationDemo.swift */; };
 		A1B2C3D82F67A0A7003831F3 /* MoveRightBehaviorFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D72F67A0A7003831F3 /* MoveRightBehaviorFOV.swift */; };
@@ -44,6 +46,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A1B2C3CF2F67C0A7003831F3 /* TokyoNight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokyoNight.swift; sourceTree = "<group>"; };
+		A1B2C3D12F67B0A7003831F3 /* AsyncLoadDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLoadDemo.swift; sourceTree = "<group>"; };
 		A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezierDemo.swift; sourceTree = "<group>"; };
 		A1B2C3D52F6790A7003831F3 /* CameraRotationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraRotationDemo.swift; sourceTree = "<group>"; };
 		A1B2C3D72F67A0A7003831F3 /* MoveRightBehaviorFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightBehaviorFOV.swift; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 				F536B6B72416939700B3566F /* textures */,
 				F536B6B62416928500B3566F /* scenes */,
 				F536B6AA2416922E00B3566F /* Constants.swift */,
+				A1B2C3CF2F67C0A7003831F3 /* TokyoNight.swift */,
 				F536B6A2241690FB00B3566F /* appleDefaults */,
 				F536B692241690A800B3566F /* ViewController.swift */,
 				F536B697241690A900B3566F /* Assets.xcassets */,
@@ -140,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				F536B6AD2416925800B3566F /* SceneTypes.swift */,
+				A1B2C3D12F67B0A7003831F3 /* AsyncLoadDemo.swift */,
 				F536B6AC2416925800B3566F /* MassRenderDemo.swift */,
 				F5EDA0B32416952400C42A29 /* TouchZoomDemo.swift */,
 				A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */,
@@ -286,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B2C3D22F67B0A7003831F3 /* AsyncLoadDemo.swift in Sources */,
 				A1B2C3D42F6780A7003831F3 /* BezierDemo.swift in Sources */,
 				A1B2C3D62F6790A7003831F3 /* CameraRotationDemo.swift in Sources */,
 				F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */,
@@ -311,6 +318,7 @@
 				A1B2C3D82F67A0A7003831F3 /* MoveRightBehaviorFOV.swift in Sources */,
 				A1B2C3DA2F67A0A7003831F3 /* MoveRightStateFOV.swift in Sources */,
 				F57FE9782427CEF3005D5A59 /* MoveRightState.swift in Sources */,
+				A1B2C3D02F67C0A7003831F3 /* TokyoNight.swift in Sources */,
 				F536B6AB2416922F00B3566F /* Constants.swift in Sources */,
 				F57FE9702426D808005D5A59 /* RandomAngleBehavior.swift in Sources */,
 			);
@@ -517,7 +525,7 @@
 			repositoryURL = "https://github.com/mattCasanova/LiquidMetal2D.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.12;
+				minimumVersion = 0.6.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -62,7 +62,7 @@ class SpawnDemo: Scene {
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        renderer.setClearColor(color: Vec3(0.1, 0.05, 0.15))
+        renderer.setClearColor(color: TokyoNight.clearColor)
 
         createObjects()
 

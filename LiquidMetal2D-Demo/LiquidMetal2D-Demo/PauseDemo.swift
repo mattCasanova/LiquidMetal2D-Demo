@@ -53,7 +53,7 @@ class PauseDemo: NSObject, Scene {
 
         // Semi-transparent dark overlay that dims the scene underneath
         overlayView = UIView(frame: renderer.view.bounds)
-        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        overlayView.backgroundColor = TokyoNight.uiBg.withAlphaComponent(0.8)
         renderer.view.addSubview(overlayView)
 
         // SlidePanel animates a content view from the specified edge.
@@ -98,7 +98,7 @@ class PauseDemo: NSObject, Scene {
 
         let resumeButton = UIButton(frame: .zero)
         resumeButton.setTitle("Resume", for: .normal)
-        resumeButton.setTitleColor(.systemBlue, for: .normal)
+        resumeButton.setTitleColor(TokyoNight.uiBlue, for: .normal)
         resumeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         resumeButton.contentHorizontalAlignment = .left
         resumeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
@@ -167,11 +167,11 @@ extension PauseDemo: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         // SceneTypes.title provides a human-readable name for each scene
         cell.textLabel?.text = scenes[indexPath.row].title
-        cell.textLabel?.textColor = .white
+        cell.textLabel?.textColor = TokyoNight.uiFg
         cell.backgroundColor = .clear
         cell.selectionStyle = .none
         let selectedView = UIView()
-        selectedView.backgroundColor = UIColor.white.withAlphaComponent(0.15)
+        selectedView.backgroundColor = TokyoNight.uiDarker
         cell.selectedBackgroundView = selectedView
         return cell
     }

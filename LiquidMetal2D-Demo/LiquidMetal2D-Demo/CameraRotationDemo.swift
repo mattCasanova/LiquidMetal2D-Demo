@@ -86,7 +86,7 @@ class CameraRotationDemo: Scene {
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
-        renderer.setClearColor(color: Vec3(0.08, 0.06, 0.12))
+        renderer.setClearColor(color: TokyoNight.clearColor)
 
         createObjects()
 
@@ -102,7 +102,7 @@ class CameraRotationDemo: Scene {
             menuAction: #selector(onMenu))
 
         rotationLabel = UILabel()
-        rotationLabel.textColor = .white
+        rotationLabel.textColor = TokyoNight.uiFg
         rotationLabel.textAlignment = .center
         rotationLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .bold)
         renderer.view.addSubview(rotationLabel)
@@ -225,6 +225,7 @@ class CameraRotationDemo: Scene {
                 obj.scale.set(2, 2)
                 obj.rotation = 0
                 obj.textureID = textures[textureIndex]
+                obj.tintColor = TokyoNight.shipTints[textureIndex]
                 objects.append(obj)
             }
         }

@@ -46,8 +46,8 @@ class InstanceDemo: Scene {
     var distance: Float = 40
     let objectCount = GameConstants.MAX_OBJECTS
 
-    var startColor = Vec3(0, 1, 1)
-    var endColor = Vec3(1, 0, 0)
+    var startColor = Vec3(0.102, 0.106, 0.149)
+    var endColor = Vec3(0.337, 0.373, 0.537)
 
     private var ui: DemoSceneUI!
     private var textures = [Int]()
@@ -141,7 +141,9 @@ class InstanceDemo: Scene {
         obj.position.set(0, 0)
         let scale = Float.random(in: 0.25...5)
         obj.scale.set(scale, scale)
-        obj.textureID = textures[Int.random(in: 0...2)]
+        let texIndex = Int.random(in: 0...2)
+        obj.textureID = textures[texIndex]
+        obj.tintColor = TokyoNight.shipTints[texIndex]
         obj.zOrder = [-10, 0, 10].randomElement()!
 
         // GameMath.twoPi is a convenience constant for 2 * pi

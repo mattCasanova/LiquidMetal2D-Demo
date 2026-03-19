@@ -68,10 +68,12 @@ class TouchZoomDemo: Scene {
         self.renderer = renderer
         self.input = input
 
-        // loadTexture returns an Int ID for each texture. The renderer caches textures internally.
-        ["playerShip1_blue", "playerShip1_green", "playerShip1_orange"].forEach {
-            textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
-        }
+        // loadTextures returns Int IDs for each texture. The renderer caches textures internally.
+        textures = renderer.loadTextures([
+            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
+            (name: "playerShip1_green", ext: "png", isMipmaped: true),
+            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
+        ])
 
         // Camera2D.defaultDistance is the engine's suggested starting z for the camera
         currentZ = Camera2D.defaultDistance
@@ -79,6 +81,7 @@ class TouchZoomDemo: Scene {
         targetZ = currentZ
 
         renderer.setCamera(point: Vec3(0, 0, currentZ))
+        renderer.setCameraRotation(angle: 0)
         renderer.setPerspective(
             fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,

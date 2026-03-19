@@ -62,11 +62,13 @@ class MassRenderDemo: Scene {
         self.renderer = renderer
         self.input = input
 
-        // loadTexture returns an Int ID that you pass to useTexture later.
+        // loadTextures returns an array of Int IDs that you pass to useTexture later.
         // isMipmaped: true generates mipmaps for better quality at small sizes (distant z).
-        ["playerShip1_blue", "playerShip1_green", "playerShip1_orange"].forEach {
-            textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
-        }
+        textures = renderer.loadTextures([
+            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
+            (name: "playerShip1_green", ext: "png", isMipmaped: true),
+            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
+        ])
 
         // Position the camera at z=40. Higher z = further back = more of the world visible.
         renderer.setCamera(point: Vec3(0, 0, distance))

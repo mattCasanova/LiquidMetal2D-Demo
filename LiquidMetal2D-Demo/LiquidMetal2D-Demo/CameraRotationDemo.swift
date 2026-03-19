@@ -75,9 +75,11 @@ class CameraRotationDemo: Scene {
         self.renderer = renderer
         self.input = input
 
-        ["playerShip1_blue", "playerShip1_green", "playerShip1_orange"].forEach {
-            textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
-        }
+        textures = renderer.loadTextures([
+            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
+            (name: "playerShip1_green", ext: "png", isMipmaped: true),
+            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
+        ])
 
         renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
         renderer.setCameraRotation(angle: 0)

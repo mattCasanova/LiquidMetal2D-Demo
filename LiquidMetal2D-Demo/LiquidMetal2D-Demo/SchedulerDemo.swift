@@ -61,9 +61,11 @@ class SchedulerDemo: Scene {
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         sceneDelegate.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
 
-        ["playerShip1_blue", "playerShip1_green", "playerShip1_orange"].forEach {
-            textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
-        }
+        textures = sceneDelegate.renderer.loadTextures([
+            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
+            (name: "playerShip1_green", ext: "png", isMipmaped: true),
+            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
+        ])
 
         createObjects()
 

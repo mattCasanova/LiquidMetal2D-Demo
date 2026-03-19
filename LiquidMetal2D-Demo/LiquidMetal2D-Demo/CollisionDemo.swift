@@ -51,12 +51,15 @@ class CollisionDemo: Scene {
         self.renderer = renderer
         self.input = input
 
-        ["playerShip1_blue", "playerShip1_green", "playerShip1_orange"].forEach {
-            textures.append(renderer.loadTexture(name: $0, ext: "png", isMipmaped: true))
-        }
+        textures = renderer.loadTextures([
+            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
+            (name: "playerShip1_green", ext: "png", isMipmaped: true),
+            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
+        ])
 
         // Camera2D.defaultDistance is the engine's suggested starting camera z position
         renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
+        renderer.setCameraRotation(angle: 0)
         renderer.setPerspective(
             fov: GameMath.degreeToRadian(getFOV()),
             aspect: renderer.screenAspect,
@@ -101,7 +104,6 @@ class CollisionDemo: Scene {
         scheduler.update(dt: dt)
 
         // Update all objects' behaviors and age them
-        let redTex = textures[redIndex]
         for i in 0..<objects.count {
             let obj = objects[i]
             guard obj.isActive else { continue }
@@ -109,9 +111,10 @@ class CollisionDemo: Scene {
             obj.behavior.update(dt: dt)
             obj.age += dt
 
-            // Blue and green die of natural causes after maxAge seconds.
-            // Zombies (red) persist forever — only green can kill them.
-            if obj.textureID != redTex && obj.age >= maxAge {
+            // Blue dies after 30s, green after 15s. Zombies persist forever.
+            if obj.textureID == textures[greenIndex] && obj.age >= maxAge * 0.5 {
+                obj.isActive = false
+            } else if obj.textureID == textures[blueIndex] && obj.age >= maxAge {
                 obj.isActive = false
             }
         }
@@ -173,6 +176,7 @@ class CollisionDemo: Scene {
     private func setType(_ obj: CollisionObj, index: Int) {
         obj.textureID = textures[index]
         obj.tintColor = TokyoNight.shipTints[index]
+        obj.age = 0
     }
 
     /// O(n^2) brute-force collision check with zombie/cure mechanics:

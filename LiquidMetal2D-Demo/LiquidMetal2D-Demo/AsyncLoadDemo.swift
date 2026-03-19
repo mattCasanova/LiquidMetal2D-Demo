@@ -38,6 +38,7 @@ class AsyncLoadDemo: Scene {
         self.input = input
 
         renderer.setDefaultPerspective()
+        renderer.setCameraRotation(angle: 0)
         renderer.setClearColor(color: TokyoNight.clearColor)
 
         createObjects()

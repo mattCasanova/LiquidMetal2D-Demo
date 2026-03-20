@@ -93,8 +93,6 @@ class CollisionDemo: Scene {
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
         ui.layout()
-        // Recreate objects on resize since world bounds changed
-        createObjects()
     }
 
     private let maxAge: Float = 30.0

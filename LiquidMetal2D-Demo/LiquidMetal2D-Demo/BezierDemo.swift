@@ -61,19 +61,12 @@ class BezierDemo: Scene {
     private var wasTouching = false
 
     private var ui: DemoSceneUI!
-    private var textures = [Int]()
 
     /// Scene protocol: called once when the scene is created.
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
-
-        textures = renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
 
         renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
         renderer.setCameraRotation(angle: 0)
@@ -141,8 +134,6 @@ class BezierDemo: Scene {
     /// Scene protocol: clean up UI and GPU resources.
     func shutdown() {
         ui.removeFromSuperview()
-        textures.forEach { renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
     }
 
     // MARK: - Private
@@ -208,7 +199,7 @@ class BezierDemo: Scene {
     private func createObjects() {
         ship = GameObj()
         ship.scale.set(2, 2)
-        ship.textureID = textures[0]
+        ship.textureID = GameTextures.blue
         ship.tintColor = TokyoNight.shipTints[0]
         // Negative zOrder = closer to camera = drawn on top of control point markers
         ship.zOrder = -1
@@ -222,7 +213,7 @@ class BezierDemo: Scene {
             let isPassThrough = (i == 0 || i == 3 || i == 6)
             cp.scale.set(isPassThrough ? 4 : 3, isPassThrough ? 4 : 3)
             let texIndex = isPassThrough ? 1 : 2
-            cp.textureID = textures[texIndex]
+            cp.textureID = GameTextures.all[texIndex]
             cp.tintColor = TokyoNight.shipTints[texIndex]
             cp.zOrder = 0
             controlPointShips.append(cp)

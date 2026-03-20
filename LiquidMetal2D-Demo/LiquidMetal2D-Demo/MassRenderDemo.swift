@@ -2,8 +2,7 @@
 //  MassRenderDemo.swift
 //  LiquidMetal2D-Demo
 //
-//  Created by Matt Casanova on 3/8/20.
-//  Copyright © 2020 Matt Casanova. All rights reserved.
+//  Copyright © 2026 Matt Casanova. All rights reserved.
 //
 
 import UIKit
@@ -23,7 +22,7 @@ import LiquidMetal2D
 /// - **Camera movement:** `renderer.setCamera(point:)` moves the camera each frame.
 /// - **Scheduler:** `ScheduledTask` fires a repeating callback to swap colors.
 /// - **Perspective projection:** FOV-based projection with configurable near/far planes.
-/// - **Texture loading:** `renderer.loadTexture(name:ext:isMipmaped:)` caches textures by ID.
+/// - **Global textures:** Uses `GameTextures` static properties loaded once at app startup.
 /// - **MoveRightBehavior:** A single-state Behavior that moves ships right and wraps them.
 class MassRenderDemo: Scene {
     private var sceneMgr: SceneManager!
@@ -51,8 +50,6 @@ class MassRenderDemo: Scene {
     private var ui: DemoSceneUI!
     /// Scheduler manages a list of timed tasks. Call scheduler.update(dt:) each frame.
     private let scheduler = Scheduler()
-    /// Texture IDs returned by renderer.loadTexture. Used to bind textures before drawing.
-    private var textures = [Int]()
 
     /// Called once when the scene is first loaded.
     /// The Scene protocol requires `initialize(sceneMgr:renderer:input:)` -- this is where
@@ -61,14 +58,6 @@ class MassRenderDemo: Scene {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
-
-        // loadTextures returns an array of Int IDs that you pass to useTexture later.
-        // isMipmaped: true generates mipmaps for better quality at small sizes (distant z).
-        textures = renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
 
         // Position the camera at z=40. Higher z = further back = more of the world visible.
         renderer.setCamera(point: Vec3(0, 0, distance))
@@ -151,10 +140,6 @@ class MassRenderDemo: Scene {
         objects.removeAll()
         scheduler.clear()
         ui.removeFromSuperview()
-
-        // Always unload textures on shutdown to free GPU memory
-        textures.forEach { renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
     }
 
     /// Adapt FOV for orientation: wider FOV in portrait so content still fills the screen.
@@ -175,7 +160,7 @@ class MassRenderDemo: Scene {
             let obj = BehaviorObj()
             // MoveRightBehavior is a single-state Behavior: ships start at the left edge
             // and move right. When they exit bounds, they respawn at a new random z-depth.
-            obj.behavior = MoveRightBehavior(obj: obj, getBounds: getBounds, textures: textures)
+            obj.behavior = MoveRightBehavior(obj: obj, getBounds: getBounds)
             objects.append(obj)
         }
     }

@@ -59,7 +59,6 @@ class TouchZoomDemo: Scene {
     private var cornerShips = [GameObj]()
 
     private var ui: DemoSceneUI!
-    private var textures = [Int]()
 
     /// Scene protocol: called once when the scene is first created.
     /// Set up textures, camera, projection, and create all game objects here.
@@ -67,13 +66,6 @@ class TouchZoomDemo: Scene {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
-
-        // loadTextures returns Int IDs for each texture. The renderer caches textures internally.
-        textures = renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
 
         // Camera2D.defaultDistance is the engine's suggested starting z for the camera
         currentZ = Camera2D.defaultDistance
@@ -161,9 +153,6 @@ class TouchZoomDemo: Scene {
     /// Clean up UI overlays and release GPU resources (textures).
     func shutdown() {
         ui.removeFromSuperview()
-        // Always unload textures on shutdown to free GPU memory
-        textures.forEach { renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
     }
 
     private func getFOV() -> Float {
@@ -174,7 +163,7 @@ class TouchZoomDemo: Scene {
         centerShip = GameObj()
         centerShip.position.set(0, 0)
         centerShip.scale.set(5, 5)
-        centerShip.textureID = textures[0]
+        centerShip.textureID = GameTextures.blue
         centerShip.tintColor = TokyoNight.shipTints[0]
 
         cornerShips.removeAll()
@@ -182,7 +171,7 @@ class TouchZoomDemo: Scene {
             let ship = GameObj()
             ship.scale.set(7, 7)
             let texIndex = 1 + (i % 2)
-            ship.textureID = textures[texIndex]
+            ship.textureID = GameTextures.all[texIndex]
             ship.tintColor = TokyoNight.shipTints[texIndex]
             cornerShips.append(ship)
         }

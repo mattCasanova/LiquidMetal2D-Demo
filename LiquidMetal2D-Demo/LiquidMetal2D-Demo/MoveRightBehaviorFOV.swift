@@ -13,9 +13,9 @@ class MoveRightBehaviorFOV: Behavior {
     var current: State!
 
     init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds,
-         textures: [Int], zRange: ClosedRange<Float>) {
+         zRange: ClosedRange<Float>) {
         let state = MoveRightStateFOV(
-            obj: obj, getBounds: getBounds, textures: textures, zRange: zRange)
+            obj: obj, getBounds: getBounds, zRange: zRange)
         setStartState(startState: state)
     }
 }

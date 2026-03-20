@@ -2,13 +2,13 @@
 //  AsyncLoadDemo.swift
 //  LiquidMetal2D-Demo
 //
-//  Demonstrates async texture loading. Ships spawn immediately with no
-//  textures loaded — they render as magenta (the engine's error texture).
-//  After 5 seconds, textures load asynchronously in bulk. Once each
-//  texture finishes loading on the background thread, the magenta
-//  seamlessly swaps to the real texture on the next frame.
+//  Loading screen with a starfield flythrough effect. Stars are
+//  procedural 1x1 white textures tinted with Tokyo Night colors —
+//  no file loading required. After a brief delay, game textures
+//  load asynchronously. On completion, "Ready!" and a Start button
+//  appear over the starfield.
 //
-//  Press "Reset" to unload textures and restart the countdown.
+//  Copyright © 2026 Matt Casanova. All rights reserved.
 //
 
 import UIKit
@@ -19,18 +19,14 @@ class AsyncLoadDemo: Scene {
     private var renderer: Renderer!
     private var input: InputReader!
 
-    private var objects = [GameObj]()
     private let scheduler = Scheduler()
-    private var ui: DemoSceneUI!
-    private var textures = [Int]()
+    private let artificialDelay: Float = 5.0
 
-    private var texturesLoaded = false
-    private var countdown: Float = 0
-    private var countdownLabel: UILabel!
-    private var resetButton: UIButton!
+    private var statusLabel: UILabel!
+    private var startButton: UIButton!
 
-    private let objectCount = 50
-    private let loadDelay: Float = 5.0
+    private var stars = [GameObj]()
+    private let starCount = 600
 
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
@@ -41,22 +37,16 @@ class AsyncLoadDemo: Scene {
         renderer.setCameraRotation(angle: 0)
         renderer.setClearColor(color: TokyoNight.clearColor)
 
-        createObjects()
-        scheduleLoad()
+        createStars()
+        setupUI()
 
-        ui = DemoSceneUI(
-            parentView: renderer.view, target: self,
-            menuAction: #selector(onMenu))
-
-        setupCountdownLabel()
-        setupResetButton()
-        layoutUI()
+        scheduler.add(task: ScheduledTask(time: artificialDelay, action: { [weak self] in
+            self?.loadAllTextures()
+        }, count: 1))
     }
 
-    func resume() { ui.view.isHidden = false }
-
+    func resume() {}
     func resize() {
-        ui.layout()
         renderer.setDefaultPerspective()
         layoutUI()
     }
@@ -64,137 +54,129 @@ class AsyncLoadDemo: Scene {
     func update(dt: Float) {
         scheduler.update(dt: dt)
 
-        for obj in objects {
-            obj.rotation += dt * 0.5
-        }
+        // Move stars outward from center, scale up as they move
+        // star.zOrder stores the per-star speed multiplier (0.3 to 1.0)
+        for star in stars {
+            let dir = simd_normalize(star.position)
+            let dist = simd_length(star.position)
+            let starSpeed = star.zOrder
 
-        if !texturesLoaded {
-            countdown = max(0, countdown - dt)
-            countdownLabel.text = String(format: "Loading in %.1fs", countdown)
-            countdownLabel.isHidden = false
-        } else {
-            countdownLabel.isHidden = true
+            // Speed increases with distance, scaled by per-star multiplier
+            let speed = (0.2 + dist * 0.15) * starSpeed
+            star.position += dir * speed * dt * 3
+
+            // Closer stars (higher speed) appear bigger
+            let scaleFactor = (0.04 + dist * 0.03) * starSpeed
+            star.scale.set(scaleFactor, scaleFactor)
+
+            if dist > 60 {
+                respawnStar(star)
+            }
         }
     }
 
     func draw() {
         guard renderer.beginPass() else { return }
         renderer.usePerspective()
-        renderer.submit(objects: objects)
+        renderer.submit(objects: stars)
         renderer.endPass()
     }
 
     func shutdown() {
-        objects.removeAll()
         scheduler.clear()
-        ui.removeFromSuperview()
-        countdownLabel.removeFromSuperview()
-        resetButton.removeFromSuperview()
-        textures.forEach { renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
+        stars.removeAll()
+        statusLabel.removeFromSuperview()
+        startButton.removeFromSuperview()
     }
 
-    // MARK: - UI Setup
+    // MARK: - Stars
 
-    private func setupCountdownLabel() {
-        countdownLabel = UILabel()
-        countdownLabel.textColor = TokyoNight.uiFg
-        countdownLabel.textAlignment = .right
-        countdownLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .bold)
-        renderer.view.addSubview(countdownLabel)
+    private func createStars() {
+        for i in 0..<starCount {
+            let star = GameObj()
+            star.textureID = renderer.defaultTextureId
+
+            // Random speed multiplier — close stars move fast/big, far stars slow/small
+            star.zOrder = Float.random(in: 0.2...1.8)
+
+            // Evenly distribute initial distances so there's no wave pattern
+            let angle = Float.random(in: 0...GameMath.twoPi)
+            let dist = Float(i) / Float(starCount) * 60.0 + Float.random(in: -2...2)
+            star.position.set(cos(angle) * max(dist, 0.5), sin(angle) * max(dist, 0.5))
+            let scaleFactor = (0.04 + abs(dist) * 0.03) * star.zOrder
+            star.scale.set(scaleFactor, scaleFactor)
+            star.tintColor = TokyoNight.accents.randomElement()!
+            stars.append(star)
+        }
     }
 
-    private func setupResetButton() {
-        resetButton = UIButton(type: .system)
-        resetButton.setTitle("Reset", for: .normal)
-        resetButton.setTitleColor(TokyoNight.uiBlue, for: .normal)
-        resetButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        resetButton.backgroundColor = TokyoNight.uiDarker
-        resetButton.layer.cornerRadius = 8
-        resetButton.addTarget(self, action: #selector(onReset), for: .touchUpInside)
-        renderer.view.addSubview(resetButton)
+    private func respawnStar(_ star: GameObj) {
+        let angle = Float.random(in: 0...GameMath.twoPi)
+        let dist = Float.random(in: 0.5...2)
+        star.position.set(cos(angle) * dist, sin(angle) * dist)
+        star.zOrder = Float.random(in: 0.2...1.8)
+        star.scale.set(0.04, 0.04)
+        star.tintColor = TokyoNight.accents.randomElement()!
+    }
+
+    // MARK: - UI
+
+    private func setupUI() {
+        statusLabel = UILabel()
+        statusLabel.textColor = TokyoNight.uiFg
+        statusLabel.textAlignment = .center
+        statusLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 24, weight: .bold)
+        statusLabel.text = "Loading..."
+        renderer.view.addSubview(statusLabel)
+
+        startButton = UIButton(type: .system)
+        startButton.setTitle("Start", for: .normal)
+        startButton.setTitleColor(TokyoNight.uiBg, for: .normal)
+        startButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        startButton.backgroundColor = TokyoNight.uiBlue
+        startButton.layer.cornerRadius = 10
+        startButton.addTarget(self, action: #selector(onStart), for: .touchUpInside)
+        startButton.isHidden = true
+        renderer.view.addSubview(startButton)
+
+        layoutUI()
     }
 
     private func layoutUI() {
-        let safeArea = renderer.view.safeAreaInsets
-        let viewWidth = renderer.view.bounds.width
-
-        countdownLabel.frame = CGRect(
-            x: viewWidth - 220, y: safeArea.top + 8,
-            width: 200, height: 30)
-
-        resetButton.frame = CGRect(
-            x: viewWidth - 90 - safeArea.right,
-            y: renderer.view.bounds.height - safeArea.bottom - 52,
-            width: 80, height: 40)
+        let bounds = renderer.view.bounds
+        let centerX = bounds.width / 2
+        let centerY = bounds.height / 2
+        statusLabel.frame = CGRect(
+            x: 0, y: centerY - 40,
+            width: bounds.width, height: 40)
+        startButton.frame = CGRect(
+            x: centerX - 60, y: centerY + 20,
+            width: 120, height: 50)
     }
 
     // MARK: - Loading
 
-    private func createObjects() {
-        objects.removeAll()
-        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
-        for _ in 0..<objectCount {
-            let obj = GameObj()
-            obj.position.set(
-                Float.random(in: bounds.minX...bounds.maxX),
-                Float.random(in: bounds.minY...bounds.maxY))
-            let scale = Float.random(in: 1...4)
-            obj.scale.set(scale, scale)
-            obj.rotation = Float.random(in: 0...GameMath.twoPi)
-            obj.textureID = 0
-            objects.append(obj)
-        }
-    }
-
-    private func scheduleLoad() {
-        countdown = loadDelay
-        texturesLoaded = false
-        scheduler.add(task: ScheduledTask(time: loadDelay, action: { [weak self] in
-            self?.loadAndAssignTextures()
-        }, count: 1))
-    }
-
-    private func loadAndAssignTextures() {
-        textures = renderer.loadTextures([
+    private func loadAllTextures() {
+        let ids = renderer.loadTextures([
             (name: "playerShip1_blue", ext: "png", isMipmaped: true),
             (name: "playerShip1_green", ext: "png", isMipmaped: true),
             (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
+        ], completion: { [weak self] in
+            self?.onLoadComplete()
+        })
 
-        let tintMap = [
-            textures[0]: TokyoNight.blue,
-            textures[1]: TokyoNight.teal,
-            textures[2]: TokyoNight.red
-        ]
-
-        for obj in objects {
-            let tex = textures.randomElement()!
-            obj.textureID = tex
-            obj.tintColor = tintMap[tex]!
-        }
-
-        texturesLoaded = true
+        GameTextures.blue = ids[0]
+        GameTextures.green = ids[1]
+        GameTextures.orange = ids[2]
     }
 
-    // MARK: - Actions
-
-    @objc func onReset() {
-        textures.forEach { renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
-
-        for obj in objects {
-            obj.textureID = 0
-        }
-
-        texturesLoaded = false
-        scheduler.clear()
-        scheduleLoad()
+    private func onLoadComplete() {
+        statusLabel.text = "Ready!"
+        startButton.isHidden = false
     }
 
-    @objc func onMenu() {
-        ui.view.isHidden = true
-        sceneMgr.pushScene(type: SceneTypes.pauseDemo)
+    @objc func onStart() {
+        sceneMgr.setScene(type: SceneTypes.massRenderDemo)
     }
 
     static func build() -> Scene { return AsyncLoadDemo() }

@@ -63,7 +63,7 @@ class ViewController: LiquidViewController {
         // and routes input events from LiquidViewController to the active scene.
         gameEngine = DefaultEngine(
             renderer: renderer,
-            initialSceneType: SceneTypes.massRenderDemo,
+            initialSceneType: SceneTypes.asyncLoadDemo,
             sceneFactory: sceneFactory)
 
         gameEngine.run()

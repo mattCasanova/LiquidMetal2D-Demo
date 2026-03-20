@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1B2C3CE2F67D0A7003831F3 /* GameTextures.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3CD2F67D0A7003831F3 /* GameTextures.swift */; };
 		A1B2C3D02F67C0A7003831F3 /* TokyoNight.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3CF2F67C0A7003831F3 /* TokyoNight.swift */; };
 		A1B2C3D22F67B0A7003831F3 /* AsyncLoadDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D12F67B0A7003831F3 /* AsyncLoadDemo.swift */; };
 		A1B2C3D42F6780A7003831F3 /* BezierDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A1B2C3CD2F67D0A7003831F3 /* GameTextures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTextures.swift; sourceTree = "<group>"; };
 		A1B2C3CF2F67C0A7003831F3 /* TokyoNight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokyoNight.swift; sourceTree = "<group>"; };
 		A1B2C3D12F67B0A7003831F3 /* AsyncLoadDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLoadDemo.swift; sourceTree = "<group>"; };
 		A1B2C3D32F6780A7003831F3 /* BezierDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezierDemo.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				F536B6B72416939700B3566F /* textures */,
 				F536B6B62416928500B3566F /* scenes */,
 				F536B6AA2416922E00B3566F /* Constants.swift */,
+				A1B2C3CD2F67D0A7003831F3 /* GameTextures.swift */,
 				A1B2C3CF2F67C0A7003831F3 /* TokyoNight.swift */,
 				F536B6A2241690FB00B3566F /* appleDefaults */,
 				F536B692241690A800B3566F /* ViewController.swift */,
@@ -318,6 +321,7 @@
 				A1B2C3D82F67A0A7003831F3 /* MoveRightBehaviorFOV.swift in Sources */,
 				A1B2C3DA2F67A0A7003831F3 /* MoveRightStateFOV.swift in Sources */,
 				F57FE9782427CEF3005D5A59 /* MoveRightState.swift in Sources */,
+				A1B2C3CE2F67D0A7003831F3 /* GameTextures.swift in Sources */,
 				A1B2C3D02F67C0A7003831F3 /* TokyoNight.swift in Sources */,
 				F536B6AB2416922F00B3566F /* Constants.swift in Sources */,
 				F57FE9702426D808005D5A59 /* RandomAngleBehavior.swift in Sources */,
@@ -525,7 +529,7 @@
 			repositoryURL = "https://github.com/mattCasanova/LiquidMetal2D.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.2;
+				minimumVersion = 0.6.5;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

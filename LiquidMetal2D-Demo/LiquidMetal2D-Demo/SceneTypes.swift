@@ -57,7 +57,7 @@ enum SceneTypes: SceneType {
     static let navigable: [SceneTypes] = [
         .massRenderDemo, .touchZoomDemo, .instanceDemo,
         .schedulerDemo, .spawnDemo, .collisionDemo,
-        .bezierDemo, .cameraRotationDemo, .asyncLoadDemo
+        .bezierDemo, .cameraRotationDemo
     ]
 
     /// Returns the next scene in the navigable list, or nil if this is the last one.

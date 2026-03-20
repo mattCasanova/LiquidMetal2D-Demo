@@ -32,18 +32,16 @@ class RandomAngleState: State {
     /// the BehaviorObj owns the Behavior which owns the State.
     private unowned let obj: BehaviorObj
 
-    private let textures: [Int]
     /// Closure that returns the current spawn position (e.g., the player's touch location).
     /// Using a closure instead of a stored Vec2 allows the spawn point to change dynamically.
     private let getSpawnLocation: () -> Vec2
     /// Closure that returns the current world bounds for out-of-bounds detection.
     private let getBounds: () -> WorldBounds
 
-    init(obj: BehaviorObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds, textures: [Int]) {
+    init(obj: BehaviorObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds) {
         self.obj              = obj
         self.getSpawnLocation = getSpawnLocation
         self.getBounds        = getBounds
-        self.textures         = textures
     }
 
     /// Called when this state becomes active. Randomizes the object's properties.
@@ -91,8 +89,8 @@ class RandomAngleState: State {
         // Scale velocity by 5 * scale: larger ships move faster, creating a parallax effect
         obj.velocity *= 5 * scale
         // Randomly assign one of the available textures
-        let texIndex = Int.random(in: 0..<textures.count)
-        obj.textureID = textures[texIndex]
+        let texIndex = Int.random(in: 0..<GameTextures.all.count)
+        obj.textureID = GameTextures.all[texIndex]
         obj.tintColor = TokyoNight.shipTints[texIndex]
     }
 

@@ -38,10 +38,6 @@ class CollisionDemo: Scene {
     private var objects = [CollisionObj]()
 
     private let scheduler = Scheduler()
-    private var textures = [Int]()
-    private let blueIndex = 0    // normal (vulnerable)
-    private let greenIndex = 1   // cure (immune, spreads immunity)
-    private let redIndex = 2     // infected (zombie)
 
     private var ui: DemoSceneUI!
 
@@ -50,12 +46,6 @@ class CollisionDemo: Scene {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
-
-        textures = renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
 
         // Camera2D.defaultDistance is the engine's suggested starting camera z position
         renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
@@ -110,7 +100,7 @@ class CollisionDemo: Scene {
             obj.age += dt
 
             // Blue and green die after 30s. Zombies persist forever.
-            if obj.textureID != textures[redIndex] && obj.age >= maxAge {
+            if obj.textureID != GameTextures.orange && obj.age >= maxAge {
                 obj.isActive = false
             }
         }
@@ -130,7 +120,6 @@ class CollisionDemo: Scene {
     /// Scene protocol: clean up everything -- objects, textures, scheduler, and UI.
     func shutdown() {
         objects.removeAll()
-        textures.forEach(renderer.unloadTexture(textureId:))
         scheduler.clear()
         ui.removeFromSuperview()
     }
@@ -155,18 +144,18 @@ class CollisionDemo: Scene {
         let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
 
         // 5% zombie, 2% super zombie. Green only spawns (3%) when 20+ reds exist.
-        let redCount = objects.filter { $0.isActive && $0.textureID == textures[redIndex] }.count
+        let redCount = objects.filter { $0.isActive && $0.textureID == GameTextures.orange }.count
         let roll = Int.random(in: 0..<100)
         let texIndex: Int
         let isSuperZombie: Bool
         if roll < 2 {
-            texIndex = redIndex; isSuperZombie = true
+            texIndex = 2; isSuperZombie = true
         } else if roll < 7 {
-            texIndex = redIndex; isSuperZombie = false
+            texIndex = 2; isSuperZombie = false
         } else if roll < 10 && redCount >= 20 {
-            texIndex = greenIndex; isSuperZombie = false
+            texIndex = 1; isSuperZombie = false
         } else {
-            texIndex = blueIndex; isSuperZombie = false
+            texIndex = 0; isSuperZombie = false
         }
 
         obj.position.set(
@@ -175,8 +164,8 @@ class CollisionDemo: Scene {
 
         obj.isSuper = isSuperZombie
         obj.scale = isSuperZombie ? Vec2(4, 4) : Vec2(2, 2)
-        obj.charges = texIndex == greenIndex ? 3 : (isSuperZombie ? 3 : 0)
-        obj.textureID = textures[texIndex]
+        obj.charges = texIndex == 1 ? 3 : (isSuperZombie ? 3 : 0)
+        obj.textureID = GameTextures.all[texIndex]
         obj.tintColor = TokyoNight.shipTints[texIndex]
         obj.age = 0
         obj.isActive = true
@@ -185,7 +174,7 @@ class CollisionDemo: Scene {
     }
 
     private func setType(_ obj: CollisionObj, index: Int) {
-        obj.textureID = textures[index]
+        obj.textureID = GameTextures.all[index]
         obj.tintColor = TokyoNight.shipTints[index]
         obj.age = 0
     }
@@ -196,9 +185,9 @@ class CollisionDemo: Scene {
     /// - Green + super Red → super loses a hit point (dies at 0), green loses a charge
     /// - Green + Blue → blue becomes green (cure spreads)
     private func checkCollision() {
-        let redTex = textures[redIndex]
-        let blueTex = textures[blueIndex]
-        let greenTex = textures[greenIndex]
+        let redTex = GameTextures.orange
+        let blueTex = GameTextures.blue
+        let greenTex = GameTextures.green
 
         for i in 0..<objects.count {
             let first = objects[i]
@@ -235,14 +224,14 @@ class CollisionDemo: Scene {
 
     /// Convert a blue ship to green (healer). Gets fresh 3 charges.
     private func recruit(_ obj: CollisionObj) {
-        setType(obj, index: greenIndex)
+        setType(obj, index: 1)
         obj.charges = 3
     }
 
     /// Zombie bite: 80% chance blue becomes red, 20% blue dies.
     private func bite(_ blue: CollisionObj) {
         if Float.random(in: 0...1) < 0.8 {
-            setType(blue, index: redIndex)
+            setType(blue, index: 2)
             blue.isSuper = false
             blue.charges = 0
         } else {
@@ -260,7 +249,7 @@ class CollisionDemo: Scene {
                 zombie.isActive = false
             }
         } else {
-            setType(zombie, index: blueIndex)
+            setType(zombie, index: 0)
         }
 
         healer.charges -= 1

@@ -54,18 +54,11 @@ class SchedulerDemo: Scene {
     let objectCount = 100
 
     private var ui: DemoSceneUI!
-    private var textures = [Int]()
     private let scheduler = Scheduler()
 
     /// Scene protocol: called once when the scene is created.
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         sceneDelegate.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
-
-        textures = sceneDelegate.renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
 
         createObjects()
 
@@ -133,8 +126,6 @@ class SchedulerDemo: Scene {
     func shutdown() {
         scheduler.clear()
         sceneDelegate.renderer.setCameraRotation(angle: 0)
-        textures.forEach { sceneDelegate.renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
         ui.removeFromSuperview()
     }
 
@@ -205,7 +196,7 @@ class SchedulerDemo: Scene {
         let scale = Float.random(in: 0.25...5)
         obj.scale.set(scale, scale)
         let texIndex = Int.random(in: 0...2)
-        obj.textureID = textures[texIndex]
+        obj.textureID = GameTextures.all[texIndex]
         obj.tintColor = TokyoNight.shipTints[texIndex]
         // Random rotation in full circle
         obj.rotation = Float.random(in: 0...GameMath.twoPi)

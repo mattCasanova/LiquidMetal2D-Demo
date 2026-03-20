@@ -38,13 +38,11 @@ class RandomAngleBehavior: Behavior {
     ///   - obj: The game object this behavior controls (position, velocity, scale, etc.)
     ///   - getSpawnLocation: Closure returning the current spawn position (e.g., touch location)
     ///   - getBounds: Closure returning the visible world bounds for out-of-bounds checks
-    ///   - textures: Array of texture IDs to randomly assign on spawn
-    init(obj: BehaviorObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds, textures: [Int]) {
+    init(obj: BehaviorObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds) {
         randomAngleState = RandomAngleState(
             obj: obj,
             getSpawnLocation: getSpawnLocation,
-            getBounds: getBounds,
-            textures: textures)
+            getBounds: getBounds)
         // setStartState activates the state by calling its enter() method.
         // For this single-state behavior, this is the only transition that ever happens.
         setStartState(startState: randomAngleState)

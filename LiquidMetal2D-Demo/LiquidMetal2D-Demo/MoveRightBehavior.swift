@@ -31,9 +31,8 @@ class MoveRightBehavior: Behavior {
     /// - Parameters:
     ///   - obj: The game object this behavior controls
     ///   - getBounds: Closure that returns world bounds for a given zOrder depth
-    ///   - textures: Array of texture IDs to randomly assign on spawn
-    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds, textures: [Int]) {
-        moveRightState = MoveRightState(obj: obj, getBounds: getBounds, textures: textures)
+    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds) {
+        moveRightState = MoveRightState(obj: obj, getBounds: getBounds)
         // setStartState activates the state and calls its enter() method
         setStartState(startState: moveRightState)
     }

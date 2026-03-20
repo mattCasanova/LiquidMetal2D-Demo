@@ -16,15 +16,13 @@ import LiquidMetal2D
 class MoveRightStateFOV: State {
     private unowned let obj: BehaviorObj
 
-    private let textures: [Int]
     private let getBounds: (_ zOrder: Float) -> WorldBounds
     private let zRange: ClosedRange<Float>
     private var bounds = WorldBounds(minX: 0, maxX: 0, minY: 0, maxY: 0)
 
     init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds,
-         textures: [Int], zRange: ClosedRange<Float>) {
+         zRange: ClosedRange<Float>) {
         self.obj = obj
-        self.textures = textures
         self.getBounds = getBounds
         self.zRange = zRange
     }
@@ -54,6 +52,6 @@ class MoveRightStateFOV: State {
         obj.scale.set(1, 1)
         obj.rotation = 0
         obj.velocity.set(Float.random(in: 2...8), 0)
-        obj.textureID = textures[Int.random(in: 0..<textures.count)]
+        obj.textureID = GameTextures.all.randomElement()!
     }
 }

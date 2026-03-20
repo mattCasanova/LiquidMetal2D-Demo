@@ -68,18 +68,11 @@ class CameraRotationDemo: Scene {
 
     private var rotationLabel: UILabel!
     private var ui: DemoSceneUI!
-    private var textures = [Int]()
 
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
-
-        textures = renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
 
         renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
         renderer.setCameraRotation(angle: 0)
@@ -187,8 +180,6 @@ class CameraRotationDemo: Scene {
         renderer.setCameraRotation(angle: 0)
         rotationLabel.removeFromSuperview()
         ui.removeFromSuperview()
-        textures.forEach { renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
     }
 
     // MARK: - Private
@@ -226,7 +217,7 @@ class CameraRotationDemo: Scene {
                 obj.zOrder = startZ + Float(i) * zSpacing
                 obj.scale.set(2, 2)
                 obj.rotation = 0
-                obj.textureID = textures[textureIndex]
+                obj.textureID = GameTextures.all[textureIndex]
                 obj.tintColor = TokyoNight.shipTints[textureIndex]
                 objects.append(obj)
             }

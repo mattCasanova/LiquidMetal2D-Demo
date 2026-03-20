@@ -26,16 +26,14 @@ class MoveRightState: State {
     /// so the object always outlives the state.
     private unowned let obj: BehaviorObj
 
-    private let textures: [Int]
     /// Closure that returns the visible world bounds for a given z-depth.
     /// This allows bounds to change based on how far the ship is from the camera.
     private let getBounds: (_ zOrder: Float) -> WorldBounds
     /// Cached bounds for this ship's current zOrder, recalculated on each respawn.
     private var bounds = WorldBounds(minX: 0, maxX: 0, minY: 0, maxY: 0)
 
-    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds, textures: [Int]) {
+    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds) {
         self.obj       = obj
-        self.textures  = textures
         self.getBounds = getBounds
     }
 
@@ -81,7 +79,7 @@ class MoveRightState: State {
         // Velocity is purely horizontal (rightward) with random speed
         obj.velocity.set(Float.random(in: 2...10), 0)
         let texIndex = Int.random(in: 0...2)
-        obj.textureID = textures[texIndex]
+        obj.textureID = GameTextures.all[texIndex]
         obj.tintColor = TokyoNight.shipTints[texIndex]
     }
 

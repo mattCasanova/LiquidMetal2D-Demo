@@ -44,19 +44,12 @@ class SpawnDemo: Scene {
     private let spawnEaseDuration: Float = 0.3
 
     private var ui: DemoSceneUI!
-    private var textures = [Int]()
 
     /// Scene protocol: called once when the scene is created.
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
-
-        textures = renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
 
         renderer.setCamera(point: Vec3(0, 0, distance))
         renderer.setCameraRotation(angle: 0)
@@ -142,9 +135,6 @@ class SpawnDemo: Scene {
         objects.removeAll()
         spawnAge.removeAll()
         ui.removeFromSuperview()
-        // Always unload textures to free GPU memory
-        textures.forEach { renderer.unloadTexture(textureId: $0) }
-        textures.removeAll()
     }
 
     private func getFOV() -> Float {
@@ -168,7 +158,7 @@ class SpawnDemo: Scene {
             // speed, and scale on enter(), then checks bounds on update() to respawn when needed.
             obj.behavior = RandomAngleBehavior(
                 obj: obj, getSpawnLocation: getSpawnLocation,
-                getBounds: getBounds, textures: textures)
+                getBounds: getBounds)
             objects.append(obj)
             // Start with full ease duration so objects appear fully scaled on first frame
             spawnAge.append(spawnEaseDuration)

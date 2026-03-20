@@ -50,7 +50,6 @@ class InstanceDemo: Scene {
     var endColor = Vec3(0.337, 0.373, 0.537)
 
     private var ui: DemoSceneUI!
-    private var textures = [Int]()
 
     /// Scene protocol: called once when the scene is created.
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
@@ -58,12 +57,6 @@ class InstanceDemo: Scene {
         // configures the perspective projection, and stores references to sceneMgr,
         // renderer, and input so you can access them via sceneDelegate.renderer, etc.
         sceneDelegate.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
-
-        textures = renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
-        ])
 
         createObjects()
 
@@ -144,7 +137,7 @@ class InstanceDemo: Scene {
         let scale = Float.random(in: 0.25...5)
         obj.scale.set(scale, scale)
         let texIndex = Int.random(in: 0...2)
-        obj.textureID = textures[texIndex]
+        obj.textureID = GameTextures.all[texIndex]
         obj.tintColor = TokyoNight.shipTints[texIndex]
         obj.zOrder = [-10, 0, 10].randomElement()!
 

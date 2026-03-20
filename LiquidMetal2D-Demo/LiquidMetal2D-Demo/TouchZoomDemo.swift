@@ -75,7 +75,7 @@ class TouchZoomDemo: Scene {
         renderer.setCamera(point: Vec3(0, 0, currentZ))
         renderer.setCameraRotation(angle: 0)
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -96,7 +96,7 @@ class TouchZoomDemo: Scene {
     func resize() {
         ui.layout()
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -153,10 +153,6 @@ class TouchZoomDemo: Scene {
     /// Clean up UI overlays and release GPU resources (textures).
     func shutdown() {
         ui.removeFromSuperview()
-    }
-
-    private func getFOV() -> Float {
-        renderer.screenWidth <= renderer.screenHeight ? 90 : 45
     }
 
     private func createObjects() {

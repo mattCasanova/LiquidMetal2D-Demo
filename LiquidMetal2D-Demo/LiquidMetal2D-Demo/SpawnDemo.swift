@@ -54,7 +54,7 @@ class SpawnDemo: Scene {
         renderer.setCamera(point: Vec3(0, 0, distance))
         renderer.setCameraRotation(angle: 0)
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -74,7 +74,7 @@ class SpawnDemo: Scene {
     func resize() {
         ui.layout()
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -135,10 +135,6 @@ class SpawnDemo: Scene {
         objects.removeAll()
         spawnAge.removeAll()
         ui.removeFromSuperview()
-    }
-
-    private func getFOV() -> Float {
-        renderer.screenWidth <= renderer.screenHeight ? 90 : 45
     }
 
     private func createObjects() {

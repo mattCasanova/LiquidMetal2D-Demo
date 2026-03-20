@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattCasanova/LiquidMetal2D.git",
       "state" : {
-        "revision" : "5a691d2a5381eb157fd48fc9e6fc7928fa073645",
-        "version" : "0.6.8"
+        "revision" : "fe8d1469f1a98389e13461a96ab69bfd035011ed",
+        "version" : "0.6.9"
       }
     },
     {

@@ -51,7 +51,7 @@ class CollisionDemo: Scene {
         renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
         renderer.setCameraRotation(angle: 0)
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -78,7 +78,7 @@ class CollisionDemo: Scene {
     /// because the visible world bounds have changed.
     func resize() {
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -107,7 +107,7 @@ class CollisionDemo: Scene {
 
         checkCollision()
 
-        objects.sort(by: { $0.isActive.toInt() > $1.isActive.toInt() })
+        objects.sort(by: { $0.isActive && !$1.isActive })
     }
 
     func draw() {
@@ -133,10 +133,6 @@ class CollisionDemo: Scene {
             obj.isActive = false
             objects.append(obj)
         }
-    }
-
-    private func getFOV() -> Float {
-        renderer.screenWidth <= renderer.screenHeight ? 90 : 45
     }
 
     private func spawnShip() {

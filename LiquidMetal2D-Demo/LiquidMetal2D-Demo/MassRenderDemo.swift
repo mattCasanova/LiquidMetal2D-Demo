@@ -68,7 +68,7 @@ class MassRenderDemo: Scene {
         // Set up perspective projection. FOV adapts to portrait vs landscape orientation.
         // PerspectiveProjection.defaultNearZ/defaultFarZ provide sensible clip plane defaults.
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -97,7 +97,7 @@ class MassRenderDemo: Scene {
     func resize() {
         ui.layout()
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -140,11 +140,6 @@ class MassRenderDemo: Scene {
         objects.removeAll()
         scheduler.clear()
         ui.removeFromSuperview()
-    }
-
-    /// Adapt FOV for orientation: wider FOV in portrait so content still fills the screen.
-    private func getFOV() -> Float {
-        renderer.screenWidth <= renderer.screenHeight ? 90 : 45
     }
 
     private func createObjects() {

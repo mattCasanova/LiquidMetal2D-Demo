@@ -71,7 +71,7 @@ class BezierDemo: Scene {
         renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
         renderer.setCameraRotation(angle: 0)
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -91,7 +91,7 @@ class BezierDemo: Scene {
     func resize() {
         ui.layout()
         renderer.setPerspective(
-            fov: GameMath.degreeToRadian(getFOV()),
+            fov: renderer.getDefaultFOV(),
             aspect: renderer.screenAspect,
             nearZ: PerspectiveProjection.defaultNearZ,
             farZ: PerspectiveProjection.defaultFarZ)
@@ -137,10 +137,6 @@ class BezierDemo: Scene {
     }
 
     // MARK: - Private
-
-    private func getFOV() -> Float {
-        renderer.screenWidth <= renderer.screenHeight ? 90 : 45
-    }
 
     /// Evaluates the chained bezier path at parameter t.
     /// t in [0,1) uses the first cubic segment (controlPoints[0..3]).

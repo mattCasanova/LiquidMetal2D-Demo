@@ -28,7 +28,7 @@ import LiquidMetal2D
 /// - **Camera rotation:** `setCameraRotation(angle:)` rotates the view around the Z axis.
 /// - **Camera zoom:** Varying the camera's Z distance changes the visible world area.
 /// - **DefaultScene delegation:** Reuses DefaultScene for camera setup, projection, and drawing.
-/// - **simd_mix:** Component-wise linear interpolation for smooth color transitions.
+/// - **Vec3.lerp:** Linear interpolation for smooth color transitions.
 class SchedulerDemo: Scene {
     var sceneDelegate = DefaultScene()
 
@@ -86,7 +86,7 @@ class SchedulerDemo: Scene {
             changeTime += dt
             let t = min(changeTime / maxChangeTime, 1)
             sceneDelegate.renderer.setClearColor(
-                color: simd_mix(startColor, endColor, Vec3(repeating: t)))
+                color: startColor.lerp(to: endColor, t: t))
         } else {
             sceneDelegate.renderer.setClearColor(color: startColor)
         }
@@ -107,11 +107,10 @@ class SchedulerDemo: Scene {
         sceneDelegate.renderer.setCamera(point: Vec3(0, 0, distance))
         let vec = sceneDelegate.input.getWorldTouch(forZ: 0)
 
-        for i in 0..<objectCount {
-            let obj = sceneDelegate.objects[i]
+        for obj in sceneDelegate.objects {
             obj.position += obj.velocity * dt
             if let v = vec { obj.rotation = atan2(v.y, v.x) }
-            if simd_length_squared(obj.position) >= 3600 { randomize(obj: obj) }
+            if obj.position.lengthSquared >= 3600 { randomize(obj: obj) }
         }
 
         sceneDelegate.objects.sort(by: { $0.zOrder < $1.zOrder })

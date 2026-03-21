@@ -40,6 +40,7 @@ class MassRenderDemo: Scene {
     var camDistance: Float = 30
     /// Center z-distance for the camera oscillation
     var distance: Float = 40
+    let cameraOscillationSpeed: Float = 0.5
 
     let objectCount = GameConstants.MAX_OBJECTS
     var objects = [BehaviorObj]()
@@ -104,28 +105,20 @@ class MassRenderDemo: Scene {
     }
 
     func update(dt: Float) {
-        // Advance all scheduled tasks by the frame delta time
         scheduler.update(dt: dt)
 
-        // Oscillate camera z-distance using a sine wave for a smooth zoom in/out effect.
-        // The camera moves between (distance - camDistance) and (distance + camDistance).
-        cameraTime += dt * 0.5
+        cameraTime += dt * cameraOscillationSpeed
         let newDist = -sinf(cameraTime) * camDistance + distance
         renderer.setCamera(point: Vec3(0, 0, newDist))
 
-        // Smoothly interpolate the clear (background) color between startColor and endColor.
-        // simd_mix performs component-wise linear interpolation. t goes from 0 to 1 over 2 seconds.
         backgroundTime += dt
         let t = backgroundTime / maxBackgroundChangeTime
-        renderer.setClearColor(color: simd_mix(startColor, endColor, Vec3(repeating: t)))
+        renderer.setClearColor(color: startColor.lerp(to: endColor, t: t))
 
-        // Update each ship's Behavior (MoveRightBehavior), which moves it right and wraps it
-        for i in 0..<objectCount {
-            objects[i].behavior.update(dt: dt)
+        for obj in objects {
+            obj.behavior.update(dt: dt)
         }
 
-        // Sort by zOrder so objects further from the camera (higher z) draw first.
-        // The renderer draws in array order, so back-to-front sorting prevents visual artifacts.
         objects.sort(by: { $0.zOrder < $1.zOrder })
     }
 

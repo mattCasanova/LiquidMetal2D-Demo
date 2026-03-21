@@ -28,6 +28,17 @@ class AsyncLoadDemo: Scene {
     private var stars = [GameObj]()
     private let starCount = 600
 
+    // Star movement
+    private let baseSpeed: Float = 0.2
+    private let distanceSpeedScale: Float = 0.15
+    private let globalSpeedMultiplier: Float = 3
+    private let baseScale: Float = 0.04
+    private let distanceScaleMultiplier: Float = 0.03
+    private let maxDistance: Float = 60
+    private let speedRange: ClosedRange<Float> = 0.2...1.8
+    private let respawnDistanceRange: ClosedRange<Float> = 0.5...2
+    private let initialJitter: ClosedRange<Float> = -2...2
+
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
@@ -57,19 +68,17 @@ class AsyncLoadDemo: Scene {
         // Move stars outward from center, scale up as they move
         // star.zOrder stores the per-star speed multiplier (0.3 to 1.0)
         for star in stars {
-            let dir = simd_normalize(star.position)
-            let dist = simd_length(star.position)
+            let dir = star.position.normalized
+            let dist = star.position.length
             let starSpeed = star.zOrder
 
-            // Speed increases with distance, scaled by per-star multiplier
-            let speed = (0.2 + dist * 0.15) * starSpeed
-            star.position += dir * speed * dt * 3
+            let speed = (baseSpeed + dist * distanceSpeedScale) * starSpeed
+            star.position += dir * speed * dt * globalSpeedMultiplier
 
-            // Closer stars (higher speed) appear bigger
-            let scaleFactor = (0.04 + dist * 0.03) * starSpeed
+            let scaleFactor = (baseScale + dist * distanceScaleMultiplier) * starSpeed
             star.scale.set(scaleFactor, scaleFactor)
 
-            if dist > 60 {
+            if dist > maxDistance {
                 respawnStar(star)
             }
         }
@@ -95,15 +104,14 @@ class AsyncLoadDemo: Scene {
         for i in 0..<starCount {
             let star = GameObj()
             star.textureID = renderer.defaultTextureId
+            star.zOrder = Float.random(in: speedRange)
 
-            // Random speed multiplier — close stars move fast/big, far stars slow/small
-            star.zOrder = Float.random(in: 0.2...1.8)
-
-            // Evenly distribute initial distances so there's no wave pattern
             let angle = Float.random(in: 0...GameMath.twoPi)
-            let dist = Float(i) / Float(starCount) * 60.0 + Float.random(in: -2...2)
-            star.position.set(cos(angle) * max(dist, 0.5), sin(angle) * max(dist, 0.5))
-            let scaleFactor = (0.04 + abs(dist) * 0.03) * star.zOrder
+            let dist = Float(i) / Float(starCount) * maxDistance + Float.random(in: initialJitter)
+            let clampedDist = max(dist, respawnDistanceRange.lowerBound)
+            star.position.set(cos(angle) * clampedDist, sin(angle) * clampedDist)
+
+            let scaleFactor = (baseScale + abs(dist) * distanceScaleMultiplier) * star.zOrder
             star.scale.set(scaleFactor, scaleFactor)
             star.tintColor = TokyoNight.accents.randomElement()!
             stars.append(star)
@@ -112,10 +120,10 @@ class AsyncLoadDemo: Scene {
 
     private func respawnStar(_ star: GameObj) {
         let angle = Float.random(in: 0...GameMath.twoPi)
-        let dist = Float.random(in: 0.5...2)
+        let dist = Float.random(in: respawnDistanceRange)
         star.position.set(cos(angle) * dist, sin(angle) * dist)
-        star.zOrder = Float.random(in: 0.2...1.8)
-        star.scale.set(0.04, 0.04)
+        star.zOrder = Float.random(in: speedRange)
+        star.scale.set(baseScale, baseScale)
         star.tintColor = TokyoNight.accents.randomElement()!
     }
 
@@ -158,9 +166,9 @@ class AsyncLoadDemo: Scene {
 
     private func loadAllTextures() {
         let ids = renderer.loadTextures([
-            TextureDescriptor(name: "playerShip1_blue", ext: "png", isMipmapped: true),
-            TextureDescriptor(name: "playerShip1_green", ext: "png", isMipmapped: true),
-            TextureDescriptor(name: "playerShip1_orange", ext: "png", isMipmapped: true)
+            TextureDescriptor(name: "playerShip1_blue", isMipmapped: true),
+            TextureDescriptor(name: "playerShip1_green", isMipmapped: true),
+            TextureDescriptor(name: "playerShip1_orange", isMipmapped: true)
         ], completion: { [weak self] in
             self?.onLoadComplete()
         })

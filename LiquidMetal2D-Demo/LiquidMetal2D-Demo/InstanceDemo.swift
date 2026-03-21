@@ -76,11 +76,10 @@ class InstanceDemo: Scene {
     }
 
     func update(dt: Float) {
-        // Smoothly interpolate background color using simd_mix (component-wise lerp)
         changeTime += dt
         let t = changeTime / maxChangeTime
         sceneDelegate.renderer.setClearColor(
-            color: simd_mix(startColor, endColor, Vec3(repeating: t)))
+            color: startColor.lerp(to: endColor, t: t))
         sceneDelegate.renderer.setCamera(point: Vec3(0, 0, distance))
 
         // getWorldTouch returns the touch position in world-space at z=0, or nil if no touch
@@ -94,17 +93,10 @@ class InstanceDemo: Scene {
             endColor = temp
         }
 
-        for i in 0..<objectCount {
-            let obj = sceneDelegate.objects[i]
-
-            // Simple position integration: move by velocity * delta time
+        for obj in sceneDelegate.objects {
             obj.position += obj.velocity * dt
-
-            // If touch is active, rotate all ships to face the touch direction
             if let v = vec { obj.rotation = atan2(v.y, v.x) }
-
-            // Respawn ships that fly too far from center (60 units squared = 3600)
-            if simd_length_squared(obj.position) >= 3600 { randomize(obj: obj) }
+            if obj.position.lengthSquared >= 3600 { randomize(obj: obj) }
         }
 
         // Sort by zOrder for correct back-to-front rendering

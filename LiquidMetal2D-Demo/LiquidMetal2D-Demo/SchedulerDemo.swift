@@ -25,6 +25,7 @@ import LiquidMetal2D
 /// - **Infinite looping via chaining:** The final onComplete rebuilds the chain.
 /// - **Camera rotation and zoom** via `setCameraRotation` and `setCamera`.
 class SchedulerDemo: DefaultScene {
+    override class var sceneType: any SceneType { SceneTypes.schedulerDemo }
 
     // Phase 1: Color crossfade
     var shouldChange = true
@@ -184,5 +185,4 @@ class SchedulerDemo: DefaultScene {
         sceneMgr.pushScene(type: SceneTypes.pauseDemo)
     }
 
-    override static func build() -> Scene { return SchedulerDemo() }
 }

@@ -27,6 +27,8 @@ import LiquidMetal2D
 ///   do not need bounds for a different camera distance than the current one.
 /// - **Sort by scale for depth:** Objects sorted by scale.x so smaller ships draw first.
 class SpawnDemo: Scene {
+    static var sceneType: any SceneType { SceneTypes.spawnDemo }
+
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

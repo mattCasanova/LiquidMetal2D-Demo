@@ -33,6 +33,8 @@ import LiquidMetal2D
 /// **Why NSObject?** PauseDemo conforms to UITableViewDataSource and UITableViewDelegate,
 /// which are Objective-C protocols that require NSObject inheritance.
 class PauseDemo: NSObject, Scene {
+    static var sceneType: any SceneType { SceneTypes.pauseDemo }
+
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

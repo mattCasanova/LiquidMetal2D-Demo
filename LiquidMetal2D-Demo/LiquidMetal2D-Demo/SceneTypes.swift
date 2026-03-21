@@ -13,14 +13,14 @@ import LiquidMetal2D
 ///
 /// **How scene types work in LiquidMetal2D:**
 /// The engine identifies scenes by `SceneType` values. You define your own enum conforming
-/// to `SceneType`, then register each case with the `SceneFactory` in your ViewController.
-/// This decouples scene transitions from concrete scene classes -- you call
-/// `sceneMgr.setScene(type: .touchZoomDemo)` without importing TouchZoomDemo directly.
+/// to `SceneType`. Each scene class declares a `static var sceneType` returning its case,
+/// so the factory can register and build scenes automatically.
 ///
 /// **Registration flow:**
 /// 1. Define your enum cases here
-/// 2. In ViewController, call `sceneFactory.addScene(type:builder:)` for each case
-/// 3. In your scenes, call `sceneMgr.setScene(type:)` or `sceneMgr.pushScene(type:)` to navigate
+/// 2. Each scene class sets `static var sceneType` to its case
+/// 3. In ViewController, call `sceneFactory.addScenes([MyScene.self, ...])`
+/// 4. In your scenes, call `sceneMgr.setScene(type:)` or `sceneMgr.pushScene(type:)` to navigate
 ///
 /// The `title` property provides human-readable names used by the PauseDemo menu.
 /// The `navigable` list controls which scenes appear in the menu (excludes pauseDemo

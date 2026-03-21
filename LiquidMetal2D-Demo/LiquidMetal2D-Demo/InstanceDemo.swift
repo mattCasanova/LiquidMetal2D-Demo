@@ -22,6 +22,7 @@ import LiquidMetal2D
 /// - **Touch rotation:** `input.getWorldTouch(forZ:)` + `atan2` rotates all ships.
 /// - **Z-order sorting:** Ships sorted by `zOrder` each frame for correct draw order.
 class InstanceDemo: DefaultScene {
+    override class var sceneType: any SceneType { SceneTypes.instanceDemo }
 
     var changeTime: Float = 0
     let maxChangeTime: Float = 2
@@ -106,5 +107,4 @@ class InstanceDemo: DefaultScene {
         sceneMgr.pushScene(type: SceneTypes.pauseDemo)
     }
 
-    override static func build() -> Scene { return InstanceDemo() }
 }

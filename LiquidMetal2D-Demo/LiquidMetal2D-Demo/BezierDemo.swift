@@ -28,6 +28,8 @@ import LiquidMetal2D
 /// - **zOrder for draw ordering:** The ship has zOrder = -1 (closer to camera) so it draws
 ///   on top of the control point markers at zOrder = 0.
 class BezierDemo: Scene {
+    static var sceneType: any SceneType { SceneTypes.bezierDemo }
+
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

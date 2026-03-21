@@ -33,6 +33,8 @@ import LiquidMetal2D
 /// when a pushed scene (PauseDemo) pops and this scene becomes active again. `shutdown()` is
 /// called when the scene is removed from the scene stack.
 class TouchZoomDemo: Scene {
+    static var sceneType: any SceneType { SceneTypes.touchZoomDemo }
+
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

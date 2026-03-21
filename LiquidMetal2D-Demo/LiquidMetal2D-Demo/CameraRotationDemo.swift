@@ -17,6 +17,8 @@ import LiquidMetal2D
 /// - `Scheduler` — timed repeat events and task chaining (3 waves)
 /// - `GameObj.isActive` — deactivating objects that leave world bounds
 class CameraRotationDemo: Scene {
+    static var sceneType: any SceneType { SceneTypes.cameraRotationDemo }
+
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

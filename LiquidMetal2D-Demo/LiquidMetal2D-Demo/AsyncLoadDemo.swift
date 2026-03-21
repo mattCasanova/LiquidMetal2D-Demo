@@ -15,6 +15,8 @@ import UIKit
 import LiquidMetal2D
 
 class AsyncLoadDemo: Scene {
+    static var sceneType: any SceneType { SceneTypes.asyncLoadDemo }
+
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

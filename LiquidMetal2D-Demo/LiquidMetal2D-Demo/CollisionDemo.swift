@@ -30,6 +30,8 @@ import LiquidMetal2D
 /// - **NilBehavior / NilCollider:** Default no-op implementations of Behavior and Collider.
 ///   Inactive objects use these so update/collision calls are safe without nil checks.
 class CollisionDemo: Scene {
+    static var sceneType: any SceneType { SceneTypes.collisionDemo }
+
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

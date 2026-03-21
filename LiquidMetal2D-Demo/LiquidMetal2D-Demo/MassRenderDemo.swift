@@ -25,6 +25,8 @@ import LiquidMetal2D
 /// - **Global textures:** Uses `GameTextures` static properties loaded once at app startup.
 /// - **MoveRightBehavior:** A single-state Behavior that moves ships right and wraps them.
 class MassRenderDemo: Scene {
+    static var sceneType: any SceneType { SceneTypes.massRenderDemo }
+
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
     private var input: InputReader!

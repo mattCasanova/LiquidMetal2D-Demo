@@ -14,53 +14,44 @@ import LiquidMetal2D
 /// **Engine setup pattern:** This is the entry point for a LiquidMetal2D app. The three
 /// steps to launch the engine are:
 ///
-/// 1. **Register scenes with a SceneFactory:** Create a `SceneFactory` and call
-///    `addScene(type:builder:)` for every scene in your game. `TSceneBuilder<T>` is a
-///    generic builder that calls `T.build()` to create scene instances. The `type` parameter
-///    is your `SceneType` enum value.
+/// 1. **Register scenes with a SceneFactory:** Each scene class declares a static
+///    `sceneType` property and a `build()` method (inherited automatically if you
+///    subclass `DefaultScene`). Pass the scene classes to `addScenes(_:)`.
 ///
 /// 2. **Create a renderer:** `DefaultRenderer` is the engine's Metal-based renderer.
 ///    It needs the parent UIView, the maximum number of objects you will draw per frame
 ///    (`maxObjects`), and the byte size of your per-object uniform struct (`uniformSize`).
-///    `WorldUniform.typeSize()` returns the correct size for the built-in uniform type.
 ///
 /// 3. **Create and run the engine:** `DefaultEngine` takes the renderer, the initial scene
-///    type, and the scene factory. Calling `gameEngine.run()` starts the CADisplayLink
-///    game loop. The engine owns the game loop and scene stack from this point forward.
-///
-/// `LiquidViewController` (the superclass) handles device rotation (calling `resize()` on
-/// the active scene), touch forwarding (populating the `InputReader` that scenes query),
-/// and provides the `gameEngine` property. You only need to override `viewDidLoad()`.
+///    type, and the scene factory. Calling `gameEngine.run()` starts the game loop.
 class ViewController: LiquidViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Step 1: Register all scenes with the factory.
-        // Each SceneType maps to a builder that can create instances of that scene.
+        // Step 1: Register all scenes. Each scene declares its own sceneType,
+        // so the factory reads the type automatically from the class.
         let sceneFactory = SceneFactory()
-        sceneFactory.addScene(type: SceneTypes.massRenderDemo, builder: TSceneBuilder<MassRenderDemo>())
-        sceneFactory.addScene(type: SceneTypes.touchZoomDemo, builder: TSceneBuilder<TouchZoomDemo>())
-        sceneFactory.addScene(type: SceneTypes.instanceDemo, builder: TSceneBuilder<InstanceDemo>())
-        sceneFactory.addScene(type: SceneTypes.schedulerDemo, builder: TSceneBuilder<SchedulerDemo>())
-        sceneFactory.addScene(type: SceneTypes.spawnDemo, builder: TSceneBuilder<SpawnDemo>())
-        sceneFactory.addScene(type: SceneTypes.collisionDemo, builder: TSceneBuilder<CollisionDemo>())
-        sceneFactory.addScene(type: SceneTypes.bezierDemo, builder: TSceneBuilder<BezierDemo>())
-        sceneFactory.addScene(type: SceneTypes.cameraRotationDemo, builder: TSceneBuilder<CameraRotationDemo>())
-        sceneFactory.addScene(type: SceneTypes.asyncLoadDemo, builder: TSceneBuilder<AsyncLoadDemo>())
-        sceneFactory.addScene(type: SceneTypes.pauseDemo, builder: TSceneBuilder<PauseDemo>())
+        sceneFactory.addScenes([
+            MassRenderDemo.self,
+            TouchZoomDemo.self,
+            InstanceDemo.self,
+            SchedulerDemo.self,
+            SpawnDemo.self,
+            CollisionDemo.self,
+            BezierDemo.self,
+            CameraRotationDemo.self,
+            AsyncLoadDemo.self,
+            PauseDemo.self,
+        ])
 
         // Step 2: Create the Metal renderer.
-        // maxObjects defines the triple-buffered uniform ring buffer size.
-        // uniformSize is the byte size of each object's GPU data (transform matrix, etc.).
         let renderer = DefaultRenderer(
             parentView: self.view,
             maxObjects: GameConstants.MAX_OBJECTS,
             uniformSize: WorldUniform.typeSize())
 
         // Step 3: Create the engine and start the game loop.
-        // The engine manages the scene stack, calls update/draw each frame via CADisplayLink,
-        // and routes input events from LiquidViewController to the active scene.
         gameEngine = DefaultEngine(
             renderer: renderer,
             initialSceneType: SceneTypes.asyncLoadDemo,

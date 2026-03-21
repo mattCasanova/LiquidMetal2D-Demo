@@ -158,9 +158,9 @@ class AsyncLoadDemo: Scene {
 
     private func loadAllTextures() {
         let ids = renderer.loadTextures([
-            (name: "playerShip1_blue", ext: "png", isMipmaped: true),
-            (name: "playerShip1_green", ext: "png", isMipmaped: true),
-            (name: "playerShip1_orange", ext: "png", isMipmaped: true)
+            TextureDescriptor(name: "playerShip1_blue", ext: "png", isMipmapped: true),
+            TextureDescriptor(name: "playerShip1_green", ext: "png", isMipmapped: true),
+            TextureDescriptor(name: "playerShip1_orange", ext: "png", isMipmapped: true)
         ], completion: { [weak self] in
             self?.onLoadComplete()
         })

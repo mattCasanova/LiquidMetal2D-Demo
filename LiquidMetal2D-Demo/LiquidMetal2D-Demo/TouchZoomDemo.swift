@@ -74,11 +74,7 @@ class TouchZoomDemo: Scene {
 
         renderer.setCamera(point: Vec3(0, 0, currentZ))
         renderer.setCameraRotation(angle: 0)
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
         renderer.setClearColor(color: TokyoNight.clearColor)
 
         createObjects()
@@ -95,11 +91,7 @@ class TouchZoomDemo: Scene {
     /// Scene protocol: called on device rotation or window resize.
     func resize() {
         ui.layout()
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
         // Reposition corners since screen aspect may have changed
         positionCornerShips()
     }

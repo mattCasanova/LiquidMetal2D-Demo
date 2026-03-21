@@ -8,27 +8,14 @@
 import UIKit
 import LiquidMetal2D
 
-/// Camera rotation & scheduler pause demo: Four rows of ships form a tunnel
-/// that oscillates like an earthquake. Touch the screen to pause the
-/// oscillation and manually drag the rotation. Release to resume.
-///
-/// **What the user sees:** A tunnel of ships shakes back and forth (±45°)
-/// like an earthquake. Touching the screen freezes the shake — you can
-/// drag left/right to manually rotate. Releasing resumes the shake from
-/// wherever you left off.
+/// Camera rotation & scheduler demo. Ships form a tunnel that oscillates
+/// smoothly via a per-frame sine wave. Press the Spawn button to schedule
+/// three chained waves of ships that fly across the screen.
 ///
 /// **Engine features demonstrated:**
-/// - **Camera rotation:** `renderer.setCameraRotation(angle:)` rotates the
-///   entire view around the Z axis without touching any object's individual
-///   rotation. This is how you'd implement screen shake, tilt effects, or
-///   camera transitions — one call rotates the whole world.
-/// - **Scheduler pause/resume:** The oscillation is driven by a `Scheduler`.
-///   When the user touches the screen, `scheduler.isPaused = true` freezes
-///   all scheduled tasks. Releasing sets `isPaused = false` to resume.
-///   This demonstrates pausing game logic during player input or menus.
-/// - **Sine-wave oscillation:** `sin(time * speed) * amplitude` creates
-///   smooth pendulum motion, a common pattern for idle animations, bobbing,
-///   or breathing effects.
+/// - `renderer.setCameraRotation(angle:)` — rotates the entire view
+/// - `Scheduler` — timed repeat events and task chaining (3 waves)
+/// - `GameObj.isActive` — deactivating objects that leave world bounds
 class CameraRotationDemo: Scene {
     private var sceneMgr: SceneManager!
     private var renderer: Renderer!
@@ -36,134 +23,56 @@ class CameraRotationDemo: Scene {
 
     private var objects = [GameObj]()
 
-    /// Current camera rotation in radians, driven by scheduler or manual drag.
-    private var currentRotation: Float = 0
-
-    /// Elapsed time feeding the sine oscillation. Accumulates while scheduler runs.
+    // Oscillation
     private var elapsedTime: Float = 0
+    private let oscillationSpeed: Float = 1.5
+    private let maxSwing: Float = GameMath.degreeToRadian(30)
 
-    /// Oscillation frequency — higher = faster shaking.
-    private let oscillationSpeed: Float = 4.0
-
-    /// Maximum swing angle (±45°). The camera oscillates between -maxSwing and +maxSwing.
-    private let maxSwing: Float = GameMath.degreeToRadian(45)
-
-    /// The scheduler that drives the automatic oscillation.
-    /// Setting `scheduler.isPaused = true` freezes the shake.
+    // Scheduler for spawn waves
     private let scheduler = Scheduler()
 
-    /// The oscillation task — kept as a reference so we can observe its state.
-    private var oscillateTask: ScheduledTask!
-
-    // Manual drag tracking
-    private var lastTouchX: Float?
-    private let dragSensitivity: Float = 0.01
-    private var wasTouching = false
-
-    // Tunnel layout
+    // Tunnel layout (pushed back behind the spawn layer)
     private let shipsPerRow = 20
     private let trackSpacing: Float = 8
     private let zSpacing: Float = 4
-    private let startZ: Float = 5
+    private let startZ: Float = -40
+
+    // Spawn config
+    private let spawnSpeed: Float = 30
+    private let spawnZ: Float = 0
 
     private var rotationLabel: UILabel!
     private var ui: DemoSceneUI!
+    private var spawnButton: UIButton!
 
     func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
         self.sceneMgr = sceneMgr
         self.renderer = renderer
         self.input = input
 
-        renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
-        renderer.setCameraRotation(angle: 0)
-        renderer.setPerspective(
-            fov: GameMath.degreeToRadian(45),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setCamera(point: Vec3(0, 0, 60))
+        renderer.setDefaultPerspective()
         renderer.setClearColor(color: TokyoNight.clearColor)
 
-        createObjects()
-
-        // Schedule the oscillation task — fires every frame (small interval, infinite repeats).
-        // The scheduler's isPaused flag controls whether this runs.
-        oscillateTask = ScheduledTask(time: 0.001, action: { [weak self] in
-            // intentionally empty — oscillation is computed in update() from elapsedTime
-        })
-        scheduler.add(task: oscillateTask)
-
-        ui = DemoSceneUI(
-            parentView: renderer.view, target: self,
-            menuAction: #selector(onMenu))
-
-        rotationLabel = UILabel()
-        rotationLabel.textColor = TokyoNight.uiFg
-        rotationLabel.textAlignment = .center
-        rotationLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .bold)
-        renderer.view.addSubview(rotationLabel)
-        updateLabel(0)
-        layoutLabel()
+        createTunnelObjects()
+        setupUI()
     }
 
     func resume() { ui.view.isHidden = false }
 
     func resize() {
         ui.layout()
-        renderer.setPerspective(
-            fov: GameMath.degreeToRadian(45),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
-        layoutLabel()
+        renderer.setDefaultPerspective()
+        layoutUI()
     }
 
     func update(dt: Float) {
-        let isTouching = input.getScreenTouch() != nil
-
-        if isTouching {
-            // Touch active: pause the scheduler so the oscillation freezes.
-            // The user takes manual control of the camera rotation via drag.
-            scheduler.isPaused = true
-
-            if let touch = input.getScreenTouch() {
-                let touchX = touch.x
-                if let last = lastTouchX {
-                    let delta = (touchX - last) * dragSensitivity
-                    // Clamp manual rotation to the same range as the oscillation
-                    currentRotation = GameMath.clamp(
-                        value: currentRotation + delta,
-                        low: -maxSwing, high: maxSwing)
-                }
-                lastTouchX = touchX
-            }
-        } else {
-            lastTouchX = nil
-
-            if wasTouching {
-                // Just released: resume the scheduler and sync elapsed time
-                // to the current rotation so the oscillation picks up smoothly.
-                // Solve: sin(elapsedTime * speed) * maxSwing = currentRotation
-                //    →   elapsedTime = asin(currentRotation / maxSwing) / speed
-                let clamped = GameMath.clamp(
-                    value: currentRotation / maxSwing, low: -1, high: 1)
-                elapsedTime = asin(clamped) / oscillationSpeed
-                scheduler.isPaused = false
-            }
-
-            // Scheduler is running: advance the oscillation
-            elapsedTime += dt
-            currentRotation = sin(elapsedTime * oscillationSpeed) * maxSwing
-        }
-
-        wasTouching = isTouching
-
-        // Apply the rotation to the camera — this one call rotates the entire
-        // rendered world without modifying any individual object's transform.
-        renderer.setCameraRotation(angle: currentRotation)
-        updateLabel(currentRotation)
-
-        // Advance the scheduler (fires tasks, respects isPaused)
         scheduler.update(dt: dt)
+        updateSpawnedShips(dt: dt)
+
+        let rotation = computeOscillation(dt: dt)
+        renderer.setCameraRotation(angle: rotation)
+        updateLabel(rotation)
     }
 
     func draw() {
@@ -176,32 +85,170 @@ class CameraRotationDemo: Scene {
     func shutdown() {
         objects.removeAll()
         scheduler.clear()
-        // Reset rotation so other scenes don't inherit the tilt
         renderer.setCameraRotation(angle: 0)
         rotationLabel.removeFromSuperview()
+        spawnButton.removeFromSuperview()
         ui.removeFromSuperview()
     }
 
-    // MARK: - Private
+    // MARK: - Oscillation
+
+    /// Advances the sine-wave oscillation and returns the current angle.
+    private func computeOscillation(dt: Float) -> Float {
+        elapsedTime += dt
+        return sin(elapsedTime * oscillationSpeed) * maxSwing
+    }
+
+    // MARK: - Spawning
+
+    /// Moves ships that have velocity and deactivates any that exit
+    /// the far side of the world bounds. Tunnel ships (zero velocity) are skipped.
+    /// Only checks the edge the ship is moving toward so off-screen spawns
+    /// aren't immediately deactivated.
+    private func updateSpawnedShips(dt: Float) {
+        let bounds = renderer.getWorldBoundsFromCamera(zOrder: spawnZ)
+
+        for ship in objects where ship.isActive && ship.velocity != Vec2() {
+            ship.position += ship.velocity * dt
+
+            let exited = (ship.velocity.x > 0 && ship.position.x > bounds.maxX)
+                || (ship.velocity.x < 0 && ship.position.x < bounds.minX)
+                || (ship.velocity.y > 0 && ship.position.y > bounds.maxY)
+                || (ship.velocity.y < 0 && ship.position.y < bounds.minY)
+
+            if exited {
+                ship.isActive = false
+            }
+        }
+    }
+
+    /// Schedules three chained waves of ships:
+    /// - Wave 1 (blue): left-to-right
+    /// - Wave 2 (red): top-to-bottom, 2x scale
+    /// - Wave 3 (green): left-to-right
+    private func scheduleSpawnWaves() {
+        let bounds = renderer.getWorldBoundsFromCamera(zOrder: spawnZ)
+        let speed = spawnSpeed
+        let down = GameMath.degreeToRadian(270)
+
+        // Wave 1 (blue): left-to-right, centered vertically
+        let wave1 = ScheduledTask(time: 0.5, action: { [weak self] _ in
+            guard let self else { return }
+            self.spawnShip(
+                position: Vec2(bounds.minX - 2, 0),
+                velocity: Vec2(speed, 0),
+                rotation: 0,
+                scale: 4,
+                textureIndex: 0)
+        }, count: 4)
+
+        // Wave 2 (red): top-to-bottom, centered horizontally
+        let wave2 = wave1.then(time: 0.5, action: { [weak self] _ in
+            guard let self else { return }
+            self.spawnShip(
+                position: Vec2(0, bounds.maxY + 2),
+                velocity: Vec2(0, -speed),
+                rotation: down,
+                scale: 4,
+                textureIndex: 2)
+        }, count: 4)
+
+        // Wave 3 (green): right-to-left, centered vertically
+        let left = GameMath.degreeToRadian(180)
+        wave2.then(time: 0.5, action: { [weak self] _ in
+            guard let self else { return }
+            self.spawnShip(
+                position: Vec2(bounds.maxX + 2, 0),
+                velocity: Vec2(-speed, 0),
+                rotation: left,
+                scale: 4,
+                textureIndex: 1)
+        }, count: 4)
+
+        scheduler.add(task: wave1)
+    }
+
+    /// Creates a single ship and adds it to the objects array.
+    private func spawnShip(
+        position: Vec2, velocity: Vec2, rotation: Float,
+        scale: Float, textureIndex: Int
+    ) {
+        let ship = GameObj()
+        ship.position = position
+        ship.velocity = velocity
+        ship.rotation = rotation
+        ship.scale.set(scale, scale)
+        ship.zOrder = spawnZ
+        ship.textureID = GameTextures.all[textureIndex]
+        ship.tintColor = TokyoNight.shipTints[textureIndex]
+        objects.append(ship)
+    }
+
+    // MARK: - UI
+
+    private func setupUI() {
+        ui = DemoSceneUI(
+            parentView: renderer.view, target: self,
+            menuAction: #selector(onMenu))
+
+        rotationLabel = UILabel()
+        rotationLabel.textColor = TokyoNight.uiFg
+        rotationLabel.textAlignment = .center
+        rotationLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .bold)
+        renderer.view.addSubview(rotationLabel)
+
+        spawnButton = createButton(title: "Schedule Wave", action: #selector(onSpawn))
+        renderer.view.addSubview(spawnButton)
+
+        updateLabel(0)
+        layoutUI()
+    }
+
+    private func createButton(title: String, action: Selector) -> UIButton {
+        let button = UIButton(frame: .zero)
+        button.backgroundColor = TokyoNight.uiDarker
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(TokyoNight.uiBlue, for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 6
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return button
+    }
+
+    private func layoutUI() {
+        let safeTop = renderer.view.safeAreaInsets.top
+        let safeBottom = renderer.view.safeAreaInsets.bottom
+        let viewWidth = renderer.view.bounds.width
+        let viewHeight = renderer.view.bounds.height
+
+        rotationLabel.frame = CGRect(
+            x: 0, y: safeTop + 8,
+            width: viewWidth, height: 30)
+
+        let buttonWidth: CGFloat = 140
+        let buttonHeight: CGFloat = 44
+        let bottomY = viewHeight - safeBottom - buttonHeight - 16
+
+        spawnButton.frame = CGRect(
+            x: (viewWidth - buttonWidth) / 2,
+            y: bottomY, width: buttonWidth, height: buttonHeight)
+    }
 
     private func updateLabel(_ rotation: Float) {
         let degrees = GameMath.radianToDegree(rotation)
-        rotationLabel.text = String(format: "Rotation: %.1f°", degrees)
+        rotationLabel.text = String(format: "Camera Rotation: %.1f°", degrees)
     }
 
-    private func layoutLabel() {
-        let safeTop = renderer.view.safeAreaInsets.top
-        rotationLabel.frame = CGRect(
-            x: 0, y: safeTop + 8,
-            width: renderer.view.bounds.width, height: 30)
+    @objc private func onSpawn() {
+        scheduleSpawnWaves()
     }
 
-    /// Creates four rows of ships forming a rectangular tunnel extending into the distance.
-    /// All ships are the same size and evenly spaced — the only visual variable is FOV/rotation.
-    private func createObjects() {
+    // MARK: - Tunnel
+
+    /// Creates four rows of ships forming a rectangular tunnel into the distance.
+    private func createTunnelObjects() {
         objects.removeAll()
 
-        // Four tracks: left (blue), right (green), top (orange), bottom (blue)
         let positions: [(Float, Float, Int)] = [
             (-trackSpacing, 0, 0),
             (trackSpacing, 0, 1),
@@ -213,7 +260,6 @@ class CameraRotationDemo: Scene {
             for i in 0..<shipsPerRow {
                 let obj = GameObj()
                 obj.position.set(xPos, yPos)
-                // Each ship is 4 units further in z, creating the tunnel perspective
                 obj.zOrder = startZ + Float(i) * zSpacing
                 obj.scale.set(2, 2)
                 obj.rotation = 0

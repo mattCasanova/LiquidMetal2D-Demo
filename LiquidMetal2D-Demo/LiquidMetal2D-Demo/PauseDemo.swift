@@ -96,12 +96,12 @@ class PauseDemo: NSObject, Scene {
         // slidePanel.contentView is the panel's drawable area where you add your UI
         let content = slidePanel.contentView
 
-        let resumeButton = UIButton(frame: .zero)
-        resumeButton.setTitle("Resume", for: .normal)
-        resumeButton.setTitleColor(TokyoNight.uiBlue, for: .normal)
-        resumeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        var resumeConfig = UIButton.Configuration.plain()
+        resumeConfig.title = "Resume"
+        resumeConfig.baseForegroundColor = TokyoNight.uiBlue
+        resumeConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0)
+        let resumeButton = UIButton(configuration: resumeConfig)
         resumeButton.contentHorizontalAlignment = .left
-        resumeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
         resumeButton.addTarget(self, action: #selector(onResume), for: .touchUpInside)
         resumeButton.tag = 100
         content.addSubview(resumeButton)

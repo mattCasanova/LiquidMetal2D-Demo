@@ -68,13 +68,9 @@ class BezierDemo: Scene {
         self.renderer = renderer
         self.input = input
 
-        renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
+        renderer.setCamera()
         renderer.setCameraRotation(angle: 0)
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
         renderer.setClearColor(color: TokyoNight.clearColor)
 
         createObjects()
@@ -90,11 +86,7 @@ class BezierDemo: Scene {
     /// Scene protocol: called on device rotation. Recalculate perspective projection.
     func resize() {
         ui.layout()
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
     }
 
     func update(dt: Float) {

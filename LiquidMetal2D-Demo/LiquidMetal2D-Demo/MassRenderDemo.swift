@@ -68,15 +68,11 @@ class MassRenderDemo: Scene {
 
         // Set up perspective projection. FOV adapts to portrait vs landscape orientation.
         // PerspectiveProjection.defaultNearZ/defaultFarZ provide sensible clip plane defaults.
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
 
         // Scheduler fires a repeating task every 2 seconds (indefinitely, since no count).
         // The action swaps start/end colors so the background crossfade reverses direction.
-        scheduler.add(task: ScheduledTask(time: maxBackgroundChangeTime, action: { [unowned self] in
+        scheduler.add(task: ScheduledTask(time: maxBackgroundChangeTime, action: { [unowned self] _ in
             self.backgroundTime = 0
             let temp = self.startColor
             self.startColor = self.endColor
@@ -97,11 +93,7 @@ class MassRenderDemo: Scene {
     /// Called on device rotation or window resize. Recalculate projection to match new aspect ratio.
     func resize() {
         ui.layout()
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
     }
 
     func update(dt: Float) {

@@ -19,18 +19,12 @@ import LiquidMetal2D
 /// Touch rotates all ships toward the touch point at any time.
 ///
 /// **Engine features demonstrated:**
-/// - **Task chaining:** `task.then(time:action:count:onComplete:)` sequences multiple
-///   tasks so each starts automatically when the previous one completes.
+/// - **Task chaining:** `task.then(time:action:count:onComplete:)` sequences tasks.
 /// - **Finite repeat count:** Phase 1 uses `count: 4` to fire exactly 4 times.
-/// - **onComplete callbacks:** Each phase's completion triggers the next phase's setup.
-/// - **Infinite looping via chaining:** The final onComplete rebuilds the entire chain,
-///   creating a self-restarting cycle.
-/// - **Camera rotation:** `setCameraRotation(angle:)` rotates the view around the Z axis.
-/// - **Camera zoom:** Varying the camera's Z distance changes the visible world area.
-/// - **DefaultScene delegation:** Reuses DefaultScene for camera setup, projection, and drawing.
-/// - **Vec3.lerp:** Linear interpolation for smooth color transitions.
-class SchedulerDemo: Scene {
-    var sceneDelegate = DefaultScene()
+/// - **onComplete callbacks:** Each phase's completion triggers the next phase.
+/// - **Infinite looping via chaining:** The final onComplete rebuilds the chain.
+/// - **Camera rotation and zoom** via `setCameraRotation` and `setCamera`.
+class SchedulerDemo: DefaultScene {
 
     // Phase 1: Color crossfade
     var shouldChange = true
@@ -54,11 +48,9 @@ class SchedulerDemo: Scene {
     let objectCount = 100
 
     private var ui: DemoSceneUI!
-    private let scheduler = Scheduler()
 
-    /// Scene protocol: called once when the scene is created.
-    func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        sceneDelegate.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
+    override func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
+        super.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
 
         createObjects()
 
@@ -69,32 +61,29 @@ class SchedulerDemo: Scene {
         buildDemoChain()
     }
 
-    /// Scene protocol: re-show the menu button when returning from PauseDemo.
-    func resume() { ui.view.isHidden = false }
+    override func resume() { ui.view.isHidden = false }
 
-    /// Scene protocol: called on device rotation. Delegate recalculates projection.
-    func resize() {
-        sceneDelegate.resize()
+    override func resize() {
+        super.resize()
         ui.layout()
     }
 
-    func update(dt: Float) {
+    override func update(dt: Float) {
         scheduler.update(dt: dt)
 
         // Phase 1: Smooth color crossfade between swaps
         if shouldChange {
             changeTime += dt
             let t = min(changeTime / maxChangeTime, 1)
-            sceneDelegate.renderer.setClearColor(
-                color: startColor.lerp(to: endColor, t: t))
+            renderer.setClearColor(color: startColor.lerp(to: endColor, t: t))
         } else {
-            sceneDelegate.renderer.setClearColor(color: startColor)
+            renderer.setClearColor(color: startColor)
         }
 
         // Phase 2: Smooth 360° camera rotation
         if isRotating {
             cameraAngle += (GameMath.twoPi / rotationDuration) * dt
-            sceneDelegate.renderer.setCameraRotation(angle: cameraAngle)
+            renderer.setCameraRotation(angle: cameraAngle)
         }
 
         // Phase 3: Zoom in then back out (sine curve)
@@ -104,34 +93,26 @@ class SchedulerDemo: Scene {
             distance = baseDistance + 50 * sin(t * .pi)
         }
 
-        sceneDelegate.renderer.setCamera(point: Vec3(0, 0, distance))
-        let vec = sceneDelegate.input.getWorldTouch(forZ: 0)
+        renderer.setCamera(point: Vec3(0, 0, distance))
+        let vec = input.getWorldTouch(forZ: 0)
 
-        for obj in sceneDelegate.objects {
+        for obj in objects {
             obj.position += obj.velocity * dt
             if let v = vec { obj.rotation = atan2(v.y, v.x) }
             if obj.position.lengthSquared >= 3600 { randomize(obj: obj) }
         }
 
-        sceneDelegate.objects.sort(by: { $0.zOrder < $1.zOrder })
+        objects.sort(by: { $0.zOrder < $1.zOrder })
     }
 
-    /// Delegate the entire draw to DefaultScene, which iterates sceneDelegate.objects
-    /// and submits draw calls with each object's transform, texture, and zOrder.
-    func draw() { sceneDelegate.draw() }
-
-    /// Scene protocol: clean up. Always clear the scheduler to cancel pending tasks,
-    /// and unload textures to free GPU memory.
-    func shutdown() {
-        scheduler.clear()
-        sceneDelegate.renderer.setCameraRotation(angle: 0)
+    override func shutdown() {
+        super.shutdown()
+        renderer.setCameraRotation(angle: 0)
         ui.removeFromSuperview()
     }
 
     /// Builds the three-phase task chain and adds it to the scheduler.
-    /// Called on init and again from the final onComplete to loop forever.
     private func buildDemoChain() {
-        // Reset all phase state
         shouldChange = true
         changeTime = 0
         isRotating = false
@@ -141,38 +122,35 @@ class SchedulerDemo: Scene {
         distance = baseDistance
         startColor = Vec3(0.102, 0.106, 0.149)
         endColor = Vec3(0.255, 0.282, 0.408)
-        sceneDelegate.renderer.setCameraRotation(angle: 0)
+        renderer.setCameraRotation(angle: 0)
 
         // Phase 1: Swap background color 4 times with smooth crossfades
-        let colorSwap = ScheduledTask(time: maxChangeTime, action: { [unowned self] in
+        let colorSwap = ScheduledTask(time: maxChangeTime, action: { [unowned self] _ in
             self.changeTime = 0
             let temp = self.startColor
             self.startColor = self.endColor
             self.endColor = temp
-        }, count: 4, onComplete: { [unowned self] in
-            // Phase 1 done — freeze color, start rotation
+        }, count: 4, onComplete: { [unowned self] _ in
             self.shouldChange = false
             self.isRotating = true
             self.cameraAngle = 0
         })
 
-        // Phase 2: Camera rotates 360° over rotationDuration seconds
-        let rotation = colorSwap.then(time: rotationDuration, action: { [unowned self] in
+        // Phase 2: Camera rotates 360°
+        let rotation = colorSwap.then(time: rotationDuration, action: { [unowned self] _ in
             self.isRotating = false
             self.cameraAngle = 0
-            self.sceneDelegate.renderer.setCameraRotation(angle: 0)
-        }, count: 1, onComplete: { [unowned self] in
-            // Phase 2 done — start zoom
+            self.renderer.setCameraRotation(angle: 0)
+        }, count: 1, onComplete: { [unowned self] _ in
             self.isZooming = true
             self.zoomTime = 0
         })
 
-        // Phase 3: Zoom in then back out over zoomDuration seconds
-        rotation.then(time: zoomDuration, action: { [unowned self] in
+        // Phase 3: Zoom in then back out
+        rotation.then(time: zoomDuration, action: { [unowned self] _ in
             self.isZooming = false
             self.distance = self.baseDistance
-        }, count: 1, onComplete: { [unowned self] in
-            // All phases done — respawn ships and restart the whole cycle
+        }, count: 1, onComplete: { [unowned self] _ in
             self.createObjects()
             self.buildDemoChain()
         })
@@ -181,15 +159,14 @@ class SchedulerDemo: Scene {
     }
 
     private func createObjects() {
-        sceneDelegate.objects.removeAll()
+        objects.removeAll()
         for _ in 0..<objectCount {
             let obj = GameObj()
             randomize(obj: obj)
-            sceneDelegate.objects.append(obj)
+            objects.append(obj)
         }
     }
 
-    /// Respawn a ship at center with random properties (same pattern as InstanceDemo).
     private func randomize(obj: GameObj) {
         obj.position.set(0, 0)
         let scale = Float.random(in: 0.25...5)
@@ -197,16 +174,15 @@ class SchedulerDemo: Scene {
         let texIndex = Int.random(in: 0...2)
         obj.textureID = GameTextures.all[texIndex]
         obj.tintColor = TokyoNight.shipTints[texIndex]
-        // Random rotation in full circle
         obj.rotation = Float.random(in: 0...GameMath.twoPi)
-        // set(angle:) creates a unit vector from the rotation, then scale by random speed
         obj.velocity.set(angle: obj.rotation)
         obj.velocity *= Float.random(in: 1...10)
     }
 
-    /// Push PauseDemo on top. Access sceneMgr through the delegate.
-    @objc func onMenu() { ui.view.isHidden = true; sceneDelegate.sceneMgr.pushScene(type: SceneTypes.pauseDemo) }
+    @objc func onMenu() {
+        ui.view.isHidden = true
+        sceneMgr.pushScene(type: SceneTypes.pauseDemo)
+    }
 
-    /// Required factory method for TSceneBuilder.
-    static func build() -> Scene { return SchedulerDemo() }
+    override static func build() -> Scene { return SchedulerDemo() }
 }

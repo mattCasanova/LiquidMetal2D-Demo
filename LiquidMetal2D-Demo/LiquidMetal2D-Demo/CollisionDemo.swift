@@ -48,13 +48,9 @@ class CollisionDemo: Scene {
         self.input = input
 
         // Camera2D.defaultDistance is the engine's suggested starting camera z position
-        renderer.setCamera(point: Vec3(0, 0, Camera2D.defaultDistance))
+        renderer.setCamera()
         renderer.setCameraRotation(angle: 0)
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
 
         createObjects()
 
@@ -66,7 +62,7 @@ class CollisionDemo: Scene {
             menuAction: #selector(onMenu))
 
         // Spawn one ship per second using a repeating scheduled task
-        scheduler.add(task: ScheduledTask(time: 1, action: { [unowned self] in
+        scheduler.add(task: ScheduledTask(time: 1, action: { [unowned self] _ in
             self.spawnShip()
         }))
     }
@@ -77,11 +73,7 @@ class CollisionDemo: Scene {
     /// Scene protocol: called on device rotation. Recalculate projection and recreate objects
     /// because the visible world bounds have changed.
     func resize() {
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
         ui.layout()
     }
 

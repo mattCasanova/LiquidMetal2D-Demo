@@ -53,11 +53,7 @@ class SpawnDemo: Scene {
 
         renderer.setCamera(point: Vec3(0, 0, distance))
         renderer.setCameraRotation(angle: 0)
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
         renderer.setClearColor(color: TokyoNight.clearColor)
 
         createObjects()
@@ -73,11 +69,7 @@ class SpawnDemo: Scene {
     /// Scene protocol: called on device rotation. Recalculate perspective projection.
     func resize() {
         ui.layout()
-        renderer.setPerspective(
-            fov: renderer.getDefaultFOV(),
-            aspect: renderer.screenAspect,
-            nearZ: PerspectiveProjection.defaultNearZ,
-            farZ: PerspectiveProjection.defaultFarZ)
+        renderer.setDefaultPerspective()
     }
 
     func update(dt: Float) {

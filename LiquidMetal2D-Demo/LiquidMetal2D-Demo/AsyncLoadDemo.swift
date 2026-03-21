@@ -44,14 +44,15 @@ class AsyncLoadDemo: Scene {
         self.renderer = renderer
         self.input = input
 
-        renderer.setDefaultPerspective()
+        renderer.setCamera()
         renderer.setCameraRotation(angle: 0)
+        renderer.setDefaultPerspective()
         renderer.setClearColor(color: TokyoNight.clearColor)
 
         createStars()
         setupUI()
 
-        scheduler.add(task: ScheduledTask(time: artificialDelay, action: { [weak self] in
+        scheduler.add(task: ScheduledTask(time: artificialDelay, action: { [weak self] _ in
             self?.loadAllTextures()
         }, count: 1))
     }

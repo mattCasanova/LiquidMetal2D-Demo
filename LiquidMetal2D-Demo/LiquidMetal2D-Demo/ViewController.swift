@@ -39,6 +39,7 @@ class ViewController: LiquidViewController {
             SchedulerDemo.self,
             SpawnDemo.self,
             CollisionDemo.self,
+            CollisionStressDemo.self,
             BezierDemo.self,
             CameraRotationDemo.self,
             AsyncLoadDemo.self,

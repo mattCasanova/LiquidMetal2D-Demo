@@ -32,6 +32,7 @@ enum SceneTypes: SceneType {
     case schedulerDemo
     case spawnDemo
     case collisionDemo
+    case collisionStressDemo
     case bezierDemo
     case cameraRotationDemo
     case asyncLoadDemo
@@ -46,6 +47,7 @@ enum SceneTypes: SceneType {
         case .schedulerDemo: return "Scheduler - Task Chaining"
         case .spawnDemo: return "Touch Spawn - Manual Draw Order"
         case .collisionDemo: return "Collision & AI States"
+        case .collisionStressDemo: return "Collision Stress Test"
         case .bezierDemo: return "Cubic Bezier Curves"
         case .cameraRotationDemo: return "Camera Rotation & Shake"
         case .asyncLoadDemo: return "Async Texture Loading"
@@ -56,7 +58,7 @@ enum SceneTypes: SceneType {
     /// Navigable scenes in order (excludes pauseDemo which is push-only, not a standalone scene).
     static let navigable: [SceneTypes] = [
         .massRenderDemo, .touchZoomDemo, .instanceDemo,
-        .schedulerDemo, .spawnDemo, .collisionDemo,
+        .schedulerDemo, .spawnDemo, .collisionDemo, .collisionStressDemo,
         .bezierDemo, .cameraRotationDemo
     ]
 

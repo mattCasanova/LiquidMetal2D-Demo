@@ -16,8 +16,11 @@ import LiquidMetal2D
 /// collides with a blue ship, the blue ship turns orange -- creating a spreading "infection."
 ///
 /// **Engine features demonstrated:**
-/// - **CircleCollider:** `CircleCollider(obj:radius:)` creates a circle collider centered on
-///   the object's position. `doesCollideWith(collider:)` performs circle-circle intersection.
+/// - **SpatialGrid broadphase:** `SpatialGrid(bounds:cellWidth:cellHeight:)` partitions the
+///   world into cells. Each frame: `clear()`, `insert(contentsOf:)`, `potentialPairs()` returns
+///   only nearby candidate pairs instead of O(n²) brute force.
+/// - **CircleCollider narrowphase:** `doesCollideWith(collider:)` performs circle-circle
+///   intersection on the candidate pairs returned by the grid.
 /// - **FindAndGoBehavior (3-state AI):** A multi-state Behavior with three states:
 ///   - **FindState:** Picks a random target position within world bounds.
 ///   - **RotateState:** Rotates the ship toward the target using cross product for turn direction.
@@ -40,6 +43,7 @@ class CollisionDemo: Scene {
     private var objects = [CollisionObj]()
 
     private let scheduler = Scheduler()
+    private var grid: SpatialGrid!
 
     private var ui: DemoSceneUI!
 
@@ -53,6 +57,10 @@ class CollisionDemo: Scene {
         renderer.setCamera()
         renderer.setCameraRotation(angle: 0)
         renderer.setDefaultPerspective()
+
+        // Cell size of 4 covers the largest collider diameter (super zombie radius 2 → diameter 4)
+        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        grid = SpatialGrid(bounds: bounds, cellWidth: 4, cellHeight: 4)
 
         createObjects()
 
@@ -169,45 +177,42 @@ class CollisionDemo: Scene {
         obj.age = 0
     }
 
-    /// O(n^2) brute-force collision check with zombie/cure mechanics:
-    /// - Red + Blue → 80% infected, 20% blue dies
-    /// - Green + normal Red → red becomes blue, green loses a charge
-    /// - Green + super Red → super loses a hit point (dies at 0), green loses a charge
-    /// - Green + Blue → blue becomes green (cure spreads)
+    /// Broadphase + narrowphase collision with zombie/cure mechanics.
+    /// SpatialGrid reduces candidate pairs from O(n²) to nearby objects only.
     private func checkCollision() {
+        grid.clear()
+        grid.insert(contentsOf: objects)
+
         let redTex = GameTextures.orange
         let blueTex = GameTextures.blue
         let greenTex = GameTextures.green
 
-        for i in 0..<objects.count {
-            let first = objects[i]
-            guard first.isActive else { continue }
-            for j in (i + 1)..<objects.count {
-                let second = objects[j]
-                guard second.isActive else { continue }
-                guard first.collider.doesCollideWith(collider: second.collider) else { continue }
+        for (first, second) in grid.potentialPairs() {
+            guard let first = first as? CollisionObj,
+                  let second = second as? CollisionObj else { continue }
+            guard first.isActive, second.isActive else { continue }
+            guard first.collider.doesCollideWith(collider: second.collider) else { continue }
 
-                let fTex = first.textureID
-                let sTex = second.textureID
+            let fTex = first.textureID
+            let sTex = second.textureID
 
-                // Red + Blue → 80% infection, 20% blue dies
-                if fTex == redTex && sTex == blueTex {
-                    bite(second)
-                } else if sTex == redTex && fTex == blueTex {
-                    bite(first)
+            // Red + Blue → 80% infection, 20% blue dies
+            if fTex == redTex && sTex == blueTex {
+                bite(second)
+            } else if sTex == redTex && fTex == blueTex {
+                bite(first)
 
-                // Green + Red → cure the zombie, green loses a charge
-                } else if fTex == greenTex && sTex == redTex {
-                    cure(zombie: second, healer: first)
-                } else if sTex == greenTex && fTex == redTex {
-                    cure(zombie: first, healer: second)
+            // Green + Red → cure the zombie, green loses a charge
+            } else if fTex == greenTex && sTex == redTex {
+                cure(zombie: second, healer: first)
+            } else if sTex == greenTex && fTex == redTex {
+                cure(zombie: first, healer: second)
 
-                // Green + Blue → blue becomes green (cure spreads)
-                } else if fTex == greenTex && sTex == blueTex {
-                    recruit(second)
-                } else if sTex == greenTex && fTex == blueTex {
-                    recruit(first)
-                }
+            // Green + Blue → blue becomes green (cure spreads)
+            } else if fTex == greenTex && sTex == blueTex {
+                recruit(second)
+            } else if sTex == greenTex && fTex == blueTex {
+                recruit(first)
             }
         }
     }

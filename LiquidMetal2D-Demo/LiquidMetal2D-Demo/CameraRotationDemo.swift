@@ -108,7 +108,7 @@ class CameraRotationDemo: Scene {
     /// Only checks the edge the ship is moving toward so off-screen spawns
     /// aren't immediately deactivated.
     private func updateSpawnedShips(dt: Float) {
-        let bounds = renderer.getWorldBoundsFromCamera(zOrder: spawnZ)
+        let bounds = renderer.getVisibleBounds(zOrder: spawnZ)
 
         for ship in objects where ship.isActive && ship.velocity != Vec2() {
             ship.position += ship.velocity * dt
@@ -129,7 +129,7 @@ class CameraRotationDemo: Scene {
     /// - Wave 2 (red): top-to-bottom, 2x scale
     /// - Wave 3 (green): left-to-right
     private func scheduleSpawnWaves() {
-        let bounds = renderer.getWorldBoundsFromCamera(zOrder: spawnZ)
+        let bounds = renderer.getVisibleBounds(zOrder: spawnZ)
         let speed = spawnSpeed
         let down = GameMath.degreeToRadian(270)
 

@@ -18,7 +18,7 @@ import LiquidMetal2D
 /// **Engine features demonstrated:**
 /// - **SpatialGrid broadphase:** `SpatialGrid(bounds:cellWidth:cellHeight:)` partitions the
 ///   world into cells. Each frame: `clear()`, `insert(contentsOf:)`, `potentialPairs()` returns
-///   only nearby candidate pairs instead of O(n²) brute force.
+///   only nearby candidate pairs instead of O(n^2) brute force.
 /// - **CircleCollider narrowphase:** `doesCollideWith(collider:)` performs circle-circle
 ///   intersection on the candidate pairs returned by the grid.
 /// - **FindAndGoBehavior (3-state AI):** A multi-state Behavior with three states:
@@ -27,11 +27,11 @@ import LiquidMetal2D
 ///   - **GoState:** Moves forward until reaching the target, then loops back to FindState.
 /// - **Scheduler for spawning:** A repeating ScheduledTask spawns one ship per second by
 ///   finding the first inactive object in the pool and activating it.
-/// - **Object pooling (isActive flag):** All 200 CollisionObjs are pre-allocated. The `isActive`
+/// - **Object pooling (isActive flag):** All 200 GameObjs are pre-allocated. The `isActive`
 ///   flag controls which ones update and draw. Active objects are sorted to the front so the
 ///   draw loop can `break` early when it hits an inactive object.
-/// - **NilBehavior / NilCollider:** Default no-op implementations of Behavior and Collider.
-///   Inactive objects use these so update/collision calls are safe without nil checks.
+/// - **Component system:** Each object uses `GameObj.add/get` to attach Behavior, Collider,
+///   and ZombieDemoComponent instead of subclass properties.
 class CollisionDemo: Scene {
     static var sceneType: any SceneType { SceneTypes.collisionDemo }
 
@@ -40,7 +40,7 @@ class CollisionDemo: Scene {
     private var input: InputReader!
 
     private let objectCount = 200
-    private var objects = [CollisionObj]()
+    private var objects = [GameObj]()
 
     private let scheduler = Scheduler()
     private var grid: SpatialGrid!
@@ -58,8 +58,8 @@ class CollisionDemo: Scene {
         renderer.setCameraRotation(angle: 0)
         renderer.setDefaultPerspective()
 
-        // Cell size of 4 covers the largest collider diameter (super zombie radius 2 → diameter 4)
-        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        // Cell size of 4 covers the largest collider diameter (super zombie radius 2 -> diameter 4)
+        let bounds = renderer.getVisibleBounds(zOrder: 0)
         grid = SpatialGrid(bounds: bounds, cellWidth: 4, cellHeight: 4)
 
         createObjects()
@@ -98,12 +98,15 @@ class CollisionDemo: Scene {
             let obj = objects[i]
             guard obj.isActive else { continue }
 
-            obj.behavior.update(dt: dt)
-            obj.age += dt
+            obj.get(FindAndGoBehavior.self)?.update(dt: dt)
 
-            // Blue and green die after 30s. Zombies persist forever.
-            if obj.textureID != GameTextures.orange && obj.age >= maxAge {
-                obj.isActive = false
+            if let zombie = obj.get(ZombieDemoComponent.self) {
+                zombie.age += dt
+
+                // Blue and green die after 30s. Zombies persist forever.
+                if obj.textureID != GameTextures.orange && zombie.age >= maxAge {
+                    obj.isActive = false
+                }
             }
         }
 
@@ -126,12 +129,12 @@ class CollisionDemo: Scene {
         ui.removeFromSuperview()
     }
 
-    /// Pre-allocate the full pool of CollisionObjs. They start inactive (isActive = false)
-    /// with NilBehavior and NilCollider, and get activated one per second by the scheduler.
+    /// Pre-allocate the full pool of GameObjs. They start inactive (isActive = false)
+    /// and get activated one per second by the scheduler.
     private func createObjects() {
         objects.removeAll()
         for _ in 0..<objectCount {
-            let obj = CollisionObj()
+            let obj = GameObj()
             obj.isActive = false
             objects.append(obj)
         }
@@ -139,13 +142,14 @@ class CollisionDemo: Scene {
 
     private func spawnShip() {
         guard let obj = objects.last(where: { !$0.isActive }) else { return }
-        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        let bounds = renderer.getVisibleBounds(zOrder: 0)
 
         // 5% zombie, 2% super zombie. Green only spawns (3%) when 20+ reds exist.
         let redCount = objects.filter { $0.isActive && $0.textureID == GameTextures.orange }.count
         let roll = Int.random(in: 0..<100)
         let texIndex: Int
         let isSuperZombie: Bool
+        
         if roll < 2 {
             texIndex = 2; isSuperZombie = true
         } else if roll < 7 {
@@ -160,25 +164,31 @@ class CollisionDemo: Scene {
             Float.random(in: bounds.minX...bounds.maxX),
             Float.random(in: bounds.minY...bounds.maxY))
 
-        obj.isSuper = isSuperZombie
         obj.scale = isSuperZombie ? Vec2(4, 4) : Vec2(2, 2)
-        obj.charges = texIndex == 1 ? 3 : (isSuperZombie ? 3 : 0)
         obj.textureID = GameTextures.all[texIndex]
         obj.tintColor = TokyoNight.shipTints[texIndex]
-        obj.age = 0
         obj.isActive = true
-        obj.behavior = FindAndGoBehavior(obj: obj, bounds: bounds)
-        obj.collider = CircleCollider(obj: obj, radius: isSuperZombie ? 2 : 1)
+
+        obj.add(FindAndGoBehavior(parent: obj, bounds: bounds))
+        obj.add(CircleCollider(parent: obj, radius: isSuperZombie ? 2 : 1))
+
+        let zombie = ZombieDemoComponent(parent: obj)
+        zombie.charges = texIndex == 1 ? 3 : (isSuperZombie ? 3 : 0)
+        zombie.isSuper = isSuperZombie
+        zombie.age = 0
+        obj.add(zombie)
     }
 
-    private func setType(_ obj: CollisionObj, index: Int) {
+    private func setType(_ obj: GameObj, index: Int) {
         obj.textureID = GameTextures.all[index]
         obj.tintColor = TokyoNight.shipTints[index]
-        obj.age = 0
+        if let zombie = obj.get(ZombieDemoComponent.self) {
+            zombie.age = 0
+        }
     }
 
     /// Broadphase + narrowphase collision with zombie/cure mechanics.
-    /// SpatialGrid reduces candidate pairs from O(n²) to nearby objects only.
+    /// SpatialGrid reduces candidate pairs from O(n^2) to nearby objects only.
     private func checkCollision() {
         grid.clear()
         grid.insert(contentsOf: objects)
@@ -188,27 +198,27 @@ class CollisionDemo: Scene {
         let greenTex = GameTextures.green
 
         for (first, second) in grid.potentialPairs() {
-            guard let first = first as? CollisionObj,
-                  let second = second as? CollisionObj else { continue }
             guard first.isActive, second.isActive else { continue }
-            guard first.collider.doesCollideWith(collider: second.collider) else { continue }
+            guard let fCollider = first.get(CircleCollider.self),
+                  let sCollider = second.get(CircleCollider.self) else { continue }
+            guard fCollider.doesCollideWith(collider: sCollider) else { continue }
 
             let fTex = first.textureID
             let sTex = second.textureID
 
-            // Red + Blue → 80% infection, 20% blue dies
+            // Red + Blue -> 80% infection, 20% blue dies
             if fTex == redTex && sTex == blueTex {
                 bite(second)
             } else if sTex == redTex && fTex == blueTex {
                 bite(first)
 
-            // Green + Red → cure the zombie, green loses a charge
+            // Green + Red -> cure the zombie, green loses a charge
             } else if fTex == greenTex && sTex == redTex {
                 cure(zombie: second, healer: first)
             } else if sTex == greenTex && fTex == redTex {
                 cure(zombie: first, healer: second)
 
-            // Green + Blue → blue becomes green (cure spreads)
+            // Green + Blue -> blue becomes green (cure spreads)
             } else if fTex == greenTex && sTex == blueTex {
                 recruit(second)
             } else if sTex == greenTex && fTex == blueTex {
@@ -218,17 +228,21 @@ class CollisionDemo: Scene {
     }
 
     /// Convert a blue ship to green (healer). Gets fresh 3 charges.
-    private func recruit(_ obj: CollisionObj) {
+    private func recruit(_ obj: GameObj) {
         setType(obj, index: 1)
-        obj.charges = 3
+        if let zombie = obj.get(ZombieDemoComponent.self) {
+            zombie.charges = 3
+        }
     }
 
     /// Zombie bite: 80% chance blue becomes red, 20% blue dies.
-    private func bite(_ blue: CollisionObj) {
+    private func bite(_ blue: GameObj) {
         if Float.random(in: 0...1) < 0.8 {
             setType(blue, index: 2)
-            blue.isSuper = false
-            blue.charges = 0
+            if let zombie = blue.get(ZombieDemoComponent.self) {
+                zombie.isSuper = false
+                zombie.charges = 0
+            }
         } else {
             blue.isActive = false
         }
@@ -237,19 +251,23 @@ class CollisionDemo: Scene {
     /// Green cures a zombie. Normal zombies become blue. Super zombies
     /// lose a hit point and die when charges hit 0. Green loses a charge
     /// and dies after 3 cures.
-    private func cure(zombie: CollisionObj, healer: CollisionObj) {
-        if zombie.isSuper {
-            zombie.charges -= 1
-            if zombie.charges <= 0 {
-                zombie.isActive = false
+    private func cure(zombie: GameObj, healer: GameObj) {
+        if let zData = zombie.get(ZombieDemoComponent.self) {
+            if zData.isSuper {
+                zData.charges -= 1
+                if zData.charges <= 0 {
+                    zombie.isActive = false
+                }
+            } else {
+                setType(zombie, index: 0)
             }
-        } else {
-            setType(zombie, index: 0)
         }
 
-        healer.charges -= 1
-        if healer.charges <= 0 {
-            healer.isActive = false
+        if let hData = healer.get(ZombieDemoComponent.self) {
+            hData.charges -= 1
+            if hData.charges <= 0 {
+                healer.isActive = false
+            }
         }
     }
 

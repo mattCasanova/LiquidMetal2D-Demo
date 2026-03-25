@@ -26,16 +26,16 @@ class PlayerStateMachine: Behavior {
   /// Required by the Behavior protocol. Holds the currently active State.
   var current: State!
 
-  private unowned let obj: BehaviorObj
+  unowned let parent: GameObj
 
   private let playerState: PlayerState
 
   /// - Parameters:
-  ///   - obj: The game object this behavior controls
+  ///   - parent: The game object this behavior controls
   ///   - inputReader: The engine's input reader for querying touch state each frame
-  init(obj: BehaviorObj, inputReader: InputReader) {
-    self.obj = obj
-    self.playerState = PlayerState(obj: self.obj, inputReader: inputReader)
+  init(parent: GameObj, inputReader: InputReader) {
+    self.parent = parent
+    self.playerState = PlayerState(obj: self.parent, inputReader: inputReader)
     // Activate the single player state
     setStartState(startState: playerState)
   }

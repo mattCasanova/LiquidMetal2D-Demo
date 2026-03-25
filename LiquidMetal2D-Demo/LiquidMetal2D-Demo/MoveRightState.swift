@@ -24,7 +24,7 @@ import LiquidMetal2D
 class MoveRightState: State {
     /// Unowned reference to the game object. The object owns Behavior owns State,
     /// so the object always outlives the state.
-    private unowned let obj: BehaviorObj
+    private unowned let obj: GameObj
 
     /// Closure that returns the visible world bounds for a given z-depth.
     /// This allows bounds to change based on how far the ship is from the camera.
@@ -32,7 +32,7 @@ class MoveRightState: State {
     /// Cached bounds for this ship's current zOrder, recalculated on each respawn.
     private var bounds = WorldBounds(minX: 0, maxX: 0, minY: 0, maxY: 0)
 
-    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds) {
+    init(obj: GameObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds) {
         self.obj       = obj
         self.getBounds = getBounds
     }

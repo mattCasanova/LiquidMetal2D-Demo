@@ -43,7 +43,7 @@ class CollisionStressDemo: Scene {
         renderer.setDefaultPerspective()
         renderer.setClearColor(color: TokyoNight.clearColor)
 
-        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        let bounds = renderer.getVisibleBounds(zOrder: 0)
         grid = SpatialGrid(bounds: bounds, cellWidth: 3, cellHeight: 3)
 
         createObjects(bounds: bounds)
@@ -64,7 +64,7 @@ class CollisionStressDemo: Scene {
             let currentFPS = 1.0 / dt
             smoothedFPS = smoothedFPS + fpsSmoothing * (currentFPS - smoothedFPS)
         }
-        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        let bounds = renderer.getVisibleBounds(zOrder: 0)
 
         // Move objects and wrap at bounds
         for obj in objects {
@@ -162,7 +162,7 @@ class CollisionStressDemo: Scene {
             obj.textureID = GameTextures.all[texIndex]
             obj.tintColor = TokyoNight.accents.randomElement()!
 
-            let collider = CircleCollider(obj: obj, radius: 0.5)
+            let collider = CircleCollider(parent: obj, radius: 0.5)
             objects.append(obj)
             colliders.append(collider)
             colliderMap[ObjectIdentifier(obj)] = collider

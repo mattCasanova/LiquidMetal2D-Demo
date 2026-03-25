@@ -10,12 +10,14 @@ import LiquidMetal2D
 /// Behavior wrapper for `MoveRightStateFOV`. Moves ships right with a
 /// configurable z-depth range.
 class MoveRightBehaviorFOV: Behavior {
+    unowned let parent: GameObj
     var current: State!
 
-    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds,
+    init(parent: GameObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds,
          zRange: ClosedRange<Float>) {
+        self.parent = parent
         let state = MoveRightStateFOV(
-            obj: obj, getBounds: getBounds, zRange: zRange)
+            obj: parent, getBounds: getBounds, zRange: zRange)
         setStartState(startState: state)
     }
 }

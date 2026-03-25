@@ -22,11 +22,11 @@ import LiquidMetal2D
 /// `MainActor.assumeIsolated` to tell Swift 6 concurrency that we are already on the
 /// main actor, avoiding an async call.
 class PlayerState: State, @unchecked Sendable {
-    private unowned let obj: BehaviorObj
+    private unowned let obj: GameObj
     /// Unowned reference to the engine's input reader for querying touch state.
     private unowned let inputReader: InputReader
 
-    init(obj: BehaviorObj, inputReader: InputReader) {
+    init(obj: GameObj, inputReader: InputReader) {
         self.obj = obj
         self.inputReader = inputReader
     }

@@ -14,21 +14,13 @@
 import UIKit
 import LiquidMetal2D
 
-class AsyncLoadDemo: Scene {
-    static var sceneType: any SceneType { SceneTypes.asyncLoadDemo }
+class AsyncLoadDemo: DefaultScene {
+    override class var sceneType: any SceneType { SceneTypes.asyncLoadDemo }
 
-    private var sceneMgr: SceneManager!
-    private var renderer: Renderer!
-    private var input: InputReader!
-
-    private let scheduler = Scheduler()
     private let artificialDelay: Float = 5.0
 
     private var statusLabel: UILabel!
     private var startButton: UIButton!
-
-    private var stars = [GameObj]()
-    private let starCount = 600
 
     // Star movement
     private let baseSpeed: Float = 0.2
@@ -41,14 +33,9 @@ class AsyncLoadDemo: Scene {
     private let respawnDistanceRange: ClosedRange<Float> = 0.5...2
     private let initialJitter: ClosedRange<Float> = -2...2
 
-    func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        self.sceneMgr = sceneMgr
-        self.renderer = renderer
-        self.input = input
+    override func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
+        super.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
 
-        renderer.setCamera()
-        renderer.setCameraRotation(angle: 0)
-        renderer.setDefaultPerspective()
         renderer.setClearColor(color: TokyoNight.clearColor)
 
         createStars()
@@ -59,18 +46,22 @@ class AsyncLoadDemo: Scene {
         }, count: 1))
     }
 
-    func resume() {}
-    func resize() {
-        renderer.setDefaultPerspective()
-        layoutUI()
+    override func layoutUI() {
+        let bounds = renderer.view.bounds
+        let centerX = bounds.width / 2
+        let centerY = bounds.height / 2
+        statusLabel.frame = CGRect(
+            x: 0, y: centerY - 40,
+            width: bounds.width, height: 40)
+        startButton.frame = CGRect(
+            x: centerX - 60, y: centerY + 20,
+            width: 120, height: 50)
     }
 
-    func update(dt: Float) {
+    override func update(dt: Float) {
         scheduler.update(dt: dt)
 
-        // Move stars outward from center, scale up as they move
-        // star.zOrder stores the per-star speed multiplier (0.3 to 1.0)
-        for star in stars {
+        for star in objects {
             let dir = star.position.normalized
             let dist = star.position.length
             let starSpeed = star.zOrder
@@ -87,16 +78,8 @@ class AsyncLoadDemo: Scene {
         }
     }
 
-    func draw() {
-        guard renderer.beginPass() else { return }
-        renderer.usePerspective()
-        renderer.submit(objects: stars)
-        renderer.endPass()
-    }
-
-    func shutdown() {
-        scheduler.clear()
-        stars.removeAll()
+    override func shutdown() {
+        super.shutdown()
         statusLabel.removeFromSuperview()
         startButton.removeFromSuperview()
     }
@@ -104,6 +87,7 @@ class AsyncLoadDemo: Scene {
     // MARK: - Stars
 
     private func createStars() {
+        let starCount = 600
         for i in 0..<starCount {
             let star = GameObj()
             star.textureID = renderer.defaultTextureId
@@ -117,7 +101,7 @@ class AsyncLoadDemo: Scene {
             let scaleFactor = (baseScale + abs(dist) * distanceScaleMultiplier) * star.zOrder
             star.scale.set(scaleFactor, scaleFactor)
             star.tintColor = TokyoNight.accents.randomElement()!
-            stars.append(star)
+            objects.append(star)
         }
     }
 
@@ -153,18 +137,6 @@ class AsyncLoadDemo: Scene {
         layoutUI()
     }
 
-    private func layoutUI() {
-        let bounds = renderer.view.bounds
-        let centerX = bounds.width / 2
-        let centerY = bounds.height / 2
-        statusLabel.frame = CGRect(
-            x: 0, y: centerY - 40,
-            width: bounds.width, height: 40)
-        startButton.frame = CGRect(
-            x: centerX - 60, y: centerY + 20,
-            width: 120, height: 50)
-    }
-
     // MARK: - Loading
 
     private func loadAllTextures() {
@@ -189,6 +161,4 @@ class AsyncLoadDemo: Scene {
     @objc func onStart() {
         sceneMgr.setScene(type: SceneTypes.massRenderDemo)
     }
-
-    static func build() -> Scene { return AsyncLoadDemo() }
 }

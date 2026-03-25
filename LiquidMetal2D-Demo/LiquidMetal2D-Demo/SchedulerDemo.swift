@@ -126,32 +126,38 @@ class SchedulerDemo: DefaultScene {
         renderer.setCameraRotation(angle: 0)
 
         // Phase 1: Swap background color 4 times with smooth crossfades
-        let colorSwap = ScheduledTask(time: maxChangeTime, action: { [unowned self] _ in
+        let colorSwap = ScheduledTask(time: maxChangeTime, action: { [weak self] _ in
+            guard let self else { return }
             self.changeTime = 0
             let temp = self.startColor
             self.startColor = self.endColor
             self.endColor = temp
-        }, count: 4, onComplete: { [unowned self] _ in
+        }, count: 4, onComplete: { [weak self] _ in
+            guard let self else { return }
             self.shouldChange = false
             self.isRotating = true
             self.cameraAngle = 0
         })
 
         // Phase 2: Camera rotates 360°
-        let rotation = colorSwap.then(time: rotationDuration, action: { [unowned self] _ in
+        let rotation = colorSwap.then(time: rotationDuration, action: { [weak self] _ in
+            guard let self else { return }
             self.isRotating = false
             self.cameraAngle = 0
             self.renderer.setCameraRotation(angle: 0)
-        }, count: 1, onComplete: { [unowned self] _ in
+        }, count: 1, onComplete: { [weak self] _ in
+            guard let self else { return }
             self.isZooming = true
             self.zoomTime = 0
         })
 
         // Phase 3: Zoom in then back out
-        rotation.then(time: zoomDuration, action: { [unowned self] _ in
+        rotation.then(time: zoomDuration, action: { [weak self] _ in
+            guard let self else { return }
             self.isZooming = false
             self.distance = self.baseDistance
-        }, count: 1, onComplete: { [unowned self] _ in
+        }, count: 1, onComplete: { [weak self] _ in
+            guard let self else { return }
             self.createObjects()
             self.buildDemoChain()
         })

@@ -69,9 +69,9 @@ class RotateState: State {
     /// Compute the target angle and turn direction using the cross product.
     func enter() {
         // Direction vector from ship to target
-        let targetDirection = parent.target - parent.obj.position
+        let targetDirection = parent.target - parent.parent.position
         // Unit vector representing the ship's current facing direction
-        let currentRotationVec = Vec2(angle: parent.obj.rotation)
+        let currentRotationVec = Vec2(angle: parent.parent.rotation)
 
         // The 2D cross product's sign tells us which way is shorter to turn:
         // positive z = target is counter-clockwise from current facing
@@ -92,14 +92,14 @@ class RotateState: State {
     /// and transition to GoState.
     func update(dt: Float) {
         // Apply rotation velocity
-        parent.obj.rotation += rotationVelocity * dt
+        parent.parent.rotation += rotationVelocity * dt
         // Keep rotation in [0, 2*pi) to avoid wraparound comparison issues
-        parent.obj.rotation = GameMath.wrap(value: parent.obj.rotation, low: 0, high: GameMath.twoPi)
+        parent.parent.rotation = GameMath.wrap(value: parent.parent.rotation, low: 0, high: GameMath.twoPi)
 
         // Check if we are within 0.1 radians of the target angle
-        if GameMath.isInRange(value: parent.obj.rotation, low: rotation - 0.1, high: rotation + 0.1) {
+        if GameMath.isInRange(value: parent.parent.rotation, low: rotation - 0.1, high: rotation + 0.1) {
             // Snap to the exact target angle to prevent drift
-            parent.obj.rotation = rotation
+            parent.parent.rotation = rotation
             // Transition to GoState to start moving forward
             parent.setToGo()
         }
@@ -125,11 +125,11 @@ class GoState: State {
     /// Set the ship's velocity to its facing direction at a random speed.
     func enter() {
         // Create a unit vector from the ship's current rotation angle
-        var direction = Vec2(angle: parent.obj.rotation)
+        var direction = Vec2(angle: parent.parent.rotation)
         // Scale by a random speed (6-10 units/sec)
         direction *= Float.random(in: 6...10)
 
-        parent.obj.velocity = direction
+        parent.parent.velocity = direction
     }
 
     func exit() {}
@@ -137,11 +137,11 @@ class GoState: State {
     /// Move forward and check if we have reached the target.
     func update(dt: Float) {
         // Euler integration: advance position by velocity * delta time
-        parent.obj.position += parent.obj.velocity * dt
+        parent.parent.position += parent.parent.velocity * dt
 
         // Intersect.pointCircle checks if the target point is within a circle of radius 2
         // centered on the ship. This is a simple "close enough" arrival check.
-        if Intersect.pointCircle(point: parent.target, circle: parent.obj.position, radius: 2) {
+        if Intersect.pointCircle(point: parent.target, circle: parent.parent.position, radius: 2) {
             // Arrived at target -- loop back to FindState to pick a new destination
             parent.setToFind()
         }

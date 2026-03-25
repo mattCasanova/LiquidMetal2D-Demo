@@ -22,9 +22,8 @@ import LiquidMetal2D
 ///   position, assigns random rotation/velocity/scale, and respawns when out of bounds.
 /// - **Easing (easeOutBack):** `Easing.easeOutBack(t)` produces a value that overshoots
 ///   1.0 then settles back, creating a satisfying "pop" effect on spawn scale.
-/// - **getWorldBoundsFromCamera:** Computes world bounds using the camera's current position
-///   (unlike `getWorldBounds` which takes an explicit camera distance). Simpler when you
-///   do not need bounds for a different camera distance than the current one.
+/// - **getVisibleBounds:** Computes visible world bounds using the camera's current position.
+///   An overload accepts an explicit camera distance for bounds at a different zoom level.
 /// - **Sort by scale for depth:** Objects sorted by scale.x so smaller ships draw first.
 class SpawnDemo: Scene {
     static var sceneType: any SceneType { SceneTypes.spawnDemo }
@@ -35,7 +34,7 @@ class SpawnDemo: Scene {
 
     let distance: Float = 40
     let objectCount = GameConstants.MAX_OBJECTS
-    var objects = [BehaviorObj]()
+    var objects = [GameObj]()
     private let worldUniforms = WorldUniform()
 
     /// Current spawn position in world space. Updated each frame from touch input.
@@ -83,7 +82,7 @@ class SpawnDemo: Scene {
 
         for i in 0..<objectCount {
             // Update the RandomAngleBehavior, which moves the ship and respawns when out of bounds
-            objects[i].behavior.update(dt: dt)
+            objects[i].get(RandomAngleBehavior.self)?.update(dt: dt)
 
             // Animate scale on spawn using Easing.easeOutBack for a satisfying "pop" effect.
             // easeOutBack returns values that overshoot 1.0 briefly then settle, so the ship
@@ -135,20 +134,21 @@ class SpawnDemo: Scene {
         objects.removeAll()
         spawnAge.removeAll()
 
-        // getWorldBoundsFromCamera uses the camera's current position to compute the visible
-        // world rectangle at a given z-plane. This is simpler than getWorldBounds when you
-        // don't need bounds at a different camera distance.
-        let bounds = renderer.getWorldBoundsFromCamera(zOrder: 0)
+        // getVisibleBounds uses the camera's current position to compute the visible
+        // world rectangle at a given z-plane. An overload accepts an explicit camera distance
+        // if you need bounds at a different zoom level.
+        let bounds = renderer.getVisibleBounds(zOrder: 0)
         let getSpawnLocation = { [unowned self] in self.spawnPos }
         let getBounds = { bounds }
 
         for _ in 0..<objectCount {
-            let obj = BehaviorObj()
+            let obj = GameObj()
             // RandomAngleBehavior wraps a single RandomAngleState that assigns a random direction,
             // speed, and scale on enter(), then checks bounds on update() to respawn when needed.
-            obj.behavior = RandomAngleBehavior(
-                obj: obj, getSpawnLocation: getSpawnLocation,
+            let behavior = RandomAngleBehavior(
+                parent: obj, getSpawnLocation: getSpawnLocation,
                 getBounds: getBounds)
+            obj.add(behavior)
             objects.append(obj)
             // Start with full ease duration so objects appear fully scaled on first frame
             spawnAge.append(spawnEaseDuration)

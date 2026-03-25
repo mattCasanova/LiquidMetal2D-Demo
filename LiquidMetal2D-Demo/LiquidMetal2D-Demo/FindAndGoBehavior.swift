@@ -32,9 +32,7 @@ import LiquidMetal2D
 /// targets, turning toward them, and moving to them.
 class FindAndGoBehavior: Behavior {
     /// Unowned reference to the game object this behavior controls.
-    /// Uses `CollisionObj` (not plain GameObj) because the collision demo needs
-    /// the isActive flag and Collider property.
-    unowned let obj: CollisionObj
+    unowned let parent: GameObj
 
     /// Required by the Behavior protocol. The engine calls current.update(dt:) each frame.
     var current: State!
@@ -46,14 +44,14 @@ class FindAndGoBehavior: Behavior {
     private var goState: GoState!
 
     /// - Parameters:
-    ///   - obj: The collision object to control
+    ///   - parent: The game object to control
     ///   - bounds: The visible world bounds used by FindState to pick random targets
-    init(obj: CollisionObj, bounds: WorldBounds) {
-        self.obj = obj
+    init(parent: GameObj, bounds: WorldBounds) {
+        self.parent = parent
 
         // Start the ship at a random position within the visible world
-        obj.position.x = Float.random(in: bounds.minX...bounds.maxX)
-        obj.position.y = Float.random(in: bounds.minY...bounds.maxY)
+        parent.position.x = Float.random(in: bounds.minX...bounds.maxX)
+        parent.position.y = Float.random(in: bounds.minY...bounds.maxY)
 
         // Create all three states upfront. They hold an unowned reference back to this
         // Behavior (as `parent`) so they can access `obj`, `target`, and transition methods.

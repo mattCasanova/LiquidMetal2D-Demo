@@ -26,6 +26,7 @@ import LiquidMetal2D
 /// **Used by:** `SpawnDemo` -- ships spawn at the touch location and fly outward in
 /// random directions, respawning when they leave the visible area.
 class RandomAngleBehavior: Behavior {
+    unowned let parent: GameObj
     /// Required by the Behavior protocol. Holds the currently active State.
     /// The Behavior protocol manages transitions by calling exit() on the old state
     /// and enter() on the new one.
@@ -35,12 +36,13 @@ class RandomAngleBehavior: Behavior {
     private let randomAngleState: RandomAngleState
 
     /// - Parameters:
-    ///   - obj: The game object this behavior controls (position, velocity, scale, etc.)
+    ///   - parent: The game object this behavior controls (position, velocity, scale, etc.)
     ///   - getSpawnLocation: Closure returning the current spawn position (e.g., touch location)
     ///   - getBounds: Closure returning the visible world bounds for out-of-bounds checks
-    init(obj: BehaviorObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds) {
+    init(parent: GameObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds) {
+        self.parent = parent
         randomAngleState = RandomAngleState(
-            obj: obj,
+            obj: parent,
             getSpawnLocation: getSpawnLocation,
             getBounds: getBounds)
         // setStartState activates the state by calling its enter() method.

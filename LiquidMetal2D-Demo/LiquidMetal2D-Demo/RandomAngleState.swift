@@ -29,8 +29,8 @@ import LiquidMetal2D
 class RandomAngleState: State {
     /// Unowned reference to the game object this state controls.
     /// Use `unowned` (not `weak`) because the object always outlives its state --
-    /// the BehaviorObj owns the Behavior which owns the State.
-    private unowned let obj: BehaviorObj
+    /// the GameObj owns the Behavior which owns the State.
+    private unowned let obj: GameObj
 
     /// Closure that returns the current spawn position (e.g., the player's touch location).
     /// Using a closure instead of a stored Vec2 allows the spawn point to change dynamically.
@@ -38,7 +38,7 @@ class RandomAngleState: State {
     /// Closure that returns the current world bounds for out-of-bounds detection.
     private let getBounds: () -> WorldBounds
 
-    init(obj: BehaviorObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds) {
+    init(obj: GameObj, getSpawnLocation: @escaping () -> Vec2, getBounds: @escaping () -> WorldBounds) {
         self.obj              = obj
         self.getSpawnLocation = getSpawnLocation
         self.getBounds        = getBounds

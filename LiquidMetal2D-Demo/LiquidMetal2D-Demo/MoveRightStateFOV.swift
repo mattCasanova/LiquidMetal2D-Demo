@@ -14,13 +14,13 @@ import LiquidMetal2D
 /// The z range is passed at init time, unlike `MoveRightState` which
 /// hardcodes 0..60.
 class MoveRightStateFOV: State {
-    private unowned let obj: BehaviorObj
+    private unowned let obj: GameObj
 
     private let getBounds: (_ zOrder: Float) -> WorldBounds
     private let zRange: ClosedRange<Float>
     private var bounds = WorldBounds(minX: 0, maxX: 0, minY: 0, maxY: 0)
 
-    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds,
+    init(obj: GameObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds,
          zRange: ClosedRange<Float>) {
         self.obj = obj
         self.getBounds = getBounds

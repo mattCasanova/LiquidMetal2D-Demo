@@ -23,7 +23,7 @@ import LiquidMetal2D
 /// - **Camera zoom:** `renderer.setCamera(point:)` adjusts the camera's z distance each frame.
 /// - **Easing functions:** `Easing.easeInOutCubic` smooths the zoom interpolation so it
 ///   accelerates and decelerates naturally instead of moving at constant speed.
-/// - **World bounds:** `renderer.getWorldBounds(cameraDistance:zOrder:)` calculates the visible
+/// - **World bounds:** `renderer.getVisibleBounds(cameraDistance:zOrder:)` calculates the visible
 ///   world rectangle for a given camera distance. Corner ships are placed at these bounds.
 /// - **GameMath.lerp:** Linear interpolation between start and target z, driven by eased t.
 ///
@@ -173,9 +173,9 @@ class TouchZoomDemo: Scene {
     /// This means when the camera is zoomed in (at nearZ), the corner ships are at the screen edges.
     /// When zoomed out, they appear inside the screen, demonstrating how world bounds expand with distance.
     private func positionCornerShips() {
-        // getWorldBounds returns the visible world-space rectangle for a given camera distance and z-plane.
+        // getVisibleBounds returns the visible world-space rectangle for a given camera distance and z-plane.
         // Using nearZ here means the ships sit at the edges of the closest zoom level.
-        let bounds = renderer.getWorldBounds(cameraDistance: nearZ, zOrder: 0)
+        let bounds = renderer.getVisibleBounds(cameraDistance: nearZ, zOrder: 0)
 
         let positions: [(Float, Float)] = [
             (bounds.maxX, bounds.maxY),

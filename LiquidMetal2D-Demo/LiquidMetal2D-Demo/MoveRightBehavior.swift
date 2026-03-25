@@ -17,22 +17,24 @@ import LiquidMetal2D
 ///
 /// **Why bounds depend on zOrder:**
 /// In a perspective projection, objects at higher z values (further from the camera) occupy
-/// a larger world-space area on screen. `getWorldBounds(cameraDistance:zOrder:)` returns
+/// a larger world-space area on screen. `getVisibleBounds(cameraDistance:zOrder:)` returns
 /// the visible rectangle at that depth. Ships at z=60 have much wider bounds than ships at z=0,
 /// so they correctly wrap at the screen edges regardless of their depth.
 ///
 /// **Used by:** `MassRenderDemo` -- 4,500 ships scrolling right at different z-depths.
 class MoveRightBehavior: Behavior {
+    unowned let parent: GameObj
     /// Required by the Behavior protocol. Holds the currently active State.
     var current: State!
 
     private let moveRightState: MoveRightState
 
     /// - Parameters:
-    ///   - obj: The game object this behavior controls
+    ///   - parent: The game object this behavior controls
     ///   - getBounds: Closure that returns world bounds for a given zOrder depth
-    init(obj: BehaviorObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds) {
-        moveRightState = MoveRightState(obj: obj, getBounds: getBounds)
+    init(parent: GameObj, getBounds: @escaping (_ zOrder: Float) -> WorldBounds) {
+        self.parent = parent
+        moveRightState = MoveRightState(obj: parent, getBounds: getBounds)
         // setStartState activates the state and calls its enter() method
         setStartState(startState: moveRightState)
     }

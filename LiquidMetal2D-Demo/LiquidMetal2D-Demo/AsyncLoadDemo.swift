@@ -23,9 +23,9 @@ class AsyncLoadDemo: DefaultScene {
     private var startButton: UIButton!
 
     // Star movement
-    private let baseSpeed: Float = 0.2
-    private let distanceSpeedScale: Float = 0.15
-    private let globalSpeedMultiplier: Float = 3
+    private let baseSpeed: Float = 0.35
+    private let distanceSpeedScale: Float = 0.25
+    private let globalSpeedMultiplier: Float = 4.5
     private let baseScale: Float = 0.04
     private let distanceScaleMultiplier: Float = 0.03
     private let maxDistance: Float = 60
@@ -68,6 +68,7 @@ class AsyncLoadDemo: DefaultScene {
 
             let speed = (baseSpeed + dist * distanceSpeedScale) * starSpeed
             star.position += dir * speed * dt * globalSpeedMultiplier
+            star.rotation += dt * 50 * starSpeed
 
             let scaleFactor = (baseScale + dist * distanceScaleMultiplier) * starSpeed
             star.scale.set(scaleFactor, scaleFactor)
@@ -87,7 +88,7 @@ class AsyncLoadDemo: DefaultScene {
     // MARK: - Stars
 
     private func createStars() {
-        let starCount = 600
+        let starCount = 2000
         for i in 0..<starCount {
             let star = GameObj()
             star.textureID = renderer.defaultTextureId

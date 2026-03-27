@@ -14,7 +14,7 @@ class CollisionStressDemo: Scene {
     private var renderer: Renderer!
     private var input: InputReader!
 
-    private let objectCount = 4000
+    private let objectCount = 7000
     private var objects = [GameObj]()
     private var colliders = [CircleCollider]()
     private var colliderMap = [ObjectIdentifier: CircleCollider]()

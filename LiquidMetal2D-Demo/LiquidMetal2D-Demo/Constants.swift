@@ -17,7 +17,7 @@ import Foundation
 ///
 /// **Why this matters for the renderer:**
 /// The Metal renderer pre-allocates a GPU buffer large enough to hold `MAX_OBJECTS` worth
-/// of `WorldUniform` data (transform matrices). If you try to draw more objects than this
+/// of `AlphaBlendUniform` data (transform matrices). If you try to draw more objects than this
 /// in a single frame, the renderer will not have enough buffer space. Set this value to
 /// the maximum number of objects any scene in your game needs to draw simultaneously.
 class GameConstants {

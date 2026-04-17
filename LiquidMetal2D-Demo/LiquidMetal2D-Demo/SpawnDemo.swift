@@ -35,7 +35,6 @@ class SpawnDemo: Scene {
     let distance: Float = 40
     let objectCount = GameConstants.MAX_OBJECTS
     var objects = [GameObj]()
-    private let worldUniforms = WorldUniform()
 
     /// Current spawn position in world space. Updated each frame from touch input.
     var spawnPos = Vec2()
@@ -116,8 +115,8 @@ class SpawnDemo: Scene {
 
         for obj in objects {
             renderer.useTexture(textureId: obj.textureID)
-            obj.toUniform(worldUniforms)
-            renderer.draw(uniforms: worldUniforms)
+            let uniform = obj.toUniform()
+            renderer.draw(uniforms: uniform)
         }
 
         renderer.endPass()

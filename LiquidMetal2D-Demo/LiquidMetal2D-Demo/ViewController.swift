@@ -50,7 +50,7 @@ class ViewController: LiquidViewController {
         let renderer = DefaultRenderer(
             parentView: self.view,
             maxObjects: GameConstants.MAX_OBJECTS,
-            uniformSize: WorldUniform.typeSize())
+            uniformSize: AlphaBlendUniform.typeSize())
 
         // Step 3: Create the engine and start the game loop.
         gameEngine = DefaultEngine(

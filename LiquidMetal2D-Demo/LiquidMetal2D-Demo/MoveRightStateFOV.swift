@@ -52,6 +52,6 @@ class MoveRightStateFOV: State {
         obj.scale.set(1, 1)
         obj.rotation = 0
         obj.velocity.set(Float.random(in: 2...8), 0)
-        obj.textureID = GameTextures.all.randomElement()!
+        obj.get(AlphaBlendComponent.self)?.textureID = GameTextures.all.randomElement()!
     }
 }

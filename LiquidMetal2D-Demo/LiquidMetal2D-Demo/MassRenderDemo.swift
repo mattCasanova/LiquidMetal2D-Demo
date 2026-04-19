@@ -95,6 +95,7 @@ class MassRenderDemo: DefaultScene {
         }
         for _ in 0..<objectCount {
             let obj = GameObj()
+            obj.add(AlphaBlendComponent(parent: obj, textureID: GameTextures.blue))
             let behavior = MoveRightBehavior(parent: obj, getBounds: getBounds)
             obj.add(behavior)
             objects.append(obj)

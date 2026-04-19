@@ -91,7 +91,6 @@ class AsyncLoadDemo: DefaultScene {
         let starCount = 2000
         for i in 0..<starCount {
             let star = GameObj()
-            star.textureID = renderer.defaultTextureId
             star.zOrder = Float.random(in: speedRange)
 
             let angle = Float.random(in: 0...GameMath.twoPi)
@@ -101,7 +100,10 @@ class AsyncLoadDemo: DefaultScene {
 
             let scaleFactor = (baseScale + abs(dist) * distanceScaleMultiplier) * star.zOrder
             star.scale.set(scaleFactor, scaleFactor)
-            star.tintColor = TokyoNight.accents.randomElement()!
+            star.add(AlphaBlendComponent(
+                parent: star,
+                textureID: renderer.defaultTextureId,
+                tintColor: TokyoNight.accents.randomElement()!))
             objects.append(star)
         }
     }
@@ -112,7 +114,7 @@ class AsyncLoadDemo: DefaultScene {
         star.position.set(cos(angle) * dist, sin(angle) * dist)
         star.zOrder = Float.random(in: speedRange)
         star.scale.set(baseScale, baseScale)
-        star.tintColor = TokyoNight.accents.randomElement()!
+        star.get(AlphaBlendComponent.self)?.tintColor = TokyoNight.accents.randomElement()!
     }
 
     // MARK: - UI

@@ -49,8 +49,7 @@ class ViewController: LiquidViewController {
         // Step 2: Create the Metal renderer.
         let renderer = DefaultRenderer(
             parentView: self.view,
-            maxObjects: GameConstants.MAX_OBJECTS,
-            uniformSize: AlphaBlendUniform.typeSize())
+            maxObjects: GameConstants.MAX_OBJECTS)
 
         // Step 3: Create the engine and start the game loop.
         gameEngine = DefaultEngine(

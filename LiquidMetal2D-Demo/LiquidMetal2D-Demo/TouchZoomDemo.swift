@@ -153,16 +153,20 @@ class TouchZoomDemo: Scene {
         centerShip = GameObj()
         centerShip.position.set(0, 0)
         centerShip.scale.set(5, 5)
-        centerShip.textureID = GameTextures.blue
-        centerShip.tintColor = TokyoNight.shipTints[0]
+        centerShip.add(AlphaBlendComponent(
+            parent: centerShip,
+            textureID: GameTextures.blue,
+            tintColor: TokyoNight.shipTints[0]))
 
         cornerShips.removeAll()
         for i in 0..<4 {
             let ship = GameObj()
             ship.scale.set(7, 7)
             let texIndex = 1 + (i % 2)
-            ship.textureID = GameTextures.all[texIndex]
-            ship.tintColor = TokyoNight.shipTints[texIndex]
+            ship.add(AlphaBlendComponent(
+                parent: ship,
+                textureID: GameTextures.all[texIndex],
+                tintColor: TokyoNight.shipTints[texIndex]))
             cornerShips.append(ship)
         }
 

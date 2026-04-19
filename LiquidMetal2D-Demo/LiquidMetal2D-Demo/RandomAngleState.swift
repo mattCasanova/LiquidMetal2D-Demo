@@ -90,8 +90,10 @@ class RandomAngleState: State {
         obj.velocity *= 5 * scale
         // Randomly assign one of the available textures
         let texIndex = Int.random(in: 0..<GameTextures.all.count)
-        obj.textureID = GameTextures.all[texIndex]
-        obj.tintColor = TokyoNight.shipTints[texIndex]
+        if let comp = obj.get(AlphaBlendComponent.self) {
+            comp.textureID = GameTextures.all[texIndex]
+            comp.tintColor = TokyoNight.shipTints[texIndex]
+        }
     }
 
 }

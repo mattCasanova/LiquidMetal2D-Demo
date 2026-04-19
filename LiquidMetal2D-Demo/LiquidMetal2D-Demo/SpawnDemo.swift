@@ -101,10 +101,11 @@ class SpawnDemo: Scene {
         objects.sort(by: { $0.scale.x < $1.scale.x })
     }
 
-    /// Uses the advanced useTexture()/draw() API instead of submit() to preserve
-    /// insertion order. This demonstrates non-batched rendering where textures
-    /// interleave naturally based on spawn order, unlike submit() which sorts
-    /// by (zOrder, textureID) and groups all same-texture objects together.
+    /// Uses the advanced AlphaBlendShader.draw() API instead of submit() to
+    /// preserve insertion order. This demonstrates non-batched rendering where
+    /// textures interleave naturally based on spawn order, unlike submit()
+    /// which sorts by (zOrder, textureID) and groups all same-texture objects
+    /// together.
     ///
     /// **Important:** draw() does no sorting — objects render in the order you
     /// submit them. If you need correct z-ordering or depth layering, sort your
@@ -113,10 +114,24 @@ class SpawnDemo: Scene {
         guard renderer.beginPass() else { return }
         renderer.usePerspective()
 
+        guard let defaultRenderer = renderer as? DefaultRenderer else {
+            renderer.endPass()
+            return
+        }
+        renderer.useShader(defaultRenderer.alphaBlend)
+
+        var transform = Mat4()
         for obj in objects {
-            renderer.useTexture(textureId: obj.textureID)
-            let uniform = obj.toUniform()
-            renderer.draw(uniforms: uniform)
+            guard let comp = obj.get(AlphaBlendComponent.self) else { continue }
+            transform.setToTransform2D(
+                scale: obj.scale,
+                angle: obj.rotation,
+                translate: Vec3(obj.position, obj.zOrder))
+            defaultRenderer.alphaBlend.draw(
+                transform: transform,
+                texTrans: comp.texTrans,
+                color: comp.tintColor,
+                textureId: comp.textureID)
         }
 
         renderer.endPass()
@@ -142,6 +157,7 @@ class SpawnDemo: Scene {
 
         for _ in 0..<objectCount {
             let obj = GameObj()
+            obj.add(AlphaBlendComponent(parent: obj, textureID: GameTextures.blue))
             // RandomAngleBehavior wraps a single RandomAngleState that assigns a random direction,
             // speed, and scale on enter(), then checks bounds on update() to respawn when needed.
             let behavior = RandomAngleBehavior(

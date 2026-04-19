@@ -159,8 +159,10 @@ class CollisionStressDemo: Scene {
             obj.rotation = angle
 
             let texIndex = Int.random(in: 0...2)
-            obj.textureID = GameTextures.all[texIndex]
-            obj.tintColor = TokyoNight.accents.randomElement()!
+            obj.add(AlphaBlendComponent(
+                parent: obj,
+                textureID: GameTextures.all[texIndex],
+                tintColor: TokyoNight.accents.randomElement()!))
 
             let collider = CircleCollider(parent: obj, radius: 0.5)
             objects.append(obj)

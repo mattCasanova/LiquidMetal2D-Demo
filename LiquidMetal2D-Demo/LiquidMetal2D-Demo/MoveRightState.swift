@@ -79,8 +79,10 @@ class MoveRightState: State {
         // Velocity is purely horizontal (rightward) with random speed
         obj.velocity.set(Float.random(in: 2...10), 0)
         let texIndex = Int.random(in: 0...2)
-        obj.textureID = GameTextures.all[texIndex]
-        obj.tintColor = TokyoNight.shipTints[texIndex]
+        if let comp = obj.get(AlphaBlendComponent.self) {
+            comp.textureID = GameTextures.all[texIndex]
+            comp.tintColor = TokyoNight.shipTints[texIndex]
+        }
     }
 
 }

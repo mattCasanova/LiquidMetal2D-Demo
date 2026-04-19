@@ -181,8 +181,10 @@ class CameraRotationDemo: Scene {
         ship.rotation = rotation
         ship.scale.set(scale, scale)
         ship.zOrder = spawnZ
-        ship.textureID = GameTextures.all[textureIndex]
-        ship.tintColor = TokyoNight.shipTints[textureIndex]
+        ship.add(AlphaBlendComponent(
+            parent: ship,
+            textureID: GameTextures.all[textureIndex],
+            tintColor: TokyoNight.shipTints[textureIndex]))
         objects.append(ship)
     }
 
@@ -265,8 +267,10 @@ class CameraRotationDemo: Scene {
                 obj.zOrder = startZ + Float(i) * zSpacing
                 obj.scale.set(2, 2)
                 obj.rotation = 0
-                obj.textureID = GameTextures.all[textureIndex]
-                obj.tintColor = TokyoNight.shipTints[textureIndex]
+                obj.add(AlphaBlendComponent(
+                    parent: obj,
+                    textureID: GameTextures.all[textureIndex],
+                    tintColor: TokyoNight.shipTints[textureIndex]))
                 objects.append(obj)
             }
         }

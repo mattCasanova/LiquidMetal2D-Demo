@@ -84,6 +84,7 @@ class InstanceDemo: DefaultScene {
         objects.removeAll()
         for _ in 0..<objectCount {
             let obj = GameObj()
+            obj.add(AlphaBlendComponent(parent: obj, textureID: GameTextures.blue))
             randomize(obj: obj)
             objects.append(obj)
         }
@@ -94,8 +95,10 @@ class InstanceDemo: DefaultScene {
         let scale = Float.random(in: 0.25...5)
         obj.scale.set(scale, scale)
         let texIndex = Int.random(in: 0...2)
-        obj.textureID = GameTextures.all[texIndex]
-        obj.tintColor = TokyoNight.shipTints[texIndex]
+        if let comp = obj.get(AlphaBlendComponent.self) {
+            comp.textureID = GameTextures.all[texIndex]
+            comp.tintColor = TokyoNight.shipTints[texIndex]
+        }
         obj.zOrder = [-10, 0, 10].randomElement()!
         obj.rotation = Float.random(in: 0...GameMath.twoPi)
         obj.velocity.set(angle: obj.rotation)

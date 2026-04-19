@@ -104,7 +104,8 @@ class CollisionDemo: Scene {
                 zombie.age += dt
 
                 // Blue and green die after 30s. Zombies persist forever.
-                if obj.textureID != GameTextures.orange && zombie.age >= maxAge {
+                if obj.get(AlphaBlendComponent.self)?.textureID != GameTextures.orange
+                    && zombie.age >= maxAge {
                     obj.isActive = false
                 }
             }
@@ -136,6 +137,7 @@ class CollisionDemo: Scene {
         for _ in 0..<objectCount {
             let obj = GameObj()
             obj.isActive = false
+            obj.add(AlphaBlendComponent(parent: obj, textureID: GameTextures.blue))
             objects.append(obj)
         }
     }
@@ -145,7 +147,9 @@ class CollisionDemo: Scene {
         let bounds = renderer.getVisibleBounds(zOrder: 0)
 
         // 5% zombie, 2% super zombie. Green only spawns (3%) when 20+ reds exist.
-        let redCount = objects.filter { $0.isActive && $0.textureID == GameTextures.orange }.count
+        let redCount = objects.filter {
+            $0.isActive && $0.get(AlphaBlendComponent.self)?.textureID == GameTextures.orange
+        }.count
         let roll = Int.random(in: 0..<100)
         let texIndex: Int
         let isSuperZombie: Bool
@@ -165,8 +169,10 @@ class CollisionDemo: Scene {
             Float.random(in: bounds.minY...bounds.maxY))
 
         obj.scale = isSuperZombie ? Vec2(4, 4) : Vec2(2, 2)
-        obj.textureID = GameTextures.all[texIndex]
-        obj.tintColor = TokyoNight.shipTints[texIndex]
+        if let comp = obj.get(AlphaBlendComponent.self) {
+            comp.textureID = GameTextures.all[texIndex]
+            comp.tintColor = TokyoNight.shipTints[texIndex]
+        }
         obj.isActive = true
 
         obj.add(FindAndGoBehavior(parent: obj, bounds: bounds))
@@ -180,8 +186,10 @@ class CollisionDemo: Scene {
     }
 
     private func setType(_ obj: GameObj, index: Int) {
-        obj.textureID = GameTextures.all[index]
-        obj.tintColor = TokyoNight.shipTints[index]
+        if let comp = obj.get(AlphaBlendComponent.self) {
+            comp.textureID = GameTextures.all[index]
+            comp.tintColor = TokyoNight.shipTints[index]
+        }
         if let zombie = obj.get(ZombieDemoComponent.self) {
             zombie.age = 0
         }
@@ -203,8 +211,8 @@ class CollisionDemo: Scene {
                   let sCollider = second.get(CircleCollider.self) else { continue }
             guard fCollider.doesCollideWith(collider: sCollider) else { continue }
 
-            let fTex = first.textureID
-            let sTex = second.textureID
+            guard let fTex = first.get(AlphaBlendComponent.self)?.textureID,
+                  let sTex = second.get(AlphaBlendComponent.self)?.textureID else { continue }
 
             // Red + Blue -> 80% infection, 20% blue dies
             if fTex == redTex && sTex == blueTex {

@@ -43,6 +43,7 @@ class ViewController: LiquidViewController {
             BezierDemo.self,
             CameraRotationDemo.self,
             AsyncLoadDemo.self,
+            MultiShaderDemo.self,
             PauseDemo.self,
         ])
 

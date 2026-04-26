@@ -47,10 +47,10 @@ class CameraRotationDemo: Scene {
     private var ui: DemoSceneUI!
     private var spawnButton: UIButton!
 
-    func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        self.sceneMgr = sceneMgr
-        self.renderer = renderer
-        self.input = input
+    func initialize(services: SceneServices) {
+        self.sceneMgr = services.sceneMgr
+        self.renderer = services.renderer
+        self.input = services.input
 
         renderer.setCamera(point: Vec3(0, 0, 60))
         renderer.setDefaultPerspective()

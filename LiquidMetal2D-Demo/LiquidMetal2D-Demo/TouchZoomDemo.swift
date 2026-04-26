@@ -64,10 +64,10 @@ class TouchZoomDemo: Scene {
 
     /// Scene protocol: called once when the scene is first created.
     /// Set up textures, camera, projection, and create all game objects here.
-    func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        self.sceneMgr = sceneMgr
-        self.renderer = renderer
-        self.input = input
+    func initialize(services: SceneServices) {
+        self.sceneMgr = services.sceneMgr
+        self.renderer = services.renderer
+        self.input = services.input
 
         // Camera2D.defaultDistance is the engine's suggested starting z for the camera
         currentZ = Camera2D.defaultDistance

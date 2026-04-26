@@ -18,7 +18,7 @@ import LiquidMetal2D
 /// **InputReader in the Behavior/State pattern:**
 /// The engine's `InputReader` protocol provides methods like `getWorldTouch(forZ:)` for reading
 /// touch state. To use it in a State, pass the `InputReader` reference from the scene's
-/// `initialize(sceneMgr:renderer:input:)` method through the Behavior to the State.
+/// `initialize(services:)` method through the Behavior to the State.
 ///
 /// **Note:** This Behavior is not currently used by any demo scene, but demonstrates the pattern
 /// for creating player-controlled objects with the Behavior/State system.

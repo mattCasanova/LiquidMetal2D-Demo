@@ -48,10 +48,10 @@ class PauseDemo: NSObject, Scene {
     private let cellId = "SceneCell"
 
     /// Scene protocol: called once when this overlay scene is pushed onto the stack.
-    func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        self.sceneMgr = sceneMgr
-        self.renderer = renderer
-        self.input = input
+    func initialize(services: SceneServices) {
+        self.sceneMgr = services.sceneMgr
+        self.renderer = services.renderer
+        self.input = services.input
 
         // Semi-transparent dark overlay that dims the scene underneath
         overlayView = UIView(frame: renderer.view.bounds)

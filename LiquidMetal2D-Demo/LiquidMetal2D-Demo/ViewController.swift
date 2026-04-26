@@ -44,6 +44,8 @@ class ViewController: LiquidViewController {
             CameraRotationDemo.self,
             AsyncLoadDemo.self,
             MultiShaderDemo.self,
+            ParticleDemo.self,
+            SmokeDemo.self,
             PauseDemo.self,
         ])
 
@@ -52,9 +54,14 @@ class ViewController: LiquidViewController {
             parentView: self.view,
             maxObjects: GameConstants.MAX_OBJECTS)
 
-        // Step 3: Create the engine and start the game loop.
+        // Step 3: Create the user-facing file picker. Bound to this VC for
+        // the lifetime of the app; scenes reach it via `services.documents`.
+        let documents = DocumentIO(presentingVC: self)
+
+        // Step 4: Create the engine and start the game loop.
         gameEngine = DefaultEngine(
             renderer: renderer,
+            documents: documents,
             initialSceneType: SceneTypes.asyncLoadDemo,
             sceneFactory: sceneFactory)
 

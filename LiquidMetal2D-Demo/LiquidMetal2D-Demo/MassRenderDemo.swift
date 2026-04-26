@@ -40,8 +40,8 @@ class MassRenderDemo: DefaultScene {
 
     private var ui: DemoSceneUI!
 
-    override func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        super.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
+    override func initialize(services: SceneServices) {
+        super.initialize(services: services)
 
         renderer.setCamera(point: Vec3(0, 0, distance))
         renderer.setCameraRotation(angle: Float.random(in: 0...GameMath.twoPi))

@@ -33,10 +33,10 @@ class CollisionStressDemo: Scene {
     private var statsLabel: UILabel!
     private var toggleButton: UIButton!
 
-    func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        self.sceneMgr = sceneMgr
-        self.renderer = renderer
-        self.input = input
+    func initialize(services: SceneServices) {
+        self.sceneMgr = services.sceneMgr
+        self.renderer = services.renderer
+        self.input = services.input
 
         renderer.setCamera()
         renderer.setCameraRotation(angle: 0)

@@ -33,8 +33,8 @@ class AsyncLoadDemo: DefaultScene {
     private let respawnDistanceRange: ClosedRange<Float> = 0.5...2
     private let initialJitter: ClosedRange<Float> = -2...2
 
-    override func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        super.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
+    override func initialize(services: SceneServices) {
+        super.initialize(services: services)
 
         renderer.setClearColor(color: TokyoNight.clearColor)
 

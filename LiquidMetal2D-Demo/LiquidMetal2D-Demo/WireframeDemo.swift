@@ -48,8 +48,8 @@ class MultiShaderDemo: DefaultScene {
     private var showWireframes: Bool = true
     private var rippleOn: Bool = false
 
-    override func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        super.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
+    override func initialize(services: SceneServices) {
+        super.initialize(services: services)
 
         renderer.setCamera(point: Vec3(0, 0, distance))
         renderer.setDefaultPerspective()

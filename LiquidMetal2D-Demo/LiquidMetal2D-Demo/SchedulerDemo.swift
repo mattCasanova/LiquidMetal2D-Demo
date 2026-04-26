@@ -50,8 +50,8 @@ class SchedulerDemo: DefaultScene {
 
     private var ui: DemoSceneUI!
 
-    override func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        super.initialize(sceneMgr: sceneMgr, renderer: renderer, input: input)
+    override func initialize(services: SceneServices) {
+        super.initialize(services: services)
 
         createObjects()
 

@@ -65,10 +65,10 @@ class BezierDemo: Scene {
     private var ui: DemoSceneUI!
 
     /// Scene protocol: called once when the scene is created.
-    func initialize(sceneMgr: SceneManager, renderer: Renderer, input: InputReader) {
-        self.sceneMgr = sceneMgr
-        self.renderer = renderer
-        self.input = input
+    func initialize(services: SceneServices) {
+        self.sceneMgr = services.sceneMgr
+        self.renderer = services.renderer
+        self.input = services.input
 
         renderer.setCamera()
         renderer.setCameraRotation(angle: 0)

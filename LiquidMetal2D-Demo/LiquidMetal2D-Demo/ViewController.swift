@@ -45,6 +45,7 @@ class ViewController: LiquidViewController {
             AsyncLoadDemo.self,
             MultiShaderDemo.self,
             ParticleDemo.self,
+            LineParticleDemo.self,
             SmokeDemo.self,
             PauseDemo.self,
         ])

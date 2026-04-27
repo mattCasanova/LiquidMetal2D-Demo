@@ -16,6 +16,7 @@
 		A1B2C3DA2F67A0A7003831F3 /* MoveRightStateFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */; };
 		F5021ABD2F94D074000FC89F /* WireframeDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021ABC2F94D074000FC89F /* WireframeDemo.swift */; };
 		F5021ABF2F957BB8000FC89F /* ParticleDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021ABE2F957BB8000FC89F /* ParticleDemo.swift */; };
+		F5021AC32F95B0A7003831F3 /* LineParticleDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021AC22F95B0A7003831F3 /* LineParticleDemo.swift */; };
 		F5021AC12F958340000FC89F /* RocketTrailDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021AC02F958340000FC89F /* RocketTrailDemo.swift */; };
 		F536B68F241690A800B3566F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B68E241690A800B3566F /* AppDelegate.swift */; };
 		F536B691241690A800B3566F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B690241690A800B3566F /* SceneDelegate.swift */; };
@@ -59,6 +60,7 @@
 		A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightStateFOV.swift; sourceTree = "<group>"; };
 		F5021ABC2F94D074000FC89F /* WireframeDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireframeDemo.swift; sourceTree = "<group>"; };
 		F5021ABE2F957BB8000FC89F /* ParticleDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleDemo.swift; sourceTree = "<group>"; };
+		F5021AC22F95B0A7003831F3 /* LineParticleDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineParticleDemo.swift; sourceTree = "<group>"; };
 		F5021AC02F958340000FC89F /* RocketTrailDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RocketTrailDemo.swift; sourceTree = "<group>"; };
 		F536B68B241690A800B3566F /* LiquidMetal2D-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LiquidMetal2D-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F536B68E241690A800B3566F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 			children = (
 				F5021AC02F958340000FC89F /* RocketTrailDemo.swift */,
 				F5021ABE2F957BB8000FC89F /* ParticleDemo.swift */,
+				F5021AC22F95B0A7003831F3 /* LineParticleDemo.swift */,
 				F5021ABC2F94D074000FC89F /* WireframeDemo.swift */,
 				F536B6AD2416925800B3566F /* SceneTypes.swift */,
 				A1B2C3D12F67B0A7003831F3 /* AsyncLoadDemo.swift */,
@@ -311,6 +314,7 @@
 				F57FE9732426D8E4005D5A59 /* RandomAngleState.swift in Sources */,
 				F53AAB0F2F6770A7003831F3 /* InstanceDemo.swift in Sources */,
 				F5021ABF2F957BB8000FC89F /* ParticleDemo.swift in Sources */,
+				F5021AC32F95B0A7003831F3 /* LineParticleDemo.swift in Sources */,
 				F53AAB102F6770A7003831F3 /* FindAndGoBehavior.swift in Sources */,
 				F53AAB112F6770A7003831F3 /* FindAndGoStates.swift in Sources */,
 				F53AAB122F6770A7003831F3 /* SchedulerDemo.swift in Sources */,
@@ -541,7 +545,7 @@
 			repositoryURL = "https://github.com/mattCasanova/LiquidMetal2D.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.11.0;
+				minimumVersion = 0.12.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

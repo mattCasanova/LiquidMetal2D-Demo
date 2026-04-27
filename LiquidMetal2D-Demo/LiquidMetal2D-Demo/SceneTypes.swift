@@ -38,6 +38,7 @@ enum SceneTypes: SceneType {
     case asyncLoadDemo
     case multiShaderDemo
     case particleDemo
+    case lineParticleDemo
     case smokeDemo
     case pauseDemo
 
@@ -56,6 +57,7 @@ enum SceneTypes: SceneType {
         case .asyncLoadDemo: return "Async Texture Loading"
         case .multiShaderDemo: return "Multi-Shader (Wireframe + Ripple)"
         case .particleDemo: return "Particles - Additive Campfire"
+        case .lineParticleDemo: return "Particles - Line Emitter"
         case .smokeDemo: return "Particles - Alpha Smoke"
         case .pauseDemo: return "Paused"
         }
@@ -65,7 +67,8 @@ enum SceneTypes: SceneType {
     static let navigable: [SceneTypes] = [
         .massRenderDemo, .touchZoomDemo, .instanceDemo,
         .schedulerDemo, .spawnDemo, .collisionDemo, .collisionStressDemo,
-        .bezierDemo, .cameraRotationDemo, .multiShaderDemo, .particleDemo, .smokeDemo
+        .bezierDemo, .cameraRotationDemo, .multiShaderDemo,
+        .particleDemo, .lineParticleDemo, .smokeDemo
     ]
 
     /// Returns the next scene in the navigable list, or nil if this is the last one.

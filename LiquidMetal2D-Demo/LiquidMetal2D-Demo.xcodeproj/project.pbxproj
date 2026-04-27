@@ -16,8 +16,8 @@
 		A1B2C3DA2F67A0A7003831F3 /* MoveRightStateFOV.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */; };
 		F5021ABD2F94D074000FC89F /* WireframeDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021ABC2F94D074000FC89F /* WireframeDemo.swift */; };
 		F5021ABF2F957BB8000FC89F /* ParticleDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021ABE2F957BB8000FC89F /* ParticleDemo.swift */; };
-		F5021AC32F95B0A7003831F3 /* LineParticleDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021AC22F95B0A7003831F3 /* LineParticleDemo.swift */; };
 		F5021AC12F958340000FC89F /* RocketTrailDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021AC02F958340000FC89F /* RocketTrailDemo.swift */; };
+		F5021AC32F95B0A7003831F3 /* LineParticleDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5021AC22F95B0A7003831F3 /* LineParticleDemo.swift */; };
 		F536B68F241690A800B3566F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B68E241690A800B3566F /* AppDelegate.swift */; };
 		F536B691241690A800B3566F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B690241690A800B3566F /* SceneDelegate.swift */; };
 		F536B693241690A800B3566F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536B692241690A800B3566F /* ViewController.swift */; };
@@ -60,8 +60,8 @@
 		A1B2C3D92F67A0A7003831F3 /* MoveRightStateFOV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRightStateFOV.swift; sourceTree = "<group>"; };
 		F5021ABC2F94D074000FC89F /* WireframeDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireframeDemo.swift; sourceTree = "<group>"; };
 		F5021ABE2F957BB8000FC89F /* ParticleDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleDemo.swift; sourceTree = "<group>"; };
-		F5021AC22F95B0A7003831F3 /* LineParticleDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineParticleDemo.swift; sourceTree = "<group>"; };
 		F5021AC02F958340000FC89F /* RocketTrailDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RocketTrailDemo.swift; sourceTree = "<group>"; };
+		F5021AC22F95B0A7003831F3 /* LineParticleDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineParticleDemo.swift; sourceTree = "<group>"; };
 		F536B68B241690A800B3566F /* LiquidMetal2D-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LiquidMetal2D-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F536B68E241690A800B3566F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F536B690241690A800B3566F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -256,8 +256,9 @@
 		F536B683241690A800B3566F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 2600;
 				ORGANIZATIONNAME = "Matt Casanova";
 				TargetAttributes = {
 					F536B68A241690A800B3566F = {
@@ -392,6 +393,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -400,8 +402,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9GQFJY4Z92;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -421,6 +425,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -452,6 +457,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -460,8 +466,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9GQFJY4Z92;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -474,6 +482,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -485,7 +494,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9GQFJY4Z92;
 				INFOPLIST_FILE = "LiquidMetal2D-Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -503,7 +511,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9GQFJY4Z92;
 				INFOPLIST_FILE = "LiquidMetal2D-Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

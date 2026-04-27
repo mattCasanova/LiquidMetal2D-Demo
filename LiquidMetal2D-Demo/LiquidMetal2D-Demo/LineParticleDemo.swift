@@ -126,8 +126,8 @@ class LineParticleDemo: DefaultScene {
             emissionRate: 140,
             localOffset: Vec2(),
             // Only differs from ParticleDemo: spawns spread across a
-            // 10-unit horizontal segment instead of a single point.
-            shape: .line(from: Vec2(-5, 0), to: Vec2(5, 0)),
+            // 20-unit horizontal segment instead of a single point.
+            shape: .line(from: Vec2(-10, 0), to: Vec2(10, 0)),
             lifetimeRange: 0.8...1.6,
             speedRange: 6...14,
             angleRange: (.pi / 2 - 0.25)...(.pi / 2 + 0.25),
